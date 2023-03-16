@@ -1,29 +1,51 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { Navigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Navigate, useNavigate } from "react-router-dom";
 
 import Nav from "../../components/global/Nav";
-import userService from "../../services/chain/userService";
+import useFetch from "../../hooks/useFetch";
+import Credentails from "../../static/pages/Credentails";
+import LoadingScreen from "../../static/pages/LoadingScreen";
+
+const BACKEND_URL = "http://localhost:9000/api/v1/";
 
 const HomeScreen = () => {
-  const [loading, setLoading] = useState(false);
   const { user: currentUser } = useSelector((state) => state.auth);
+  const { message } = useSelector((state) => state.message);
+  const [showCredentials, setShowCredentials] = useState(false);
+  const { data, loading, error } = useFetch(
+    BACKEND_URL + "user/" + currentUser?._id
+  );
+  const navigate = useNavigate();
 
   if (!currentUser) {
-    return <Navigate to="/login" />;
+    navigate("/login");
   }
 
-  console.log(currentUser);
-  // useEffect(() => {
-
-  // }, [currentUser]);
+  useEffect(() => {
+    if (data) {
+      if (data?.isVerified) {
+        setShowCredentials(false);
+      } else setShowCredentials(true);
+      localStorage.setItem("user", JSON.stringify(data));
+    }
+  }, [data]);
 
   return (
     <div
       id="main-content"
-      class="relative w-full max-w-screen-2xl mx-auto h-full overflow-y-auto bg-gray-50 dark:bg-gray-900"
+      className="relative w-full max-w-screen-2xl mx-auto h-full overflow-y-auto bg-gray-50 dark:bg-gray-900"
     >
-      <Nav />
+      {loading ? <LoadingScreen /> : <Nav />}
+      <Credentails
+        show={showCredentials}
+        popup={false}
+        content={{
+          publicKey: data?.publicKey,
+          privateKey: message,
+        }}
+        setShowCredentials={setShowCredentials}
+      />
     </div>
   );
 };

@@ -1,26 +1,21 @@
 import axios from "axios";
-import { ROLE } from "../../enum";
 import authHeader from "../auth/auth-header";
 
 const BACKEND_URL = "http://localhost:9000/api/v1/";
 
-const user = localStorage.user;
-
-const id = user?.id;
-
 //Get Current User
-const getCurrentUser = () => {
-  return axios.get(BACKEND_URL + "user/" + id, {
+const getCurrentUser = (userID) => {
+  return axios.get(BACKEND_URL + "user/" + userID, {
     headers: authHeader(),
   });
 };
 
 //Update User Role
-const updateUserRole = (roleNumber) => {
+const updateUserRole = (userID, role) => {
   return axios.put(
-    BACKEND_URL + "user/" + { id } + "/role",
+    BACKEND_URL + "user/" + userID + "/role",
     {
-      role: roleNumber === 0 ? ROLE.BUYER : ROLE.PROVIDER,
+      role: role,
     },
     {
       headers: authHeader(),
@@ -29,8 +24,8 @@ const updateUserRole = (roleNumber) => {
 };
 
 //Update User
-const updateUser = (body) => {
-  return axios.put(BACKEND_URL + "user/" + { id }, body, {
+const updateUser = (userID, body) => {
+  return axios.put(BACKEND_URL + "user/" + userID, body, {
     headers: authHeader(),
   });
 };

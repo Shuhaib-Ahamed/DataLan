@@ -1,16 +1,13 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch} from "react-redux";
 import FormAlert from "../../components/global/FormAlert";
 import FormInput from "../../components/ui/FormInput";
 
 import PrimaryButton from "../../components/ui/PrimaryButton";
-
-// Icons
-import { HiInformationCircle } from "react-icons/hi";
 import Link from "../../components/global/Link";
 import Logo from "../../components/global/Logo";
-import { clearMessage, setMessage } from "../../redux/slices/message";
+import { clearError, setError } from "../../redux/slices/error";
 import { login, register as registerUser } from "../../redux/slices/auth";
 import { useNavigate } from "react-router-dom";
 
@@ -18,7 +15,6 @@ const RegisterScreen = () => {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState("");
   let navigate = useNavigate();
-  const { message } = useSelector((state) => state.message);
 
   const dispatch = useDispatch();
   const { register, handleSubmit } = useForm();
@@ -29,7 +25,7 @@ const RegisterScreen = () => {
 
     if (password != confirmPassword) {
       window.scrollTo(0, 0);
-      dispatch(setMessage("Password Mismatch!!"));
+      dispatch(setError("Password Mismatch!!"));
       setLoading(false);
       return;
     }
@@ -55,7 +51,7 @@ const RegisterScreen = () => {
   };
 
   useEffect(() => {
-    dispatch(clearMessage());
+    dispatch(clearError());
   }, [dispatch]);
 
   return (

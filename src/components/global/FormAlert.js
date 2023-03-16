@@ -3,21 +3,21 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 // Icons
 import { HiInformationCircle } from "react-icons/hi";
-import { clearMessage } from "../../redux/slices/message";
+import { clearError } from "../../redux/slices/error";
 
 const FormAlert = ({ additionalContent }) => {
-  const { message } = useSelector((state) => state.message);
+  const { error } = useSelector((state) => state.message);
   const dispatch = useDispatch();
-  if (message) {
+  if (error) {
     return (
       <div className="w-full max-w-xl mt-4 mb-4">
         <Alert
           color="failure"
           icon={HiInformationCircle}
-          onDismiss={() => dispatch(clearMessage())}
+          onDismiss={() => dispatch(clearError())}
           additionalContent={additionalContent}
         >
-          <span className="font-medium">{message}</span>
+          <span className="font-medium">{error}</span>
         </Alert>
       </div>
     );
