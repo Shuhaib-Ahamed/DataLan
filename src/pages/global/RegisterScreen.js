@@ -1,74 +1,74 @@
-// RegisterScreen.js
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { registerUser } from "../../features/auth/authActions";
 import FormAlert from "../../components/global/FormAlert";
 import FormInput from "../../components/ui/FormInput";
 
-import Logo from "../../static/logo.svg";
 import PrimaryButton from "../../components/ui/PrimaryButton";
 
 // Icons
 import { HiInformationCircle } from "react-icons/hi";
 import Link from "../../components/global/Link";
+import Logo from "../../components/global/Logo";
+import { clearMessage, setMessage } from "../../redux/slices/message";
+import { login, register as registerUser } from "../../redux/slices/auth";
+import { useNavigate } from "react-router-dom";
 
 const RegisterScreen = () => {
-  const { loading, userInfo, error, success } = useSelector(
-    (state) => state.auth
-  );
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState("");
+  let navigate = useNavigate();
+  const { message } = useSelector((state) => state.message);
+
   const dispatch = useDispatch();
   const { register, handleSubmit } = useForm();
 
-  const navigate = useNavigate();
+  const handleRegister = (data) => {
+    const { username, email, password, confirmPassword } = data;
+    setLoading(true);
 
-  useEffect(() => {
-    // redirect user to login page if registration was successful
-    if (success) navigate("/login");
-    // redirect authenticated user to profile screen
-    if (userInfo) navigate("/user-profile");
-  }, [navigate, userInfo, success]);
-
-  const submitForm = (data) => {
-    // check if passwords match
-    if (data.password !== data.confirmPassword) {
-      alert("Password mismatch");
+    if (password != confirmPassword) {
+      window.scrollTo(0, 0);
+      dispatch(setMessage("Password Mismatch!!"));
+      setLoading(false);
       return;
     }
-    // transform email string to lowercase to avoid case sensitivity issues in login
+
     data.email = data.email.toLowerCase();
-    dispatch(registerUser(data));
+    setStatus("Creating a Stellar Account");
+
+    dispatch(registerUser({ username, email, password }))
+      .unwrap()
+      .then(() => {
+        setStatus("Logging In");
+        //Run Login Function if Successs!!
+        dispatch(login({ email, password }))
+          .unwrap()
+          .then(() => {
+            navigate("/");
+            setLoading(false);
+          });
+      })
+      .catch(() => {
+        setLoading(false);
+      });
   };
+
+  useEffect(() => {
+    dispatch(clearMessage());
+  }, [dispatch]);
 
   return (
     <div className="flex flex-col items-center justify-center px-6 pt-0 mt-8 mb-10 dark:bg-gray-900">
-      <a
-        href="#"
-        className="flex items-center justify-center mb-1 text-2xl font-bold lg:mb-2 dark:text-white"
-      >
-        <img src={Logo} className="mr-4 h-11" alt="FlowBite Logo" />
-        <span>AUTOCS</span>
-      </a>
-
-      <a
-        href="#"
-        className="flex items-center justify-center mb-4 text-sm lg:mb-5 dark:text-white"
-      >
-        <span>An Open Automated Decentralised Data Marketplace </span>
-      </a>
-
-      {error && (
-        <FormAlert color="failure" icon={HiInformationCircle} message={error} />
-      )}
-
+      <Logo />
+      <FormAlert color="failure" />
       <div className="w-full max-w-xl p-6 space-y-8 sm:p-8 bg-white rounded-lg shadow dark:bg-gray-800">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
           Register on to the Platform
         </h2>
         <form
           className="mt-10 mb-10 space-y-6"
-          onSubmit={handleSubmit(submitForm)}
+          onSubmit={handleSubmit(handleRegister)}
         >
           <FormInput
             name="username"
@@ -114,14 +114,19 @@ const RegisterScreen = () => {
             </div>
             <div className="ml-3 text-sm">
               <label
-                HtmlFor="remember"
+                htmlFor="remember"
                 className="font-medium text-gray-900 dark:text-white"
               >
                 Remember me
               </label>
             </div>
           </div>
-          <PrimaryButton type="submit" loading={loading} content="Register" />
+          <PrimaryButton
+            type="submit"
+            loading={loading}
+            content="Register"
+            status={status}
+          />
           <div className="text-sm font-medium text-gray-500 dark:text-gray-400">
             Already registered?
             <Link

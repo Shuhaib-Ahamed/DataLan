@@ -2,7 +2,7 @@ const FormInput = ({ type, name, required, placeholder, label, setInput }) => {
   return (
     <div className="form-group">
       <label
-        for={name}
+        htmlFor={name}
         className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
       >
         {label}

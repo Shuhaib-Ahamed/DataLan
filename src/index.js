@@ -8,21 +8,28 @@ import LoginScreen from "./pages/global/LoginScreen";
 import RegisterScreen from "./pages/global/RegisterScreen";
 
 import "./index.css";
-import store from "./context/store";
+import store from "./redux/store";
+
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <Router>
-        <main>
+      <main>
+        <Router>
           <Routes>
             <Route path="/" element={<HomeScreen />} />
             <Route path="/login" element={<LoginScreen />} />
             <Route path="/register" element={<RegisterScreen />} />
           </Routes>
-        </main>
-      </Router>
+        </Router>
+      </main>
     </Provider>
   </React.StrictMode>
 );
+
+// rm -r node_modules
+
+// rm package-lock.json
+
+// npm install

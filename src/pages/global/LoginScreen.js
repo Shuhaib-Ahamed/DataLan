@@ -1,62 +1,63 @@
 // LoginScreen.js
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { userLogin } from "../../features/auth/authActions";
 
-import Logo from "../../static/logo.svg";
+import Logo from "../../components/global/Logo";
 import PrimaryButton from "../../components/ui/PrimaryButton";
 import FormInput from "../../components/ui/FormInput";
 import FormAlert from "../../components/global/FormAlert";
 
-// Icons
-import { HiInformationCircle } from "react-icons/hi";
 import Link from "../../components/global/Link";
+import { login } from "../../redux/slices/auth";
+import { clearMessage } from "../../redux/slices/message";
 
 const LoginScreen = () => {
-  const { loading, userInfo, error } = useSelector((state) => state.auth);
-  const dispatch = useDispatch();
+  let navigate = useNavigate();
   const { register, handleSubmit } = useForm();
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
 
-  // redirect authenticated user to profile screen
-  useEffect(() => {
-    if (userInfo) {
-      navigate("/user-profile");
-    }
-  }, [navigate, userInfo]);
+  const { isLoggedIn } = useSelector((state) => state.auth);
 
-  const submitForm = (data) => {
-    dispatch(userLogin(data));
+  const handleLogin = (data) => {
+    const { email, password } = data;
+    setLoading(true);
+
+    dispatch(login({ email, password }))
+      .unwrap()
+      .then(() => {
+        navigate("/");
+      })
+      .catch(() => {
+        setLoading(false);
+      });
   };
+
+  useEffect(() => {
+    dispatch(clearMessage());
+  }, [dispatch]);
+
+  if (isLoggedIn) {
+    return <Navigate to="/" />;
+  }
 
   return (
     <div className="flex flex-col items-center justify-center px-6 pt-8 mx-auto md:h-screen pt:mt-0 dark:bg-gray-900">
-      <a
-        href="#"
-        className="flex items-center justify-center mb-1 text-2xl font-bold lg:mb-2 dark:text-white"
-      >
-        <img src={Logo} className="mr-4 h-11" alt="FlowBite Logo" />
-        <span>AUTOCS</span>
-      </a>
-
+      <Logo />
       <a
         href="#"
         className="flex items-center justify-center mb-4 text-sm lg:mb-5 dark:text-white"
       >
         <span>An Open Automated Decentralised Data Marketplace </span>
       </a>
-
-      {error && (
-        <FormAlert color="failure" icon={HiInformationCircle} message={error} />
-      )}
-
+      <FormAlert color="failure" />
       <div className="w-full max-w-xl p-6 space-y-8 sm:p-8 bg-white rounded-lg shadow dark:bg-gray-800">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
           Sign in to the Platform
         </h2>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit(submitForm)}>
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit(handleLogin)}>
           <FormInput
             name="email"
             type="email"
@@ -93,10 +94,15 @@ const LoginScreen = () => {
             </div>
             <Link to="/reset" name=" Lost Password?" className="ml-auto" />
           </div>
-          <PrimaryButton type="submit" loading={loading} content="Login" />
+          <PrimaryButton
+            type="submit"
+            loading={loading}
+            content="Login"
+            status="Login In"
+          />
           <div className="text-sm font-medium text-gray-500 dark:text-gray-400">
             Not registered?
-            <Link to="/register" name="Create account "/>
+            <Link to="/register" name="Create account " />
           </div>
         </form>
       </div>
