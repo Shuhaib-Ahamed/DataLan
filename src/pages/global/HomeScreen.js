@@ -1,10 +1,13 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Navigate, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import Footer from "../../components/global/Footer";
 
 import Nav from "../../components/global/Nav";
+import SideMenu from "../../components/global/SideMenu";
+import Banner from "../../components/ui/Banner";
 import useFetch from "../../hooks/useFetch";
-import { logout } from "../../redux/slices/auth";
+import DashboardLayout from "../../layouts/DashboardLayout";
 import Credentails from "../../static/pages/Credentails";
 import Error from "../../static/pages/Error";
 import LoadingScreen from "../../static/pages/LoadingScreen";
@@ -12,7 +15,6 @@ import LoadingScreen from "../../static/pages/LoadingScreen";
 const BACKEND_URL = "http://localhost:9000/api/v1/";
 
 const HomeScreen = () => {
-  const dispatch = useDispatch();
   const { user: currentUser } = useSelector((state) => state.auth);
   const { message } = useSelector((state) => state.message);
   const [showCredentials, setShowCredentials] = useState(false);
@@ -38,12 +40,14 @@ const HomeScreen = () => {
     return <Error />;
   } else
     return (
-      <div className="relative w-full max-w-screen-2xl mx-auto h-full overflow-y-auto bg-gray-50 dark:bg-gray-900">
+      <React.Fragment>
         {loading ? (
           <LoadingScreen />
         ) : (
           <>
-            <Nav />
+            <DashboardLayout>
+              <Banner /> <div className="py-96">sda</div>
+            </DashboardLayout>
             <Credentails
               show={showCredentials}
               popup={false}
@@ -55,7 +59,7 @@ const HomeScreen = () => {
             />
           </>
         )}
-      </div>
+      </React.Fragment>
     );
 };
 

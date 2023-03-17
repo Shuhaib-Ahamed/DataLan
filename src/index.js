@@ -3,14 +3,11 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 import { ToastContainer } from "react-toastify";
+
 import "react-toastify/dist/ReactToastify.css";
-
-import HomeScreen from "./pages/global/HomeScreen";
-import LoginScreen from "./pages/global/LoginScreen";
-import RegisterScreen from "./pages/global/RegisterScreen";
-
 import "./index.css";
 import store from "./redux/store";
+import App from "./pages/global/App";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -18,11 +15,7 @@ root.render(
     <Provider store={store}>
       <main>
         <Router>
-          <Routes>
-            <Route path="/" element={<HomeScreen />} />
-            <Route path="/login" element={<LoginScreen />} />
-            <Route path="/register" element={<RegisterScreen />} />
-          </Routes>
+          <App />
         </Router>
         <ToastContainer position="bottom-right" />
       </main>
