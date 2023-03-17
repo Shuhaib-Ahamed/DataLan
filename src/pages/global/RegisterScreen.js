@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch} from "react-redux";
+import { useDispatch } from "react-redux";
 import FormAlert from "../../components/global/FormAlert";
 import FormInput from "../../components/ui/FormInput";
 
@@ -10,6 +10,7 @@ import Logo from "../../components/global/Logo";
 import { clearError, setError } from "../../redux/slices/error";
 import { login, register as registerUser } from "../../redux/slices/auth";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const RegisterScreen = () => {
   const [loading, setLoading] = useState(false);
@@ -43,6 +44,7 @@ const RegisterScreen = () => {
           .then(() => {
             navigate("/");
             setLoading(false);
+            toast("Successfully Registered!!!", { type: "success" });
           });
       })
       .catch(() => {

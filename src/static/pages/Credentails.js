@@ -84,7 +84,7 @@ const Credentails = ({ show, popup, content, setShowCredentials }) => {
                   try {
                     setLoading(true);
                     const result = await userService.updateUser(
-                      JSON.parse(localStorage.getItem("user"))._id,
+                      JSON.parse(localStorage.getItem("user"))?._id,
                       {
                         role: data.role,
                         isVerified: true,
@@ -103,7 +103,7 @@ const Credentails = ({ show, popup, content, setShowCredentials }) => {
                 <div>
                   <div id="select" className="mb-12">
                     <div className="mb-2 block">
-                      <Label htmlFor="role" value="Select your country" />
+                      <Label htmlFor="role" value="Select your prefered role" />
                     </div>
                     <Select
                       id="role"

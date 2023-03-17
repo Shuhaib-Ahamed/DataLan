@@ -86,7 +86,7 @@ const LoginScreen = () => {
             </div>
             <div className="ml-3 text-sm">
               <label
-                HtmlFor="remember"
+                htmlFor="remember"
                 className="font-medium text-gray-900 dark:text-white"
               >
                 Remember me
