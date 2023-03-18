@@ -1,15 +1,19 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./slices/auth";
 import messageReducer from "./slices/message";
+import errorReducer from "./slices/error";
+import networkReducer from "./slices/network";
 
 const reducer = {
   auth: authReducer,
-  message: messageReducer
-}
+  message: messageReducer,
+  error: errorReducer,
+  network: networkReducer,
+};
 
 const store = configureStore({
   reducer: reducer,
   devTools: true,
-})
+});
 
 export default store;

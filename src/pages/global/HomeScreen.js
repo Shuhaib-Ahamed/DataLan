@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import Footer from "../../components/global/Footer";
-
-import Nav from "../../components/global/Nav";
-import SideMenu from "../../components/global/SideMenu";
 import Banner from "../../components/ui/Banner";
 import useFetch from "../../hooks/useFetch";
 import DashboardLayout from "../../layouts/DashboardLayout";
@@ -21,11 +16,6 @@ const HomeScreen = () => {
   const { data, loading, error } = useFetch(
     BACKEND_URL + "user/" + currentUser?._id
   );
-  const navigate = useNavigate();
-
-  if (!currentUser) {
-    navigate("/login");
-  }
 
   useEffect(() => {
     if (data) {

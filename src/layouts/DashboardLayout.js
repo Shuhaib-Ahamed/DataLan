@@ -9,7 +9,7 @@ const DashboardLayout = ({ children }) => {
       <Nav />
       <div className="flex overflow-hidden bg-gray-50 dark:bg-gray-900">
         <SideMenu />
-        <div class="relative h-full w-full overflow-y-auto bg-gray-50 lg:ml-56 dark:bg-gray-900">
+        <div className="relative h-full pt-20 pb-10 w-full overflow-y-auto bg-gray-50 lg:ml-56 dark:bg-gray-900">
           <main>{children}</main>
           <Footer />
         </div>

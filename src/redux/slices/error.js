@@ -17,5 +17,5 @@ const errorSlice = createSlice({
 
 const { reducer, actions } = errorSlice;
 
-export const { setError ,clearError } = actions
+export const { setError , clearError } = actions
 export default reducer;

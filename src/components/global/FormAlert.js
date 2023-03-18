@@ -6,7 +6,7 @@ import { HiInformationCircle } from "react-icons/hi";
 import { clearError } from "../../redux/slices/error";
 
 const FormAlert = ({ additionalContent }) => {
-  const { error } = useSelector((state) => state.message);
+  const { error } = useSelector((state) => state.error);
   const dispatch = useDispatch();
   if (error) {
     return (

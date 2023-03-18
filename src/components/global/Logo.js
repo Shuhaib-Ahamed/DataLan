@@ -7,7 +7,7 @@ const Logo = () => {
       className="flex items-center justify-center mb-1 text-2xl font-bold lg:mb-2 dark:text-white pointer"
     >
       <img src={LogoImage} className="mr-4 h-11" alt="FlowBite Logo" />
-      <span>AUTOCS</span>
+      <span>DataLan</span>
     </span>
   );
 };

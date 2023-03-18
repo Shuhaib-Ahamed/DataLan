@@ -5,7 +5,7 @@ import DashboardLayout from "../../../layouts/DashboardLayout";
 // Icons
 import { AiFillHome } from "react-icons/ai";
 
-const Dashboard = () => {
+const AssetsScreen = () => {
   return (
     <DashboardLayout>
       <div class="mb-4 py-4 px-10 ">
@@ -14,13 +14,13 @@ const Dashboard = () => {
             <NavLink to="/">Home</NavLink>
           </Breadcrumb.Item>
           <Breadcrumb.Item>
-            <NavLink to="/dashboard"> Dashboard</NavLink>
+            <NavLink to="/assets">Assets</NavLink>
           </Breadcrumb.Item>
         </Breadcrumb>
-        <h1 class="text-3xl mt-4 font-semibold text-gray-900">Dashboard</h1>
+        <h1 class="text-3xl mt-4 font-semibold text-gray-900">Assets</h1>
       </div>
     </DashboardLayout>
   );
 };
 
-export default Dashboard;
+export default AssetsScreen;

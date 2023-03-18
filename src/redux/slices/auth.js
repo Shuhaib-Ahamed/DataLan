@@ -3,6 +3,8 @@ import { setMessage } from "./message";
 
 import AuthService from "../../services/auth/authService";
 import { setError } from "./error";
+import { NETWORK } from "../../enum";
+import { setTestNet } from "./network";
 
 const user = localStorage.user && JSON.parse(localStorage.getItem("user"));
 
@@ -15,6 +17,7 @@ export const register = createAsyncThunk(
   async ({ username, email, password }, thunkAPI) => {
     try {
       const response = await AuthService.register(username, email, password);
+      thunkAPI.dispatch(setTestNet(NETWORK.TESTNET));
       thunkAPI.dispatch(setMessage(response.data.data.secretKey));
       return response.data;
     } catch (error) {
