@@ -1,7 +1,8 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 // import ErrorImage from  "../images"
 
-const Error = () => {
+const ErrorScreen = () => {
   return (
     <div className="flex flex-col justify-center items-center px-6 mx-auto h-screen xl:px-0 dark:bg-gray-900">
       <div className="block md:max-w-lg">
@@ -9,14 +10,14 @@ const Error = () => {
       </div>
       <div className="text-center xl:max-w-4xl">
         <h1 className="mb-3 text-2xl font-bold leading-tight text-gray-900 sm:text-4xl lg:text-5xl dark:text-white">
-          Something has gone seriously wrong
+          Looks like you're lost
         </h1>
         <p className="mb-5 text-base font-normal text-gray-500 md:text-lg dark:text-gray-400">
           It's always time for a coffee break. We should be back by the time you
           finish your coffee.
         </p>
-        <a
-          href="#"
+        <NavLink
+          to="/"
           className="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center mr-3 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
         >
           <svg
@@ -32,10 +33,10 @@ const Error = () => {
             ></path>
           </svg>
           Go back home
-        </a>
+        </NavLink>
       </div>
     </div>
   );
 };
 
-export default Error;
+export default ErrorScreen;

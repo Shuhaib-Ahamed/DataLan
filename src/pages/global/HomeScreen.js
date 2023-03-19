@@ -4,7 +4,7 @@ import Banner from "../../components/ui/Banner";
 import useFetch from "../../hooks/useFetch";
 import DashboardLayout from "../../layouts/DashboardLayout";
 import Credentails from "../../static/pages/Credentails";
-import Error from "../../static/pages/Error";
+import ErrorScreen from "../../static/pages/ErrorScreen";
 import LoadingScreen from "../../static/pages/LoadingScreen";
 
 const BACKEND_URL = "http://localhost:9000/api/v1/";
@@ -27,7 +27,7 @@ const HomeScreen = () => {
   }, [data]);
 
   if (error) {
-    return <Error />;
+    return <ErrorScreen />;
   } else
     return (
       <React.Fragment>

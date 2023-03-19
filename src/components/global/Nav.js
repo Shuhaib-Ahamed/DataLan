@@ -119,7 +119,7 @@ function Nav() {
             >
               <Avatar
                 className="cursor-pointer"
-                img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+                img="https://i.pinimg.com/originals/ae/ec/c2/aeecc22a67dac7987a80ac0724658493.jpg"
                 status="online"
                 rounded={true}
               />
