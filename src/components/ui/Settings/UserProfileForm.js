@@ -20,18 +20,22 @@ const UserProfileForm = () => {
     const { firstName, lastName, email, role } = data;
     setLoading(true);
     try {
-      const savedUser = await userService.updateUser(currentUser._id, {
+      const newUserData = {
+        ...currentUser?.data?.userData,
+        firstName: firstName,
+        lastName: lastName,
+      };
+
+      const savedUser = await userService.updateUser({
         email: email,
         role: role,
         data: {
-          userData: { firstName: firstName, lastName: lastName },
+          userData: newUserData,
         },
       });
 
       if (savedUser.data?.succeeded) {
         dispatch(getUser());
-        window.location.reload();
-        navigate("/settings");
       }
     } catch (error) {
       console.log(error);
@@ -41,12 +45,22 @@ const UserProfileForm = () => {
   };
 
   return (
-    <div className="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
+    <div className="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 sm:p-6 dark:bg-gray-800">
       <h3 className="mb-4 text-xl font-semibold dark:text-white">
-        General information
+        User information
       </h3>
       <form onSubmit={handleSubmit(handleUserInfo)}>
         <div className="grid grid-cols-6 gap-6">
+          <div className="col-span-full">
+            <FormInput
+              disabled={true}
+              type="text"
+              setInput={() => {}}
+              label="Public Key"
+              defaultValue={currentUser?.publicKey}
+            />
+          </div>
+
           <div className="col-span-6 sm:col-span-3">
             <FormInput
               name="firstName"

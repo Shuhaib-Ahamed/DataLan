@@ -1,29 +1,74 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { AddImageToIPFS } from "../../../utils/ipfsService";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import userService from "../../../services/user/userService.js";
+import storage from "../../../firebaseConfig.js";
+import { getUser } from "../../../redux/slices/auth.js";
 
 const UserProfileUpload = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { user: currentUser } = useSelector((state) => state.auth);
+  const [loading, setLoading] = useState(false);
+
   const onDrop = useCallback(async (acceptedFiles) => {
+    setLoading(true);
     try {
-      const ipfsData = await AddImageToIPFS(acceptedFiles[0]);
-      const previewImageUrl = `https://ipfs.infura.io/ipfs/${ipfsData.ipfsHash}`;
-      console.log(previewImageUrl);
+      if (acceptedFiles.length > 0) {
+        await fireBaseUpload(acceptedFiles[0]);
+      } else {
+        toast.error("Please add an image!!!");
+      }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   }, []);
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
+  const fireBaseUpload = async (file) => {
+    const storageRef = ref(storage, `/profiles/${file?.name}`);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {},
+      (err) => console.log(err),
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then(async (photoURL) => {
+          const newUserData = {
+            ...currentUser?.data?.userData,
+            photoURL: photoURL,
+          };
+          const savedUser = await userService.updateUser({
+            data: { userData: newUserData },
+          });
+          if (savedUser.data?.succeeded) {
+            dispatch(getUser());
+          }
+        });
+      }
+    );
+  };
+
   return (
-    <div className="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
-      <div className="items-center sm:flex xl:block 2xl:flex sm:space-x-4 xl:space-x-0 2xl:space-x-4">
+    <div className="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 sm:p-6 dark:bg-gray-800">
+      <div className="items-center flex space-x-4">
         <img
-          className="mb-4 rounded-lg w-28 h-28 sm:mb-0 xl:mb-4 2xl:mb-0"
-          src="https://i.pinimg.com/originals/ae/ec/c2/aeecc22a67dac7987a80ac0724658493.jpg"
-          alt="Jese picture"
+          className="rounded-lg w-28 h-28"
+          src={
+            currentUser?.data?.userData?.photoURL ||
+            "https://i.pinimg.com/originals/ae/ec/c2/aeecc22a67dac7987a80ac0724658493.jpg"
+          }
+          alt={currentUser?.userName}
         />
         <div>
-          <h3 className="mb-1 text-xl font-bold text-gray-900 dark:text-white">
+          <h3 className="text-xl font-bold text-gray-900 dark:text-white">
             Profile picture
           </h3>
           <div className="mb-4 text-sm text-gray-500 dark:text-gray-400">
@@ -34,9 +79,9 @@ const UserProfileUpload = () => {
               className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
               {...getRootProps()}
             >
-              <input {...getInputProps()} />
+              <input accept="image/*" {...getInputProps()} />
               <svg
-                className="w-4 h-4 mr-2 -ml-1"
+                className="w-4 h-4 mr-2 ml-1"
                 fill="currentColor"
                 viewBox="0 0 20 20"
                 xmlns="http://www.w3.org/2000/svg"

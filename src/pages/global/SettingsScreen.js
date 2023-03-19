@@ -24,11 +24,11 @@ const SettingsScreen = () => {
             Settings
           </h1>
         </div>
-        <div className="col-span-full xl:col-auto">
+        <div className="col-span-full">
           <UserProfileUpload />
         </div>
 
-        <div className=" mb-4 col-span-2">
+        <div className="mb-4 col-span-full">
           <UserProfileForm />
         </div>
       </div>

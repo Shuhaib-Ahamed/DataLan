@@ -83,13 +83,10 @@ const Credentails = ({ show, popup, content, setShowCredentials }) => {
                 onSubmit={handleSubmit(async (data) => {
                   try {
                     setLoading(true);
-                    const result = await userService.updateUser(
-                      JSON.parse(localStorage.getItem("user"))?._id,
-                      {
-                        role: data.role,
-                        isVerified: true,
-                      }
-                    );
+                    const result = await userService.updateUser({
+                      role: data.role,
+                      isVerified: true,
+                    });
                     if (result) {
                       setShowCredentials(false);
                     }

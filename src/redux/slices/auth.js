@@ -57,8 +57,7 @@ export const login = createAsyncThunk(
 
 export const getUser = createAsyncThunk("auth/user", async (thunkAPI) => {
   try {
-    const userObject = JSON.parse(localStorage.user);
-    const user = await UserService.getCurrentUser(userObject?._id);
+    const user = await UserService.getCurrentUser();
     localStorage.setItem("user", JSON.stringify(user?.data?.data));
     return { user: user.data.data };
   } catch (error) {
@@ -99,6 +98,10 @@ const authSlice = createSlice({
     [logout.fulfilled]: (state, action) => {
       state.isLoggedIn = false;
       state.user = null;
+    },
+    [getUser.fulfilled]: (state, action) => {
+      state.isLoggedIn = true;
+      state.user = action.payload.user;
     },
   },
 });

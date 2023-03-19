@@ -20,6 +20,8 @@ function Nav() {
   const [isNetworkOpen, setNetworkIsOpen] = useState(false);
   const [listening, setListening] = useState(false);
 
+  console.log("dsada", currentUser);
+
   const logOut = useCallback(() => {
     dispatch(logout());
   }, [dispatch]);
@@ -119,7 +121,10 @@ function Nav() {
             >
               <Avatar
                 className="cursor-pointer"
-                img="https://i.pinimg.com/originals/ae/ec/c2/aeecc22a67dac7987a80ac0724658493.jpg"
+                img={
+                  currentUser?.data?.userData?.photoURL ||
+                  "https://i.pinimg.com/originals/ae/ec/c2/aeecc22a67dac7987a80ac0724658493.jpg"
+                }
                 status="online"
                 rounded={true}
               />
@@ -132,7 +137,7 @@ function Nav() {
             >
               <div className="px-4 py-3">
                 <span className="block text-base text-gray-900 dark:text-white">
-                  {currentUser.data
+                  {currentUser?.data
                     ? currentUser?.data?.userData?.firstName +
                       " " +
                       currentUser?.data?.userData?.lastName
