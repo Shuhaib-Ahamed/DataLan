@@ -19,6 +19,7 @@ const HomeScreen = () => {
 
   useEffect(() => {
     if (data) {
+      
       if (data?.isVerified) {
         setShowCredentials(false);
       } else setShowCredentials(true);

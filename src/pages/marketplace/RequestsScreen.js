@@ -7,7 +7,7 @@ import { AiFillHome } from "react-icons/ai";
 const RequestsScreen = () => {
   return (
     <DashboardLayout>
-      <div class="mb-4 py-4 px-10">
+      <div className="mb-4 py-4 px-10">
         <Breadcrumb>
           <Breadcrumb.Item icon={AiFillHome}>
             <NavLink to="/"> Home</NavLink>
@@ -16,7 +16,7 @@ const RequestsScreen = () => {
             <NavLink to="/requests">Requests</NavLink>
           </Breadcrumb.Item>
         </Breadcrumb>
-        <h1 class="text-3xl mt-4 font-semibold text-gray-900">Requests</h1>
+        <h1 className="text-3xl mt-4 font-semibold text-gray-900">Requests</h1>
       </div>
     </DashboardLayout>
   );

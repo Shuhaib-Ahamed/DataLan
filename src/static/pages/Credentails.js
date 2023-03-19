@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { ROLE } from "../../enum";
 import PrimaryButton from "../../components/ui/PrimaryButton";
 import { useForm } from "react-hook-form";
-import userService from "../../services/chain/userService";
+import userService from "../../services/user/userService";
 
 const Credentails = ({ show, popup, content, setShowCredentials }) => {
   const [roleSwitch, setRoleView] = useState(0);

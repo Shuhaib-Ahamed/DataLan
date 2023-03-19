@@ -46,7 +46,7 @@ function Nav() {
               className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               type="button"
             >
-              {network}
+              {network?.length > 0 ? network : "NETWORK"}
               <svg
                 className="w-4 h-4 ml-2"
                 aria-hidden="true"
@@ -56,9 +56,9 @@ function Nav() {
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
                   d="M19 9l-7 7-7-7"
                 ></path>
               </svg>
@@ -132,7 +132,11 @@ function Nav() {
             >
               <div className="px-4 py-3">
                 <span className="block text-base text-gray-900 dark:text-white">
-                  {currentUser?.username}
+                  {currentUser.data
+                    ? currentUser?.data?.userData?.firstName +
+                      " " +
+                      currentUser?.data?.userData?.lastName
+                    : currentUser?.username}
                 </span>
                 <span className="block text-sm font-medium text-gray-500 truncate dark:text-gray-400">
                   {currentUser?.email}

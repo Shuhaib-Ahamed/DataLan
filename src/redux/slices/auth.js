@@ -5,6 +5,7 @@ import AuthService from "../../services/auth/authService";
 import { setError } from "./error";
 import { NETWORK } from "../../enum";
 import { setTestNet } from "./network";
+import UserService from "../../services/user/userService";
 
 const user = localStorage.user && JSON.parse(localStorage.getItem("user"));
 
@@ -18,6 +19,8 @@ export const register = createAsyncThunk(
     try {
       const response = await AuthService.register(username, email, password);
       thunkAPI.dispatch(setTestNet(NETWORK.TESTNET));
+
+      //for credentials
       thunkAPI.dispatch(setMessage(response.data.data.secretKey));
       return response.data;
     } catch (error) {
@@ -51,6 +54,22 @@ export const login = createAsyncThunk(
     }
   }
 );
+
+export const getUser = createAsyncThunk("auth/user", async (thunkAPI) => {
+  try {
+    const userObject = JSON.parse(localStorage.user);
+    const user = await UserService.getCurrentUser(userObject?._id);
+    localStorage.setItem("user", JSON.stringify(user?.data?.data));
+    return { user: user.data.data };
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    thunkAPI.dispatch(setError(message));
+    return thunkAPI.rejectWithValue();
+  }
+});
 
 export const logout = createAsyncThunk("auth/logout", () => {
   AuthService.logout();
