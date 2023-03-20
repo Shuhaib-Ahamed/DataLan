@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
+import { toast } from "react-toastify";
 import { ROLE } from "../../../enum";
 import { getUser } from "../../../redux/slices/auth";
 import userService from "../../../services/user/userService";
@@ -14,7 +15,6 @@ const UserProfileForm = () => {
   const { register, handleSubmit } = useForm();
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const handleUserInfo = async (data) => {
     const { firstName, lastName, email, role } = data;
@@ -36,6 +36,7 @@ const UserProfileForm = () => {
 
       if (savedUser.data?.succeeded) {
         dispatch(getUser());
+        toast.success("User information updated!");
       }
     } catch (error) {
       console.log(error);
@@ -118,7 +119,7 @@ const UserProfileForm = () => {
             <PrimaryButton
               type="submit"
               loading={loading}
-              content="Save all"
+              content="Save Data"
               status="Saving"
             />
           </div>

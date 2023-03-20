@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { setMessage } from "./message";
-
 import AuthService from "../../services/auth/authService";
 import { setError } from "./error";
 import { NETWORK } from "../../enum";

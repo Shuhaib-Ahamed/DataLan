@@ -1,16 +1,14 @@
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import userService from "../../../services/user/userService.js";
-import storage from "../../../firebaseConfig.js";
+import Loader from "../../../static/images/loading.gif";
 import { getUser } from "../../../redux/slices/auth.js";
+import { uploadFile, deleteFile } from "../../../utils/firebaseService.js";
 
 const UserProfileUpload = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { user: currentUser } = useSelector((state) => state.auth);
   const [loading, setLoading] = useState(false);
 
@@ -18,7 +16,14 @@ const UserProfileUpload = () => {
     setLoading(true);
     try {
       if (acceptedFiles.length > 0) {
-        await fireBaseUpload(acceptedFiles[0]);
+        const photoURL = await uploadFile(acceptedFiles[0]);
+        const userData = await onUpload(photoURL);
+        if (userData.succeeded) {
+          dispatch(getUser());
+          toast.success("Profile picture updated!");
+        } else {
+          toast.error("Error updating profile picture!");
+        }
       } else {
         toast.error("Please add an image!!!");
       }
@@ -28,32 +33,42 @@ const UserProfileUpload = () => {
       setLoading(false);
     }
   }, []);
+  const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const onDelete = async () => {
+    console.log("delete");
+    setLoading(true);
+    try {
+      deleteFile(currentUser?.data?.userData?.photoURL);
+      const newUserData = {
+        ...currentUser?.data?.userData,
+      };
+      delete newUserData.photoURL;
 
-  const fireBaseUpload = async (file) => {
-    const storageRef = ref(storage, `/profiles/${file?.name}`);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {},
-      (err) => console.log(err),
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then(async (photoURL) => {
-          const newUserData = {
-            ...currentUser?.data?.userData,
-            photoURL: photoURL,
-          };
-          const savedUser = await userService.updateUser({
-            data: { userData: newUserData },
-          });
-          if (savedUser.data?.succeeded) {
-            dispatch(getUser());
-          }
-        });
+      const savedUser = await userService.updateUser({
+        data: { userData: newUserData },
+      });
+      if (savedUser.data.succeeded) {
+        dispatch(getUser());
+        toast.success("Profile picture deleted!");
+      } else {
+        toast.error("Error updating profile picture!");
       }
-    );
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onUpload = async (photoURL) => {
+    const newUserData = {
+      ...currentUser?.data?.userData,
+      photoURL: photoURL,
+    };
+    const savedUser = await userService.updateUser({
+      data: { userData: newUserData },
+    });
+    return savedUser.data;
   };
 
   return (
@@ -62,8 +77,10 @@ const UserProfileUpload = () => {
         <img
           className="rounded-lg w-28 h-28"
           src={
-            currentUser?.data?.userData?.photoURL ||
-            "https://i.pinimg.com/originals/ae/ec/c2/aeecc22a67dac7987a80ac0724658493.jpg"
+            loading
+              ? Loader
+              : currentUser?.data?.userData?.photoURL ||
+                "https://i.pinimg.com/originals/ae/ec/c2/aeecc22a67dac7987a80ac0724658493.jpg"
           }
           alt={currentUser?.userName}
         />
@@ -93,6 +110,7 @@ const UserProfileUpload = () => {
             </div>
 
             <button
+              onClick={() => onDelete()}
               type="button"
               className="py-2 px-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
             >
