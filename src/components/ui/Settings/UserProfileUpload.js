@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { useDropzone } from "react-dropzone";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -16,7 +17,10 @@ const UserProfileUpload = () => {
     setLoading(true);
     try {
       if (acceptedFiles.length > 0) {
-        const photoURL = await uploadFile(acceptedFiles[0]);
+        const file = acceptedFiles[0];
+        delete file.name;
+        const newFile = { name: uuidv4(), ...file };
+        const photoURL = await uploadFile(newFile);
         const userData = await onUpload(photoURL);
         if (userData.succeeded) {
           dispatch(getUser());
@@ -36,7 +40,6 @@ const UserProfileUpload = () => {
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   const onDelete = async () => {
-    console.log("delete");
     setLoading(true);
     try {
       deleteFile(currentUser?.data?.userData?.photoURL);
