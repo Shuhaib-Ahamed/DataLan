@@ -38,11 +38,11 @@ const Credentails = ({ show, popup, content, setShowCredentials }) => {
               </div>
               <div>
                 <div className="mb-2 block">
-                  <Label htmlFor="secretKey" value="Stellar Private Key" />
+                  <Label htmlFor="privateKey" value="Stellar Private Key" />
                 </div>
                 <TextInput
                   readOnly
-                  id="secretKey"
+                  id="privateKey"
                   type="password"
                   required={true}
                   defaultValue={content.privateKey}

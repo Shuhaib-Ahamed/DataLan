@@ -6,6 +6,7 @@ import DashboardLayout from "../../../layouts/DashboardLayout";
 import { AiFillHome } from "react-icons/ai";
 import AssetHeader from "../../../components/ui/Assets/AssetHeader";
 import Drawer from "../../../components/global/Drawer";
+import AssetForm from "./AssetForm";
 
 const AssetsScreen = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -28,7 +29,13 @@ const AssetsScreen = () => {
           isOpen={isOpen}
           setIsOpen={setIsOpen}
           loading={loading}
-        ></Drawer>
+        >
+          <AssetForm
+            setLoading={setLoading}
+            loading={loading}
+            setIsOpen={setIsOpen}
+          />
+        </Drawer>
       </div>
     </DashboardLayout>
   );

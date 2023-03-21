@@ -35,7 +35,6 @@ export const deleteFile = (photoURL) => {
   var url_token = pictureItem.split("?");
   var url = url_token[0].split("/");
   var filePath = url[url.length - 1].replaceAll("%2F", "/");
-  console.log(filePath);
 
   // Create a reference to the file to delete
   const storageRef = ref(storage, filePath);

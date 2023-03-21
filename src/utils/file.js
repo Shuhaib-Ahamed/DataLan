@@ -1,12 +1,18 @@
 import { toast } from "react-toastify";
 const fs = require("fs");
 
+const arrayBufferToString = (buffer) => {
+  const uint8Array = new Uint8Array(buffer);
+  const decoder = new TextDecoder();
+  return decoder.decode(uint8Array);
+};
+
 const writeToFile = (content) => {
   // Convert the keys to a string
-  const keysString = `publicKey:${content.publicKey}\nsecretKey:${content.secretKey}`;
+  const keysString = `publicKey:${content.publicKey}\nprivateKey:${content.privateKey}`;
 
   // Create a Blob object from the keys string
-  const blob = new Blob([keysString], { type: "text/plain" });
+  const blob = new Blob([keysString], { type: "text/datalan" });
 
   // Create a download link for the Blob object
   const link = document.createElement("a");
@@ -23,21 +29,24 @@ const writeToFile = (content) => {
   document.body.removeChild(link);
 };
 
-const readFromFile = (file) => {
-  // Read the contents of the file
-  const keysString = fs.readFileSync(file, { encoding: "utf8" });
+const readFromFile = async (file) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onabort = () => reject(new Error("file reading was aborted"));
+    reader.onerror = () => reject(new Error("file reading has failed"));
 
-  // Split the string into an array of lines
-  const keysArray = keysString.split("\n");
-
-  // Parse the keys from the array
-  const publicKey = keysArray[0].split(":")[1];
-  const secretKey = keysArray[1].split(":")[1];
-
-  return {
-    publicKey: publicKey,
-    secretKey: secretKey,
-  };
+    reader.onload = () => {
+      const keysArray = arrayBufferToString(reader.result);
+      const KeysArraySplit = keysArray.split("\n");
+      const publicKey = KeysArraySplit[0].split(":")[1];
+      const privateKey = KeysArraySplit[1].split(":")[1];
+      resolve({
+        publicKey: publicKey,
+        privateKey: privateKey,
+      });
+    };
+    reader.readAsArrayBuffer(file);
+  });
 };
 
 const fileService = {

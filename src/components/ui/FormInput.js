@@ -16,9 +16,10 @@ const FormInput = ({
       >
         {label}
       </label>
+
       <input
         type={type}
-        name={type}
+        name={name}
         disabled={disabled}
         id={name}
         defaultValue={defaultValue}

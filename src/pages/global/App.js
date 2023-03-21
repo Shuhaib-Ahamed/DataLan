@@ -13,7 +13,7 @@ import AssetsScreen from "../marketplace/assets/AssetsScreen";
 import AutoMLTrain from "../marketplace/buyer/AutoMLTraining";
 import RequestsScreen from "../marketplace/RequestsScreen";
 import ModelsScreen from "../automl/ModelsScreen";
-import ErrorScreen from "../../static/pages/ErrorScreen";
+import NotFoundScreen from "../../static/pages/NotFoundScreen";
 
 const App = () => {
   const { user: currentUser } = useSelector((state) => state.auth);
@@ -37,7 +37,7 @@ const App = () => {
         <Route path="/training" element={<AutoMLTrain />} />
         <Route path="/requests" element={<RequestsScreen />} />
         <Route path="/models" element={<ModelsScreen />} />
-        <Route path="*" element={<ErrorScreen />} />
+        <Route path="*" element={<NotFoundScreen />} />
       </Routes>
     </React.Fragment>
   );
