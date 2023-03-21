@@ -6,6 +6,7 @@ const useCredential = (file) => {
   const [credentials, setCredentials] = useState(null);
   useEffect(() => {
     if (!file) return;
+
     fileService
       .readFromFile(file)
       .then((keys) => {

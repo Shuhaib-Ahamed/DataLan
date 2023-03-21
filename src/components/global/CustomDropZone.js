@@ -4,10 +4,8 @@ import { toast } from "react-toastify";
 
 const CustomDropZone = ({ file, setFiles, accept, name, label, disabled }) => {
   const onDrop = useCallback(async (acceptedFiles) => {
-    // console.log("Accepted Files", acceptedFiles);
-    // if (acceptedFiles.type !== accept) {
-    //   return toast.warning("Invalid file type!!!");
-    // }
+    if (acceptedFiles[0]?.name.split(".")[1] !== "nt")
+      return toast.warning("Invalid file format");
     setFiles(acceptedFiles[0]);
   }, []);
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
