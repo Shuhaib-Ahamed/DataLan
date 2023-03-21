@@ -44,6 +44,6 @@ export const deleteFile = (photoURL) => {
   deleteObject(storageRef)
     .then(() => {})
     .catch((error) => {
-      // Uh-oh, an error occurred!
+      toast.error("Error deleting file!");
     });
 };

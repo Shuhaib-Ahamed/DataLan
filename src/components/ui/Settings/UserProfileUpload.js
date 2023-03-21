@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 import { useDropzone } from "react-dropzone";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -7,6 +6,7 @@ import userService from "../../../services/user/userService.js";
 import Loader from "../../../static/images/loading.gif";
 import { getUser } from "../../../redux/slices/auth.js";
 import { uploadFile, deleteFile } from "../../../utils/firebaseService.js";
+import { uuidv4 } from "@firebase/util";
 
 const UserProfileUpload = () => {
   const dispatch = useDispatch();
@@ -17,10 +17,7 @@ const UserProfileUpload = () => {
     setLoading(true);
     try {
       if (acceptedFiles.length > 0) {
-        const file = acceptedFiles[0];
-        delete file.name;
-        const newFile = { name: uuidv4(), ...file };
-        const photoURL = await uploadFile(newFile);
+        const photoURL = await uploadFile(acceptedFiles[0]);
         const userData = await onUpload(photoURL);
         if (userData.succeeded) {
           dispatch(getUser());
@@ -83,7 +80,7 @@ const UserProfileUpload = () => {
             loading
               ? Loader
               : currentUser?.data?.userData?.photoURL ||
-                "https://i.pinimg.com/originals/ae/ec/c2/aeecc22a67dac7987a80ac0724658493.jpg"
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNL_ZnOTpXSvhf1UaK7beHey2BX42U6solRA&usqp=CAU"
           }
           alt={currentUser?.userName}
         />
@@ -114,6 +111,7 @@ const UserProfileUpload = () => {
 
             <button
               onClick={() => onDelete()}
+              disabled={loading}
               type="button"
               className="py-2 px-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
             >

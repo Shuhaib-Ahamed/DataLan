@@ -174,9 +174,7 @@ const SideMenu = () => {
                       clipRule="evenodd"
                     ></path>
                   </svg>
-                  <span className="ml-3">
-                    Support
-                  </span>
+                  <span className="ml-3">Support</span>
                 </a>
               </div>
             </div>

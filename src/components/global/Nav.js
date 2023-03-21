@@ -20,8 +20,6 @@ function Nav() {
   const [isNetworkOpen, setNetworkIsOpen] = useState(false);
   const [listening, setListening] = useState(false);
 
-  console.log("dsada", currentUser);
-
   const logOut = useCallback(() => {
     dispatch(logout());
   }, [dispatch]);
@@ -123,7 +121,7 @@ function Nav() {
                 className="cursor-pointer"
                 img={
                   currentUser?.data?.userData?.photoURL ||
-                  "https://i.pinimg.com/originals/ae/ec/c2/aeecc22a67dac7987a80ac0724658493.jpg"
+                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNL_ZnOTpXSvhf1UaK7beHey2BX42U6solRA&usqp=CAU"
                 }
                 status="online"
                 rounded={true}
