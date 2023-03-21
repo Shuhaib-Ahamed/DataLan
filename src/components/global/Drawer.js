@@ -18,11 +18,11 @@ export default function Drawer({
     >
       <section
         className={
-          " w-screen max-w-lg right-0 absolute bg-white h-full shadow-xl delay-400 duration-500 ease-in-out transition-all transform  " +
+          " w-screen max-w-2xl right-0 absolute bg-white h-full shadow-xl delay-400 duration-500 ease-in-out transition-all transform  " +
           (isOpen ? " translate-x-0 " : " translate-x-full ")
         }
       >
-        <article className="relative w-screen max-w-lg p-8 flex flex-col space-y-4 overflow-y-auto h-full">
+        <article className="relative w-screen  max-w-2xl p-8 flex flex-col space-y-4 overflow-y-auto h-full">
           <div className="flex justify-between items-baseline">
             <h5 className="inline-flex items-center  text-md font-semibold text-gray-500 uppercase">
               {header}
