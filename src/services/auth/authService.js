@@ -1,10 +1,11 @@
 import axios from "axios";
+import { dev } from "../../config";
 
-const BACKEND_URL = "http://localhost:9000/api/v1/";
+
 
 const register = (username, email, password) => {
   return axios.post(
-    BACKEND_URL + "auth/account/create ",
+    dev.backendURL+ "auth/account/create ",
     {
       username,
       email,
@@ -20,7 +21,7 @@ const register = (username, email, password) => {
 
 const login = async (email, password) => {
   const { data } = await axios.post(
-    BACKEND_URL + "auth/login",
+    dev.backendURL + "auth/login",
     {
       email,
       password,

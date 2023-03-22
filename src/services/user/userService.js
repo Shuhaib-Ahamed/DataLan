@@ -1,14 +1,15 @@
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { dev } from "../../config";
+
 import authHeader from "../auth/auth-header";
 
-const BACKEND_URL = "http://localhost:9000/api/v1/";
+
 
 const user = JSON.parse(localStorage.getItem("user"));
 
 //Get Current User
 const getCurrentUser = async () => {
-  return await axios.get(BACKEND_URL + "user/" + user._id, {
+  return await axios.get(dev.backendURL + "user/" + user._id, {
     headers: authHeader(),
   });
 };
@@ -16,7 +17,7 @@ const getCurrentUser = async () => {
 //Update User Role
 const updateUserRole = async (role) => {
   return await axios.put(
-    BACKEND_URL + "user/" + user._id + "/role",
+    dev.backendURL+ "user/" + user._id + "/role",
     {
       role: role,
     },
@@ -28,7 +29,7 @@ const updateUserRole = async (role) => {
 
 //Update User
 const updateUser = async (body) => {
-  return await axios.put(BACKEND_URL + "user/" + user._id, body, {
+  return await axios.put(dev.backendURL + "user/" + user._id, body, {
     headers: authHeader(),
   });
 };

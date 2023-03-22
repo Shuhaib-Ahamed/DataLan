@@ -1,5 +1,4 @@
 import { toast } from "react-toastify";
-const fs = require("fs");
 
 const arrayBufferToString = (buffer) => {
   const uint8Array = new Uint8Array(buffer);
@@ -23,7 +22,7 @@ const writeToFile = (content) => {
   document.body.appendChild(link);
 
   link.click();
-  toast("File Downloaded!!!", { type: "success" });
+  toast.success("File Downloaded!!!");
 
   // Remove the link from the document
   document.body.removeChild(link);

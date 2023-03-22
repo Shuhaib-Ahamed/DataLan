@@ -6,7 +6,6 @@ import userService from "../../../services/user/userService.js";
 import Loader from "../../../static/images/loading.gif";
 import { getUser } from "../../../redux/slices/auth.js";
 import { uploadFile, deleteFile } from "../../../utils/firebaseService.js";
-import { uuidv4 } from "@firebase/util";
 
 const UserProfileUpload = () => {
   const dispatch = useDispatch();
@@ -26,7 +25,7 @@ const UserProfileUpload = () => {
           toast.error("Error updating profile picture!");
         }
       } else {
-        toast.error("Please add an image!!!");
+        toast.warning("Please select a different file!");
       }
     } catch (error) {
       console.log(error);
@@ -34,7 +33,12 @@ const UserProfileUpload = () => {
       setLoading(false);
     }
   }, []);
-  const { getRootProps, getInputProps } = useDropzone({ onDrop });
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    multiple: false,
+    accept: "image/*",
+    maxSize: 943718,
+  });
 
   const onDelete = async () => {
     setLoading(true);
@@ -50,7 +54,6 @@ const UserProfileUpload = () => {
       });
       if (savedUser.data.succeeded) {
         dispatch(getUser());
-        toast.success("Profile picture deleted!");
       } else {
         toast.error("Error updating profile picture!");
       }

@@ -6,20 +6,18 @@ import DashboardLayout from "../../layouts/DashboardLayout";
 import Credentails from "../../static/pages/Credentails";
 import NotFoundScreen from "../../static/pages/NotFoundScreen";
 import LoadingScreen from "../../static/pages/LoadingScreen";
-
-const BACKEND_URL = "http://localhost:9000/api/v1/";
+import { dev } from "../../config";
 
 const HomeScreen = () => {
   const { user: currentUser } = useSelector((state) => state.auth);
   const { message } = useSelector((state) => state.message);
   const [showCredentials, setShowCredentials] = useState(false);
   const { data, loading, error } = useFetch(
-    BACKEND_URL + "user/" + currentUser?._id
+    dev.backendURL + "user/" + currentUser?._id
   );
 
   useEffect(() => {
     if (data) {
-      
       if (data?.isVerified) {
         setShowCredentials(false);
       } else setShowCredentials(true);

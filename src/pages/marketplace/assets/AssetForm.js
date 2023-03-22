@@ -7,6 +7,7 @@ import CustomDropZone from "../../../components/global/CustomDropZone";
 import FormInput from "../../../components/ui/FormInput";
 import PrimaryButton from "../../../components/ui/PrimaryButton";
 import useCredential from "../../../hooks/useCredentialHook";
+// import chainService from "../../../web3/chainService";
 
 const AssetForm = ({ loading, setLoading, setIsOpen }) => {
   let navigate = useNavigate();
@@ -19,8 +20,27 @@ const AssetForm = ({ loading, setLoading, setIsOpen }) => {
     try {
       if (!credFile) return toast.warning("Please upload credential file");
 
-      console.log("Credentials", credentials, "Data", data);
+      const metaData = { ...data, file: undefined };
+
+      console.log(
+        "Credentials",
+        credentials,
+        "MetaData",
+        metaData,
+        "File",
+        data.file[0]
+      );
+
+      // await chainService
+      //   .uploadAsset(data.file[0], metaData, credentials)
+      //   .then((result) => {
+      //     console.log("Stellar", result);
+      //   })
+      //   .catch((error) => {
+      //     console.error(error);
+      //   });
     } catch (error) {
+      console.log(error);
     } finally {
       setLoading(false);
     }
@@ -33,7 +53,7 @@ const AssetForm = ({ loading, setLoading, setIsOpen }) => {
           name="assetTitle"
           type="text"
           placeholder="Asset Title"
-          required
+          required={true}
           label="Asset Title"
           setInput={register}
           disabled={loading}
@@ -41,7 +61,7 @@ const AssetForm = ({ loading, setLoading, setIsOpen }) => {
         <FormInput
           name="assetAmount"
           placeholder="100 LUMENS"
-          required
+          required={true}
           min="200"
           type="number"
           label="Asset Amount"
@@ -58,7 +78,7 @@ const AssetForm = ({ loading, setLoading, setIsOpen }) => {
             name="file"
             accept="text/csv"
             {...register("file")}
-            required="true"
+            required={true}
             disabled={loading}
             type="file"
           />
@@ -71,7 +91,7 @@ const AssetForm = ({ loading, setLoading, setIsOpen }) => {
           <textarea
             name="assetDescription"
             placeholder="Enter Asset description"
-            required
+            required={true}
             type="text"
             {...register("assetDescription")}
             label="Asset Description"
