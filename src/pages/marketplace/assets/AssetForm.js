@@ -7,21 +7,21 @@ import CustomDropZone from "../../../components/global/CustomDropZone";
 import FormInput from "../../../components/ui/FormInput";
 import PrimaryButton from "../../../components/ui/PrimaryButton";
 import useCredential from "../../../hooks/useCredentialHook";
-// import chainService from "../../../web3/chainService";
+import chainService from "../../../web3/chainService";
 
 const AssetForm = ({ loading, setLoading, setIsOpen }) => {
   let navigate = useNavigate();
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, reset } = useForm();
   const [credFile, setCredFile] = useState(null);
-  const { credentials, error } = useCredential(credFile);
+  const { credentials } = useCredential(credFile);
 
   const uploadAsset = async (data) => {
     setLoading(true);
+    const metaData = { ...data };
+    delete metaData.file;
+    if (!credFile) return toast.warning("Please upload credential file");
+
     try {
-      if (!credFile) return toast.warning("Please upload credential file");
-
-      const metaData = { ...data, file: undefined };
-
       console.log(
         "Credentials",
         credentials,
@@ -31,16 +31,18 @@ const AssetForm = ({ loading, setLoading, setIsOpen }) => {
         data.file[0]
       );
 
-      // await chainService
-      //   .uploadAsset(data.file[0], metaData, credentials)
-      //   .then((result) => {
-      //     console.log("Stellar", result);
-      //   })
-      //   .catch((error) => {
-      //     console.error(error);
-      //   });
+      await chainService
+        .uploadAsset(data.file[0], metaData, credentials)
+        .then((result) => {
+          console.log({ RESULT: result });
+          reset();
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     } catch (error) {
       console.log(error);
+      reset();
     } finally {
       setLoading(false);
     }

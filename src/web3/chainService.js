@@ -1,9 +1,11 @@
-import BigchainDB from "bigchaindb-driver";
 import encryptor from "../utils/encryptor";
 import StellarSdk from "stellar-sdk";
 import { dev } from "../config";
+import * as BigchainDB from "bigchaindb-driver";
+import { v4 as uuidv4 } from "uuid";
 
 const chainConnection = new BigchainDB.Connection(dev.bigchainURL);
+const setllarConnection = new StellarSdk.Server(dev.setllarURL);
 
 const uploadAsset = (file, metadata, setllarKeypair) => {
   return new Promise(async (resolve, reject) => {
@@ -44,46 +46,49 @@ const uploadAsset = (file, metadata, setllarKeypair) => {
 
       const tx = await chainConnection.postTransaction(txSigned);
 
-      const server = new StellarSdk.Server(dev.setllarURL);
+      const newAsset = {
+        assetId: tx.id,
+        assetKeyPair: bigChainKeyPair,
+      };
 
-      //Get stellar account
-      const account = await server.loadAccount(setllarKeypair.publicKey);
+      // Next, you'll need to load the account that you want to add data to
+      const sourceKeypair = StellarSdk.Keypair.fromSecret(
+        setllarKeypair.privateKey
+      );
+      
+      const sourceAccount = await setllarConnection.loadAccount(
+        sourceKeypair.publicKey()
+      );
 
-      const transaction = new StellarSdk.TransactionBuilder(account, {
+      // Then, you can create a transaction to add data to the account
+      var transaction = new StellarSdk.TransactionBuilder(sourceAccount, {
         fee: StellarSdk.BASE_FEE,
         networkPassphrase: StellarSdk.Networks.TESTNET,
       })
         .addOperation(
           StellarSdk.Operation.manageData({
-            name: tx.id,
-            value: bigChainKeyPair.privateKey,
+            name: metadata.assetTitle + uuidv4(),
+            value: encryptor.generateHash(JSON.stringify(newAsset)),
           })
         )
-        .setTimeout(0)
+        .setTimeout(30)
         .build();
 
-      transaction.sign(setllarKeypair);
+      // Sign the transaction with the account's secret key
+      transaction.sign(sourceKeypair);
 
-      await server.submitTransaction(transaction);
+      // Finally, submit the transaction to the network
+      const result = await setllarConnection.submitTransaction(transaction);
 
       resolve({
-        assetId: tx.id,
-        assetKeyPair: bigChainKeyPair,
+        asset: newAsset,
+        stellar: result,
       });
     } catch (error) {
       reject(error);
     }
   });
 };
-
-// // Usage example
-// uploadAssetPromise(file, metadata, setllarKeypair)
-//   .then((result) => {
-//     console.log(result);
-//   })
-//   .catch((error) => {
-//     console.error(error);
-//   });
 
 const chainService = {
   uploadAsset,

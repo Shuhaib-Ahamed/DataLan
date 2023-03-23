@@ -1,5 +1,6 @@
 import { NIFTRON } from "niftron-client-sdk";
 // import RSAProxyReencrypt from "rsa-proxy-reencrypt";
+import crypto from "crypto";
 
 export default {
   //   generateSalt: () => {
