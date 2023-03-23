@@ -1,17 +1,21 @@
 import { FileInput, Label } from "flowbite-react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import CustomDropZone from "../../../components/global/CustomDropZone";
+import FormAlert from "../../../components/global/FormAlert";
 import FormInput from "../../../components/ui/FormInput";
 import PrimaryButton from "../../../components/ui/PrimaryButton";
 import useCredential from "../../../hooks/useCredentialHook";
+import { clearError, setError } from "../../../redux/slices/error";
 import chainService from "../../../web3/chainService";
 
 const AssetForm = ({ loading, setLoading, setIsOpen }) => {
   let navigate = useNavigate();
   const { register, handleSubmit, reset } = useForm();
+  const dispatch = useDispatch();
   const [credFile, setCredFile] = useState(null);
   const { credentials } = useCredential(credFile);
 
@@ -20,7 +24,6 @@ const AssetForm = ({ loading, setLoading, setIsOpen }) => {
     const metaData = { ...data };
     delete metaData.file;
     if (!credFile) return toast.warning("Please upload credential file");
-
     try {
       console.log(
         "Credentials",
@@ -30,27 +33,33 @@ const AssetForm = ({ loading, setLoading, setIsOpen }) => {
         "File",
         data.file[0]
       );
-
       await chainService
         .uploadAsset(data.file[0], metaData, credentials)
         .then((result) => {
           console.log({ RESULT: result });
-          reset();
-        })
-        .catch((error) => {
-          console.error(error);
+          setIsOpen(false);
+          toast.success("Asset Created Successfully!!!");
         });
     } catch (error) {
-      console.log(error);
-      reset();
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      dispatch(setError(message));
     } finally {
       setLoading(false);
+      setCredFile(null);
+      dispatch(clearError());
+      reset();
     }
   };
 
   return (
     <form onSubmit={handleSubmit(uploadAsset)}>
       <div className="flex flex-col space-y-4 mb-16">
+        <FormAlert color="failure" />
         <FormInput
           name="assetTitle"
           type="text"
@@ -96,6 +105,7 @@ const AssetForm = ({ loading, setLoading, setIsOpen }) => {
             required={true}
             type="text"
             {...register("assetDescription")}
+            disabled={loading}
             label="Asset Description"
             rows="4"
             className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"

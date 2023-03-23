@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { setError } from "../redux/slices/error";
 import fileService from "../utils/file";
 
 const useCredential = (file) => {
   const [credentials, setCredentials] = useState(null);
+  const dispatch = useDispatch();
   useEffect(() => {
     if (!file) return;
 
@@ -13,8 +15,13 @@ const useCredential = (file) => {
         setCredentials(keys);
       })
       .catch((error) => {
-        console.log(error);
-        toast.error("Error reading file");
+        const message =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+        dispatch(setError(message));
       });
   }, [file]);
   return { credentials };

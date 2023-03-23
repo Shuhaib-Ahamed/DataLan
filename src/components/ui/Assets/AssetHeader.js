@@ -1,5 +1,4 @@
 import React from "react";
-import Drawer from "../../global/Drawer";
 
 const AssetHeader = ({ setIsOpen }) => {
   return (

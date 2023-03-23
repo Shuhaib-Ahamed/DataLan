@@ -10,7 +10,7 @@ const FormAlert = ({ additionalContent }) => {
   const dispatch = useDispatch();
   if (error) {
     return (
-      <div className="w-full max-w-xl mt-4 mb-4">
+      <div className="w-full mt-4 mb-4">
         <Alert
           color="failure"
           icon={HiInformationCircle}
