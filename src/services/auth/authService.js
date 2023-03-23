@@ -5,7 +5,7 @@ import { dev } from "../../config";
 
 const register = (username, email, password) => {
   return axios.post(
-    dev.backendURL+ "auth/account/create ",
+    dev.backendURL+ "auth/account/create",
     {
       username,
       email,

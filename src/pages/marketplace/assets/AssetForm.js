@@ -1,18 +1,22 @@
 import { FileInput, Label } from "flowbite-react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { v4 as uuidv4 } from "uuid";
 import CustomDropZone from "../../../components/global/CustomDropZone";
 import FormAlert from "../../../components/global/FormAlert";
 import FormInput from "../../../components/ui/FormInput";
 import PrimaryButton from "../../../components/ui/PrimaryButton";
+import { ENCRYPTION } from "../../../enum";
 import useCredential from "../../../hooks/useCredentialHook";
 import { clearError, setError } from "../../../redux/slices/error";
-import chainService from "../../../web3/chainService";
+import assetService from "../../../services/asset/assetService";
+import chainService from "../../../services/web3/chainService";
 
 const AssetForm = ({ loading, setLoading, setIsOpen }) => {
+  const { user: currentUser } = useSelector((state) => state.auth);
   let navigate = useNavigate();
   const { register, handleSubmit, reset } = useForm();
   const dispatch = useDispatch();
@@ -20,27 +24,42 @@ const AssetForm = ({ loading, setLoading, setIsOpen }) => {
   const { credentials } = useCredential(credFile);
 
   const uploadAsset = async (data) => {
+    if (!credFile) return dispatch(setError("Please Upload Credentials File"));
     setLoading(true);
     const metaData = { ...data };
+    metaData.assetTitle = metaData.assetTitle + "-" + uuidv4();
     delete metaData.file;
-    if (!credFile) return toast.warning("Please upload credential file");
+
     try {
-      console.log(
-        "Credentials",
-        credentials,
-        "MetaData",
-        metaData,
-        "File",
-        data.file[0]
-      );
+      //upload Asset
       await chainService
         .uploadAsset(data.file[0], metaData, credentials)
-        .then((result) => {
-          console.log({ RESULT: result });
-          setIsOpen(false);
-          toast.success("Asset Created Successfully!!!");
+        .then(async (data) => {
+          const newAsset = {
+            txID: data.response.id,
+            publicKey: currentUser.publicKey,
+            assetData: data.assetData,
+            ...metaData,
+          };
+
+          const assetResponse = await assetService.createAsset(newAsset);
+
+          if (assetResponse.status === 201) {
+            setIsOpen(false);
+            setLoading(false);
+            toast.success("Asset Created Successfully!!!");
+            console.log(
+              "RESULT",
+              newAsset,
+              "DATA",
+              data,
+              "RESPONSE",
+              assetResponse
+            );
+          }
         });
     } catch (error) {
+      console.log("ERROR", error);
       const message =
         (error.response &&
           error.response.data &&
@@ -53,6 +72,7 @@ const AssetForm = ({ loading, setLoading, setIsOpen }) => {
       setCredFile(null);
       dispatch(clearError());
       reset();
+      navigate("/assets");
     }
   };
 

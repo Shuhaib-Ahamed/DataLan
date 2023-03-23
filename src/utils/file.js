@@ -48,9 +48,29 @@ const readFromFile = async (file) => {
   });
 };
 
+const readFile = (file) => {
+  return new Promise((resolve, reject) => {
+    // Create file reader
+    let reader = new FileReader();
+
+    // Register event listeners
+    reader.addEventListener("loadend", (e) => resolve(e.target.result));
+    reader.addEventListener("error", reject);
+
+    // Read file
+    reader.readAsArrayBuffer(file);
+  });
+};
+
+const getAsByteArray = async (file) => {
+  return new Uint8Array(await readFile(file));
+};
+
 const fileService = {
   writeToFile,
   readFromFile,
+  readFile,
+  getAsByteArray,
 };
 
 export default fileService;
