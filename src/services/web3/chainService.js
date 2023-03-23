@@ -3,13 +3,15 @@ import StellarSdk from "stellar-sdk";
 import { dev } from "../../config";
 import * as BigchainDB from "bigchaindb-driver";
 import fileService from "../../utils/file";
+import { setMessage } from "../../redux/slices/message";
 
 const chainConnection = new BigchainDB.Connection(dev.bigchainURL);
 const setllarConnection = new StellarSdk.Server(dev.setllarURL);
 
-const uploadAsset = (file, metadata, setllarKeypair) => {
+const uploadAsset = (file, metadata, setllarKeypair, dispatch) => {
   return new Promise(async (resolve, reject) => {
     try {
+      dispatch(setMessage("Encryption data..."));
       const getByteArray = await fileService.getAsByteArray(file);
 
       // Create a keypair for the asset
@@ -55,6 +57,7 @@ const uploadAsset = (file, metadata, setllarKeypair) => {
         bigChainKeyPair.privateKey
       );
 
+      dispatch(setMessage("Signing Bigchain transaction..."));
       const tx = await chainConnection.postTransaction(txSigned);
 
       const newAsset = {
@@ -67,6 +70,7 @@ const uploadAsset = (file, metadata, setllarKeypair) => {
         setllarKeypair.privateKey
       );
 
+      dispatch(setMessage("Loading Stellar account..."));
       const sourceAccount = await setllarConnection.loadAccount(
         sourceKeypair.publicKey()
       );
@@ -89,6 +93,7 @@ const uploadAsset = (file, metadata, setllarKeypair) => {
       transaction.sign(sourceKeypair);
 
       // Finally, submit the transaction to the network
+      dispatch(setMessage("Submiting stellar transaction..."));
       const response = await setllarConnection.submitTransaction(transaction);
 
       //encrypt the assetData
