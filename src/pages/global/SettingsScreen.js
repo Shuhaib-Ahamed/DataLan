@@ -17,7 +17,7 @@ const SettingsScreen = () => {
               <NavLink to="/">Home</NavLink>
             </Breadcrumb.Item>
             <Breadcrumb.Item>
-              <NavLink to="/settings">Settings</NavLink>
+          Settings
             </Breadcrumb.Item>
           </Breadcrumb>
           <h1 className="text-3xl mt-4 font-semibold text-gray-900">

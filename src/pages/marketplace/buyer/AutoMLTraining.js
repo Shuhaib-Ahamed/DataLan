@@ -13,7 +13,7 @@ const AutoMLTrain = () => {
             <NavLink to="/"> Home</NavLink>
           </Breadcrumb.Item>
           <Breadcrumb.Item>
-            <NavLink to="/training">Training</NavLink>
+           Training
           </Breadcrumb.Item>
         </Breadcrumb>
         <h1 className="text-3xl mt-4 font-semibold text-gray-900">Train Datasets</h1>

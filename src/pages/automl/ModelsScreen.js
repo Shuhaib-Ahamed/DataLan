@@ -13,7 +13,7 @@ const ModelsScreen = () => {
             <NavLink to="/">Home</NavLink>
           </Breadcrumb.Item>
           <Breadcrumb.Item>
-            <NavLink to="/models">Models</NavLink>
+          Models
           </Breadcrumb.Item>
         </Breadcrumb>
         <h1 className="text-3xl mt-4 font-semibold text-gray-900">Models</h1>

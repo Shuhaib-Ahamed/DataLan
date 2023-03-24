@@ -65,6 +65,7 @@ export const getUser = createAsyncThunk("auth/user", async (thunkAPI) => {
       error.message ||
       error.toString();
     thunkAPI.dispatch(setError(message));
+    thunkAPI.dispatch(logout());
     return thunkAPI.rejectWithValue();
   }
 });

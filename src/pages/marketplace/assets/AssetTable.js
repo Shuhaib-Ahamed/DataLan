@@ -6,6 +6,7 @@ import { SiHiveBlockchain } from "react-icons/si";
 import { BiTransferAlt } from "react-icons/bi";
 import { Badge, Spinner } from "flowbite-react";
 import { SiStellar } from "react-icons/si";
+import { NavLink } from "react-router-dom";
 
 const AssetTable = ({ refresh }) => {
   const { user: currentUser } = useSelector((state) => state.auth);
@@ -41,11 +42,13 @@ const AssetTable = ({ refresh }) => {
               <table className="min-w-full divide-y divide-gray-200 table-fixed dark:divide-gray-600">
                 {loading ? (
                   <React.Fragment>
-                    <tr className="p-4 flex  items-center justify-center">
-                      <td>
-                        <Spinner size="lg" />
-                      </td>
-                    </tr>
+                    <tbody>
+                      <tr className="p-4 flex  items-center justify-center">
+                        <td>
+                          <Spinner size="lg" />
+                        </td>
+                      </tr>
+                    </tbody>
                   </React.Fragment>
                 ) : (
                   <React.Fragment>
@@ -114,13 +117,13 @@ const AssetTable = ({ refresh }) => {
                               </Badge>
                             </td>
                             <td className="p-4 space-x-4 whitespace-nowrap">
-                              <button
-                                type="button"
-                                className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                              <NavLink
+                                className="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                                to={`/assets/${asset?._id}`}
+                                state={{ asset: asset }}
                               >
-                                <BiTransferAlt className="w-4 h-4 mr-2" />
-                                Transfer
-                              </button>
+                                View Asset
+                              </NavLink>
                               <button className=" inline-flex items-center py-2 px-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                                 <SiHiveBlockchain className="w-4 h-4 mr-2" />{" "}
                                 View on Blockchain

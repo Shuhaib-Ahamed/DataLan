@@ -13,9 +13,7 @@ const Dashboard = () => {
           <Breadcrumb.Item icon={AiFillHome}>
             <NavLink to="/">Home</NavLink>
           </Breadcrumb.Item>
-          <Breadcrumb.Item>
-            <NavLink to="/dashboard"> Dashboard</NavLink>
-          </Breadcrumb.Item>
+          <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
         </Breadcrumb>
         <h1 className="text-3xl mt-4 font-semibold text-gray-900">Dashboard</h1>
       </div>

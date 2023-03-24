@@ -4,7 +4,15 @@ import { NavLink } from "react-router-dom";
 import { SiStellar } from "react-icons/si";
 import { dev } from "../../config";
 
-const CustomCard = ({ index, title, description, amount, id, rating }) => {
+const CustomCard = ({
+  asset,
+  index,
+  title,
+  description,
+  amount,
+  id,
+  rating,
+}) => {
   const ratingArr = Array.from({ length: Math.floor(rating) });
   const isFloat = (v) => Math.floor(v) !== Math.ceil(v);
 
@@ -13,7 +21,7 @@ const CustomCard = ({ index, title, description, amount, id, rating }) => {
       <img
         className="h-28 w-full object-cover transition-all duration-100 hover:scale-110"
         alt={title}
-        src={`https://source.unsplash.com/random/?data/${index}`}
+        src={`https://source.unsplash.com/random/?${title?.split(" ")[0]}`}
       />
       <div className="flex flex-col p-6 space-y-4 w-full">
         <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
@@ -25,9 +33,11 @@ const CustomCard = ({ index, title, description, amount, id, rating }) => {
         <div className="flex space-x-2 justify-start">
           <Rating>
             {ratingArr?.map((_, index) => {
-              if (isFloat(rating) && index === ratingArr.length - 1) {
-                return <Rating.Star key={index} filled={false} />;
-              } else return <Rating.Star key={index} />;
+              if (rating <= 5) {
+                if (isFloat(rating) && index === ratingArr.length - 1) {
+                  return <Rating.Star key={index} filled={false} />;
+                } else return <Rating.Star key={index} />;
+              }
             })}
           </Rating>
           <Badge color="info">{rating}</Badge>
@@ -41,6 +51,7 @@ const CustomCard = ({ index, title, description, amount, id, rating }) => {
           <NavLink
             className="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
             to={`/assets/${id}`}
+            state={{ asset: asset }}
           >
             View Asset
           </NavLink>

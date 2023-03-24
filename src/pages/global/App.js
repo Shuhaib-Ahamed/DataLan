@@ -14,6 +14,7 @@ import RequestsScreen from "../marketplace/buyer/RequestsScreen";
 import LoadingScreen from "../../static/pages/LoadingScreen";
 import authService from "../../services/auth/authService";
 import userService from "../../services/user/userService";
+import ViewAssetScreen from "../marketplace/assets/ViewAssetScreen";
 
 const App = () => {
   const { user: currentUser } = useSelector((state) => state.auth);
@@ -56,7 +57,7 @@ const App = () => {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/settings" element={<SettingsScreen />} />
             <Route path="/assets" element={<AssetsScreen />} />
-            <Route path="/assets/:id" element={<AssetsScreen />} />
+            <Route path="/assets/:id" element={<ViewAssetScreen />} />
             <Route path="/training" element={<AutoMLTrain />} />
             <Route path="/requests" element={<RequestsScreen />} />
             <Route path="/models" element={<ModelsScreen />} />
