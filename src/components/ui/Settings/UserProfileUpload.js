@@ -16,7 +16,7 @@ const UserProfileUpload = () => {
     setLoading(true);
     try {
       if (acceptedFiles.length > 0) {
-        const photoURL = await uploadFile(acceptedFiles[0]);
+        const photoURL = await uploadFile(acceptedFiles[0], currentUser?._id);
         const userData = await onUpload(photoURL);
         if (userData.succeeded) {
           dispatch(getUser());

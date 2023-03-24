@@ -31,26 +31,6 @@ const createAsset = async (body) => {
   });
 };
 
-// //Update User Role
-// const updateUserRole = async (role) => {
-//   return await axios.put(
-//     dev.backendURL + "user/" + user._id + "/role",
-//     {
-//       role: role,
-//     },
-//     {
-//       headers: authHeader(),
-//     }
-//   );
-// };
-
-// //Update User
-// const updateUser = async (body) => {
-//   return await axios.put(dev.backendURL + "user/" + user._id, body, {
-//     headers: authHeader(),
-//   });
-// };
-
 const assetService = {
   getAsset,
   getAssets,

@@ -23,7 +23,8 @@ const AssetTable = ({ refresh }) => {
           setAssets(res.data.data);
         }
       } catch (error) {
-        toast.error("Error while fetching assets");
+        console.log(error);
+        // toast.error("Error while fetching assets");
       } finally {
         setLoading(false);
       }

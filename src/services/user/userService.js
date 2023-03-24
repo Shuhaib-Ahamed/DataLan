@@ -2,14 +2,13 @@ import axios from "axios";
 import { dev } from "../../config";
 
 import authHeader from "../auth/auth-header";
+import authService from "../auth/authService";
 
-
-
-const user = JSON.parse(localStorage.getItem("user"));
+const user = authService.decodeToken(localStorage.getItem("token"));
 
 //Get Current User
 const getCurrentUser = async () => {
-  return await axios.get(dev.backendURL + "user/" + user._id, {
+  return await axios.get(dev.backendURL + "user/" + user.id, {
     headers: authHeader(),
   });
 };
@@ -17,7 +16,7 @@ const getCurrentUser = async () => {
 //Update User Role
 const updateUserRole = async (role) => {
   return await axios.put(
-    dev.backendURL+ "user/" + user._id + "/role",
+    dev.backendURL + "user/" + user.id + "/role",
     {
       role: role,
     },
@@ -29,7 +28,14 @@ const updateUserRole = async (role) => {
 
 //Update User
 const updateUser = async (body) => {
-  return await axios.put(dev.backendURL + "user/" + user._id, body, {
+  return await axios.put(dev.backendURL + "user/" + user.id, body, {
+    headers: authHeader(),
+  });
+};
+
+//Update User
+const updateUserByPublicKey = async (body, publicKey) => {
+  return await axios.put(dev.backendURL + "user/publicKey/" + publicKey, body, {
     headers: authHeader(),
   });
 };
@@ -38,6 +44,7 @@ const userService = {
   getCurrentUser,
   updateUserRole,
   updateUser,
+  updateUserByPublicKey,
 };
 
 export default userService;

@@ -1,11 +1,10 @@
 import axios from "axios";
 import { dev } from "../../config";
-
-
+import jwt from "jsonwebtoken";
 
 const register = (username, email, password) => {
   return axios.post(
-    dev.backendURL+ "auth/account/create",
+    dev.backendURL + "auth/account/create",
     {
       username,
       email,
@@ -45,10 +44,21 @@ const logout = () => {
   localStorage.removeItem("token");
 };
 
+function decodeToken(token) {
+  try {
+    const decoded = jwt.decode(token);
+    return decoded;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}
+
 const authService = {
   register,
   login,
   logout,
+  decodeToken,
 };
 
 export default authService;

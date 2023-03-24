@@ -9,14 +9,12 @@ import { toast } from "react-toastify";
 import storage from "../firebaseConfig";
 import { v4 as uuidv4 } from "uuid";
 
-const user = localStorage.user && JSON.parse(localStorage.getItem("user"));
-
-export const uploadFile = async (file) => {
+export const uploadFile = async (file, userID) => {
   return new Promise((resolve, reject) => {
     const newName = uuidv4() + "." + file.name.split(".").pop();
     console.log(newName);
 
-    const storageRef = ref(storage, `/profiles/${user._id}/${newName}`);
+    const storageRef = ref(storage, `/profiles/${userID}/${newName}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
     uploadTask.on(
       (err) => {

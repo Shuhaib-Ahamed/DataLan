@@ -6,9 +6,12 @@ import { ROLE } from "../../enum";
 import PrimaryButton from "../../components/ui/PrimaryButton";
 import { useForm } from "react-hook-form";
 import userService from "../../services/user/userService";
+import { getUser } from "../../redux/slices/auth";
+import { useDispatch } from "react-redux";
 
 const Credentails = ({ show, popup, content, setShowCredentials }) => {
   const [roleSwitch, setRoleView] = useState(0);
+  const dispatch = useDispatch();
   const { register, handleSubmit } = useForm();
   const [loading, setLoading] = useState(false);
 
@@ -83,11 +86,15 @@ const Credentails = ({ show, popup, content, setShowCredentials }) => {
                 onSubmit={handleSubmit(async (data) => {
                   try {
                     setLoading(true);
-                    const result = await userService.updateUser({
-                      role: data.role,
-                      isVerified: true,
-                    });
+                    const result = await userService.updateUserByPublicKey(
+                      {
+                        role: data.role,
+                        isVerified: true,
+                      },
+                      content.publicKey
+                    );
                     if (result) {
+                      dispatch(getUser());
                       setShowCredentials(false);
                     }
                   } catch (error) {
