@@ -7,13 +7,14 @@ import { AiFillHome } from "react-icons/ai";
 import AssetHeader from "../../../components/ui/Assets/AssetHeader";
 import Drawer from "../../../components/global/Drawer";
 import AssetForm from "./AssetForm";
+import AssetTable from "./AssetTable";
 
 const AssetsScreen = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   return (
     <DashboardLayout>
-      <div className="mb-4 py-4 px-10 ">
+      <div className="mb-4 py-4 px-10 flex flex-col ">
         <Breadcrumb>
           <Breadcrumb.Item icon={AiFillHome}>
             <NavLink to="/">Home</NavLink>
@@ -36,6 +37,7 @@ const AssetsScreen = () => {
             setIsOpen={setIsOpen}
           />
         </Drawer>
+        <AssetTable isOpen={isOpen} />
       </div>
     </DashboardLayout>
   );

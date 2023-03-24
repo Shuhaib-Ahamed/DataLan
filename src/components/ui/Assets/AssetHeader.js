@@ -2,7 +2,7 @@ import React from "react";
 
 const AssetHeader = ({ setIsOpen }) => {
   return (
-    <div className="p-8 bg-white rounded-lg shadow items-center justify-between block sm:flex md:divide-x md:divide-gray-100 dark:divide-gray-700">
+    <div className="p-8 mb-6 bg-white rounded-lg shadow items-center justify-between block sm:flex md:divide-x md:divide-gray-100 dark:divide-gray-700">
       <div className="flex items-center mb-4 sm:mb-0">
         <form className="sm:pr-3">
           <div className="relative w-48 mt-1 sm:w-64 xl:w-96">

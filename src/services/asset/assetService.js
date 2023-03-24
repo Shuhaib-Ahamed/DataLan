@@ -5,14 +5,21 @@ import authHeader from "../auth/auth-header";
 
 //Get Asset
 const getAsset = async (body) => {
-  return await axios.get(dev.backendURL + "asset/" + body.id, {
+  return await axios.get(dev.backendURL + "assets/" + body.id, {
     headers: authHeader(),
   });
 };
 
 //Get All Assets
 const getAssets = async () => {
-  return await axios.get(dev.backendURL + "asset/", {
+  return await axios.get(dev.backendURL + "assets/", {
+    headers: authHeader(),
+  });
+};
+
+//Get Assets by publicKey
+const getAssetByPublicKey = async (id) => {
+  return await axios.get(dev.backendURL + "assets/user/" + id, {
     headers: authHeader(),
   });
 };
@@ -48,6 +55,7 @@ const assetService = {
   getAsset,
   getAssets,
   createAsset,
+  getAssetByPublicKey,
 };
 
 export default assetService;

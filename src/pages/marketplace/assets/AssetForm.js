@@ -38,6 +38,7 @@ const AssetForm = ({ loading, setLoading, setIsOpen }) => {
       await chainService
         .uploadAsset(data.file[0], metaData, credentials, dispatch)
         .then(async (data) => {
+          
           const newAsset = {
             txID: data.response.id,
             publicKey: currentUser.publicKey,

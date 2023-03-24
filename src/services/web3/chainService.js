@@ -11,7 +11,6 @@ const setllarConnection = new StellarSdk.Server(dev.setllarURL);
 const uploadAsset = (file, metadata, setllarKeypair, dispatch) => {
   return new Promise(async (resolve, reject) => {
     try {
-      dispatch(setMessage("Encryption data..."));
       const getByteArray = await fileService.getAsByteArray(file);
 
       // Create a keypair for the asset
@@ -93,7 +92,7 @@ const uploadAsset = (file, metadata, setllarKeypair, dispatch) => {
       transaction.sign(sourceKeypair);
 
       // Finally, submit the transaction to the network
-      dispatch(setMessage("Submiting stellar transaction..."));
+      dispatch(setMessage("Submiting Stellar transaction..."));
       const response = await setllarConnection.submitTransaction(transaction);
 
       //encrypt the assetData
