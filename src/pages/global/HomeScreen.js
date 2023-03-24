@@ -7,6 +7,7 @@ import Credentails from "../../static/pages/Credentails";
 import NotFoundScreen from "../../static/pages/NotFoundScreen";
 import LoadingScreen from "../../static/pages/LoadingScreen";
 import { dev } from "../../config";
+import Marketplace from "../marketplace/Marketplace";
 
 const HomeScreen = () => {
   const { user: currentUser } = useSelector((state) => state.auth);
@@ -35,7 +36,7 @@ const HomeScreen = () => {
         ) : (
           <>
             <DashboardLayout>
-              <Banner /> <div className="py-96">sda</div>
+              <Banner /> <Marketplace />
             </DashboardLayout>
             <Credentails
               show={showCredentials}

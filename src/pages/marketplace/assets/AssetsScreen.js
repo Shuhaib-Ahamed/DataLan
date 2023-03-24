@@ -12,6 +12,7 @@ import AssetTable from "./AssetTable";
 const AssetsScreen = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [refresh, setRefresh] = useState(false);
   return (
     <DashboardLayout>
       <div className="mb-4 py-4 px-10 flex flex-col ">
@@ -24,7 +25,7 @@ const AssetsScreen = () => {
           </Breadcrumb.Item>
         </Breadcrumb>
         <h1 className="text-3xl my-4 font-semibold text-gray-900">Assets</h1>
-        <AssetHeader setIsOpen={setIsOpen} />
+        <AssetHeader setIsOpen={setIsOpen} setRefresh={setRefresh} />
         <Drawer
           header="Add New Asset"
           isOpen={isOpen}
@@ -35,9 +36,10 @@ const AssetsScreen = () => {
             setLoading={setLoading}
             loading={loading}
             setIsOpen={setIsOpen}
+            setRefresh={setRefresh}
           />
         </Drawer>
-        <AssetTable isOpen={isOpen} />
+        <AssetTable refresh={refresh} />
       </div>
     </DashboardLayout>
   );

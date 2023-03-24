@@ -36,3 +36,14 @@ code {
     transform: translateX(100%);
   }
 }
+
+.text-truncate-custom {
+  overflow: hidden;
+  max-height: 6rem;
+  -webkit-box-orient: vertical;
+  display: block;
+  display: -webkit-box;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 3;
+}

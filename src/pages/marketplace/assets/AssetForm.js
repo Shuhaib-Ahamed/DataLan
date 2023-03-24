@@ -17,7 +17,7 @@ import assetService from "../../../services/asset/assetService";
 import chainService from "../../../services/web3/chainService";
 import LoadingGif from "../../../static/images/block.gif";
 
-const AssetForm = ({ loading, setLoading, setIsOpen }) => {
+const AssetForm = ({ loading, setLoading, setIsOpen, setRefresh }) => {
   const { user: currentUser } = useSelector((state) => state.auth);
   const { message } = useSelector((state) => state.message);
   let navigate = useNavigate();
@@ -38,7 +38,6 @@ const AssetForm = ({ loading, setLoading, setIsOpen }) => {
       await chainService
         .uploadAsset(data.file[0], metaData, credentials, dispatch)
         .then(async (data) => {
-          
           const newAsset = {
             txID: data.response.id,
             publicKey: currentUser.publicKey,
@@ -53,6 +52,7 @@ const AssetForm = ({ loading, setLoading, setIsOpen }) => {
             setIsOpen(false);
             setLoading(false);
             toast.success("Asset Created Successfully!!!");
+            setRefresh((reload) => !reload);
             console.log(
               "RESULT",
               newAsset,

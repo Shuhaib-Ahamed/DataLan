@@ -1,7 +1,7 @@
 import { Breadcrumb } from "flowbite-react";
 import React from "react";
 import { NavLink } from "react-router-dom";
-import DashboardLayout from "../../layouts/DashboardLayout"; // Icons
+import DashboardLayout from "../../../layouts/DashboardLayout"; // Icons
 import { AiFillHome } from "react-icons/ai";
 
 const RequestsScreen = () => {

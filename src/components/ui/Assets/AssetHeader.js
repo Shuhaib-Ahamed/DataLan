@@ -1,6 +1,7 @@
 import React from "react";
+import { IoMdRefreshCircle } from "react-icons/io";
 
-const AssetHeader = ({ setIsOpen }) => {
+const AssetHeader = ({ setIsOpen, setRefresh }) => {
   return (
     <div className="p-8 mb-6 bg-white rounded-lg shadow items-center justify-between block sm:flex md:divide-x md:divide-gray-100 dark:divide-gray-700">
       <div className="flex items-center mb-4 sm:mb-0">
@@ -16,23 +17,11 @@ const AssetHeader = ({ setIsOpen }) => {
         </form>
         <div className="flex items-center w-full sm:justify-end">
           <div className="flex pl-2 space-x-1">
-            <a
-              href="#"
+            <IoMdRefreshCircle
+              onClick={() => setRefresh((prev) => !prev)}
+              size="32"
               className="inline-flex justify-center p-1 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            >
-              <svg
-                className="w-6 h-6"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
-                  clipRule="evenodd"
-                ></path>
-              </svg>
-            </a>
+            />
             <a
               href="#"
               className="inline-flex justify-center p-1 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
@@ -84,7 +73,7 @@ const AssetHeader = ({ setIsOpen }) => {
         </div>
       </div>
       <button
-        onClick={() => setIsOpen((open) => !open)}
+        onClick={() => setIsOpen((prev) => !prev)}
         className="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
       >
         Add new Asset

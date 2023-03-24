@@ -1,9 +1,6 @@
-import React, { useCallback, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import AuthVerify from "../../common/authVerify";
-import { getUser, logout } from "../../redux/slices/auth";
-
 import SettingsScreen from "./SettingsScreen";
 import Dashboard from "../marketplace/provider/Dashboard";
 import HomeScreen from "./HomeScreen";
@@ -11,9 +8,9 @@ import LoginScreen from "./LoginScreen";
 import RegisterScreen from "./RegisterScreen";
 import AssetsScreen from "../marketplace/assets/AssetsScreen";
 import AutoMLTrain from "../marketplace/buyer/AutoMLTraining";
-import RequestsScreen from "../marketplace/RequestsScreen";
 import ModelsScreen from "../automl/ModelsScreen";
 import NotFoundScreen from "../../static/pages/NotFoundScreen";
+import RequestsScreen from "../marketplace/buyer/RequestsScreen";
 
 const App = () => {
   const { user: currentUser } = useSelector((state) => state.auth);
