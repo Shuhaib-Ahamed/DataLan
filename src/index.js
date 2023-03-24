@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import { Provider } from "react-redux";
 import { ToastContainer } from "react-toastify";
 
@@ -8,6 +8,9 @@ import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
 import store from "./redux/store";
 import App from "./pages/global/App";
+
+// import * as dotenv from "dotenv";
+// dotenv.config();
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -22,4 +25,3 @@ root.render(
     </Provider>
   </React.StrictMode>
 );
-

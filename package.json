@@ -14,7 +14,7 @@
     "bip39": "^2.5.0",
     "core-js": "^3.29.1",
     "crypto": "^1.0.1",
-    "dotenv": "^16.0.3",
+    "dotenv": "^10.0.0",
     "firebase": "^9.18.0",
     "flowbite": "^1.6.4",
     "flowbite-react": "^0.4.2",

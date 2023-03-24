@@ -1,19 +1,19 @@
 import { Badge, Rating } from "flowbite-react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { SiStellar } from "react-icons/si";
+import { dev } from "../../config";
 
-const CustomCard = ({ title, description, amount, id, rating }) => {
+const CustomCard = ({ index, title, description, amount, id, rating }) => {
   const ratingArr = Array.from({ length: Math.floor(rating) });
-
   const isFloat = (v) => Math.floor(v) !== Math.ceil(v);
 
   return (
     <div className="flex flex-col overflow-hidden rounded-lg border hover:shadow-md">
       <img
         className="h-28 w-full object-cover transition-all duration-100 hover:scale-110"
-        alt="Meaningful alt text for an image that is not purely decorative"
-        src="https://flowbite.com/docs/images/blog/image-1.jpg"
+        alt={title}
+        src={`https://source.unsplash.com/random/?data/${index}`}
       />
       <div className="flex flex-col p-6 space-y-4 w-full">
         <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">

@@ -12,21 +12,22 @@ const AssetTable = ({ refresh }) => {
   const [loading, setLoading] = useState(false);
   const [assets, setAssets] = useState(null);
 
-  const fetchAssets = async () => {
-    setLoading(true);
-    try {
-      const res = await assetService.getAssetByPublicKey(currentUser.publicKey);
-      if (res.status === 200) {
-        setAssets(res.data.data);
-      }
-    } catch (error) {
-      toast.error("Error while fetching assets");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchAssets = async () => {
+      setLoading(true);
+      try {
+        const res = await assetService.getAssetByPublicKey(
+          currentUser.publicKey
+        );
+        if (res.status === 200) {
+          setAssets(res.data.data);
+        }
+      } catch (error) {
+        toast.error("Error while fetching assets");
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchAssets();
   }, [refresh]);
 
@@ -48,7 +49,7 @@ const AssetTable = ({ refresh }) => {
                 ) : (
                   <React.Fragment>
                     <thead className="bg-gray-100 dark:bg-gray-700">
-                      <tr colspan="4">
+                      <tr colSpan="4">
                         <th
                           scope="col"
                           className="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400"

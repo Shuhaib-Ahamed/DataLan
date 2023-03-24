@@ -31,6 +31,7 @@ const App = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/settings" element={<SettingsScreen />} />
         <Route path="/assets" element={<AssetsScreen />} />
+        <Route path="/assets/:id" element={<AssetsScreen />} />
         <Route path="/training" element={<AutoMLTrain />} />
         <Route path="/requests" element={<RequestsScreen />} />
         <Route path="/models" element={<ModelsScreen />} />

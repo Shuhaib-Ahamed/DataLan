@@ -6,7 +6,7 @@ const Search = () => {
       <label htmlFor="topbar-search" className="sr-only">
         Search
       </label>
-      <div className="relative mt-1 lg:w-96">
+      <div className="relative lg:w-96">
         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
           <svg
             className="w-5 h-5 text-gray-500 dark:text-gray-400"
