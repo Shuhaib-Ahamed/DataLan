@@ -10,7 +10,7 @@ import AssetsScreen from "../marketplace/assets/AssetsScreen";
 import AutoMLTrain from "../marketplace/buyer/AutoMLTraining";
 import ModelsScreen from "../automl/ModelsScreen";
 import NotFoundScreen from "../../static/pages/NotFoundScreen";
-import RequestsScreen from "../marketplace/buyer/RequestsScreen";
+import RequestsScreen from "../marketplace/requests/RequestsScreen";
 import LoadingScreen from "../../static/pages/LoadingScreen";
 import authService from "../../services/auth/authService";
 import userService from "../../services/user/userService";

@@ -13,6 +13,7 @@ import Drawer from "../../../components/global/Drawer";
 import { toast } from "react-toastify";
 import PrimaryButton from "../../../components/ui/PrimaryButton";
 import assetService from "../../../services/asset/assetService";
+import requestService from "../../../services/request/requestService";
 
 const ViewAssetScreen = () => {
   const { user: currentUser } = useSelector((state) => state.auth);
@@ -40,11 +41,14 @@ const ViewAssetScreen = () => {
           setLoading(true);
           if (!asset) return toast.warning("Asset not found!!");
 
-          const response = await assetService.sendAssetRequest({
+          const response = await requestService.sendAssetRequest({
             assetId: asset?._id,
             toPublicKey: asset?.publicKey,
             fromPublicKey: currentUser?.publicKey,
-            userData: currentUser?.data?.userData,
+            userData: {
+              ...currentUser?.data?.userData,
+              email: currentUser?.email,
+            },
           });
 
           if (response?.status === 201) {

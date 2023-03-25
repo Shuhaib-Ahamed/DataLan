@@ -48,6 +48,25 @@ const AssetTable = ({ refresh }) => {
                       </tr>
                     </tbody>
                   </React.Fragment>
+                ) : assets?.length === 0 ? (
+                  <React.Fragment>
+                    <div class="flex flex-col justify-center items-center pt-16 pb-6 mx-auto dark:bg-gray-900">
+                      <div class="text-center">
+                        <h1 class="mb-3 text-3xl font-bold leading-tight text-gray-900 dark:text-white">
+                          No Assets Found!!
+                        </h1>
+                        <p class="text-base font-base text-gray-500  dark:text-gray-400">
+                          You can try adding you own assets to the marketplace
+                        </p>
+                      </div>
+                      <div class="block max-w-sm">
+                        <img
+                          src="https://flowbite-admin-dashboard.vercel.app/images/illustrations/500.svg"
+                          alt="astronaut image"
+                        />
+                      </div>
+                    </div>
+                  </React.Fragment>
                 ) : (
                   <React.Fragment>
                     <thead className="bg-gray-100 dark:bg-gray-700">

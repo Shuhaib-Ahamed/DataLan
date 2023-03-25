@@ -4,10 +4,10 @@ import { NavLink } from "react-router-dom";
 import DashboardLayout from "../../../layouts/DashboardLayout";
 // Icons
 import { AiFillHome } from "react-icons/ai";
-import AssetHeader from "../../../components/ui/Assets/AssetHeader";
 import Drawer from "../../../components/global/Drawer";
 import AssetForm from "./AssetForm";
 import AssetTable from "./AssetTable";
+import AssetHeader from "./AssetHeader";
 
 const AssetsScreen = () => {
   const [isOpen, setIsOpen] = useState(null);
