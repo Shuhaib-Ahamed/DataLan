@@ -30,7 +30,7 @@ const Marketplace = () => {
 
   return (
     <div className="p-6 my-6 mx-10 bg-white rounded-lg shadow md:flex md:items-center md:justify-between md:p-6 xl:p-8 dark:bg-gray-800">
-      <div className="flex flex-col">
+      <div className="flex flex-col w-full">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl flex flex-col gap-2 font-semibold text-gray-900 ">
             Marketplace

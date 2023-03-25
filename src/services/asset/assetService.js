@@ -33,7 +33,14 @@ const createAsset = async (body) => {
 
 //Send Asset Request
 const sendAssetRequest = async (body) => {
-  return await axios.post(dev.backendURL + "chain/sendAssetRequest", body, {
+  return await axios.post(dev.backendURL + "request/send", body, {
+    headers: authHeader(),
+  });
+};
+
+//Send Asset Request
+const accesptAssetRequest = async (body) => {
+  return await axios.post(dev.backendURL + "request/accept", body, {
     headers: authHeader(),
   });
 };
@@ -44,6 +51,7 @@ const assetService = {
   createAsset,
   getAssetByPublicKey,
   sendAssetRequest,
+  accesptAssetRequest,
 };
 
 export default assetService;

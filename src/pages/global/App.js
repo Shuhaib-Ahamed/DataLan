@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import SettingsScreen from "./SettingsScreen";
 import Dashboard from "../marketplace/provider/Dashboard";
@@ -15,10 +15,12 @@ import LoadingScreen from "../../static/pages/LoadingScreen";
 import authService from "../../services/auth/authService";
 import userService from "../../services/user/userService";
 import ViewAssetScreen from "../marketplace/assets/ViewAssetScreen";
+import { getUser } from "../../redux/slices/auth";
 
 const App = () => {
-  const { user: currentUser } = useSelector((state) => state.auth);
-  const [loading, setLoading] = useState(false);
+  const { user: currentUser, loading } = useSelector((state) => state.auth);
+
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,15 +31,7 @@ const App = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      setLoading(true);
-      try {
-        const user = await userService.getCurrentUser();
-        localStorage.setItem("user", JSON.stringify(user?.data?.data));
-      } catch (error) {
-        authService.logout();
-      } finally {
-        setLoading(false);
-      }
+      dispatch(getUser());
     };
     if (currentUser) {
       fetchUser();

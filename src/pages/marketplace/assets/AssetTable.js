@@ -16,7 +16,7 @@ const AssetTable = ({ refresh }) => {
       setLoading(true);
       try {
         const res = await assetService.getAssetByPublicKey(
-          currentUser.publicKey
+          currentUser?.publicKey
         );
         if (res.status === 200) {
           setAssets(res.data.data);

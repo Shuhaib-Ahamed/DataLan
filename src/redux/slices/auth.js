@@ -9,8 +9,8 @@ import UserService from "../../services/user/userService";
 const user = localStorage.user && JSON.parse(localStorage.getItem("user"));
 
 const initialState = user
-  ? { isLoggedIn: true, user }
-  : { isLoggedIn: false, user: null };
+  ? { isLoggedIn: true, user, loading: false }
+  : { isLoggedIn: false, user: null, loading: false };
 
 export const register = createAsyncThunk(
   "auth/register",
@@ -102,6 +102,17 @@ const authSlice = createSlice({
     [getUser.fulfilled]: (state, action) => {
       state.isLoggedIn = true;
       state.user = action.payload.user;
+      state.loading = false;
+    },
+    [getUser.pending]: (state, action) => {
+      state.isLoggedIn = true;
+      state.user = null;
+      state.loading = true;
+    },
+    [getUser.rejected]: (state, action) => {
+      state.isLoggedIn = false;
+      state.user = null;
+      state.loading = false;
     },
   },
 });

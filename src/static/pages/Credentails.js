@@ -94,13 +94,13 @@ const Credentails = ({ show, popup, content, setShowCredentials }) => {
                       content.publicKey
                     );
                     if (result) {
-                      dispatch(getUser());
                       setShowCredentials(false);
                     }
                   } catch (error) {
                     console.log(error);
                   } finally {
                     setLoading(false);
+                    dispatch(getUser());
                   }
                 })}
               >

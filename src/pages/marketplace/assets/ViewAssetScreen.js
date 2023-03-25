@@ -16,11 +16,16 @@ import assetService from "../../../services/asset/assetService";
 
 const ViewAssetScreen = () => {
   const { user: currentUser } = useSelector((state) => state.auth);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(null);
   const [loading, setLoading] = useState(false);
   let { state } = useLocation();
 
   const handleTransferOrRequest = async (asset) => {
+    console.log(currentUser?.data);
+    if (!currentUser?.data?.userData) {
+      return toast.warning("Please add your user details first");
+    }
+
     if (!loading) {
       if (
         currentUser?.publicKey === state?.asset?.publicKey &&
@@ -39,6 +44,7 @@ const ViewAssetScreen = () => {
             assetId: asset?._id,
             toPublicKey: asset?.publicKey,
             fromPublicKey: currentUser?.publicKey,
+            userData: currentUser?.data?.userData,
           });
 
           if (response?.status === 201) {

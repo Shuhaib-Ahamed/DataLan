@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Footer from "../components/global/Footer";
 import Nav from "../components/global/Nav";
 import SideMenu from "../components/global/SideMenu";
 
 const DashboardLayout = ({ children }) => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <React.Fragment>
       <Nav />
