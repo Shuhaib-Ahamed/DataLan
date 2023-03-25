@@ -17,7 +17,7 @@ const UserProfileForm = () => {
   const dispatch = useDispatch();
 
   const handleUserInfo = async (data) => {
-    const { firstName, lastName, email, role } = data;
+    const { firstName, lastName, role } = data;
     setLoading(true);
     try {
       const newUserData = {
@@ -27,7 +27,6 @@ const UserProfileForm = () => {
       };
 
       const savedUser = await userService.updateUser({
-        email: email,
         role: role,
         data: {
           userData: newUserData,
@@ -56,6 +55,7 @@ const UserProfileForm = () => {
             <FormInput
               disabled={true}
               type="text"
+              readOnly
               setInput={() => {}}
               label="Public Key"
               defaultValue={currentUser?.publicKey}
@@ -90,10 +90,11 @@ const UserProfileForm = () => {
             <FormInput
               name="email"
               type="email"
+              disabled={true}
+              setInput={() => {}}
+              readOnly
               label="Email"
-              setInput={register}
               defaultValue={currentUser?.email}
-              placeholder="name@company.com"
               required={true}
             />
           </div>

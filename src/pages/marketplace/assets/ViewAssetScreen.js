@@ -1,5 +1,5 @@
 import { Badge, Breadcrumb, Label, TextInput } from "flowbite-react";
-import React, { useCallback, useState } from "react";
+import React, {  useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import DashboardLayout from "../../../layouts/DashboardLayout";
 // Icons
@@ -12,7 +12,6 @@ import { ROLE } from "../../../enum";
 import Drawer from "../../../components/global/Drawer";
 import { toast } from "react-toastify";
 import PrimaryButton from "../../../components/ui/PrimaryButton";
-import assetService from "../../../services/asset/assetService";
 import requestService from "../../../services/request/requestService";
 
 const ViewAssetScreen = () => {
@@ -22,7 +21,6 @@ const ViewAssetScreen = () => {
   let { state } = useLocation();
 
   const handleTransferOrRequest = async (asset) => {
-    console.log(currentUser?.data);
     if (!currentUser?.data?.userData) {
       return toast.warning("Please add your user details first");
     }
