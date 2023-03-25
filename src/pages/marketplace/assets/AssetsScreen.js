@@ -13,6 +13,7 @@ const AssetsScreen = () => {
   const [isOpen, setIsOpen] = useState(null);
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
+  
   return (
     <DashboardLayout>
       <div className="mb-4 py-4 px-10 flex flex-col ">

@@ -1,6 +1,7 @@
 import React, { useCallback } from "react";
 
 function Drawer({ header, children, isOpen, setIsOpen, loading }) {
+  
   const toggleDrawer = useCallback(() => {
     if (!loading) {
       setIsOpen((open) => !open);

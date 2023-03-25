@@ -1,8 +1,20 @@
 import { Button } from "flowbite-react";
 
-const PrimaryButton = ({ loading, type, content, status, fullSized }) => {
+const PrimaryButton = ({
+  loading,
+  type,
+  content,
+  status,
+  fullSized,
+  onClick,
+}) => {
   return (
-    <Button type={type} fullSized={fullSized} disabled={loading}>
+    <Button
+      onClick={onClick}
+      type={type}
+      fullSized={fullSized}
+      disabled={loading}
+    >
       {loading ? (
         <>
           <svg

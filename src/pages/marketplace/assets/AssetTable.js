@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { toast } from "react-toastify";
 import assetService from "../../../services/asset/assetService";
 import { SiHiveBlockchain } from "react-icons/si";
-import { BiTransferAlt } from "react-icons/bi";
 import { Badge, Spinner } from "flowbite-react";
 import { SiStellar } from "react-icons/si";
 import { NavLink } from "react-router-dom";

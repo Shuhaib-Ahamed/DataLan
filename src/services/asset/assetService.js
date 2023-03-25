@@ -31,11 +31,19 @@ const createAsset = async (body) => {
   });
 };
 
+//Send Asset Request
+const sendAssetRequest = async (body) => {
+  return await axios.post(dev.backendURL + "chain/sendAssetRequest", body, {
+    headers: authHeader(),
+  });
+};
+
 const assetService = {
   getAsset,
   getAssets,
   createAsset,
   getAssetByPublicKey,
+  sendAssetRequest,
 };
 
 export default assetService;
