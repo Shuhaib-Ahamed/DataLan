@@ -1,36 +1,38 @@
-import React from "react";
+import React, { useCallback } from "react";
 
-export default function Drawer({
-  header,
-  children,
-  isOpen,
-  setIsOpen,
-  loading,
-}) {
+function Drawer({ header, children, isOpen, setIsOpen, loading }) {
+  const toggleDrawer = useCallback(() => {
+    if (!loading) {
+      setIsOpen((open) => !open);
+    }
+  }, [loading, setIsOpen]);
+
   return (
     <main
       className={
-        " fixed overflow-hidden z-50 bg-gray-900 bg-opacity-50 inset-0 transform ease-in-out" +
+        "fixed overflow-hidden z-50 bg-gray-900 bg-opacity-50 inset-0 transform ease-in-out" +
         (isOpen
-          ? " transition-opacity opacity-100 duration-200 translate-x-0  "
-          : "transition-all custom_slide_out")
+          ? " transition-opacity opacity-100 duration-200 translate-x-0"
+          : isOpen === false
+          ? " transition-all custom_slide_out"
+          : "transition-opacity opacity-0 duration-200 translate-x-full")
       }
     >
       <section
         className={
-          " w-screen max-w-2xl right-0 absolute bg-white h-full shadow-xl delay-400 duration-500 ease-in-out transition-all transform  " +
-          (isOpen ? " translate-x-0 " : " translate-x-full ")
+          "w-screen max-w-2xl right-0 absolute bg-white h-full shadow-xl delay-400 duration-500 ease-in-out transition-all transform" +
+          (isOpen ? " translate-x-0" : " translate-x-full")
         }
       >
-        <article className="relative w-screen  max-w-2xl p-8 flex flex-col space-y-4 overflow-y-auto h-full">
+        <article className="relative w-screen max-w-2xl p-8 flex flex-col space-y-4 overflow-y-auto h-full">
           <div className="flex justify-between items-baseline">
-            <h5 className="inline-flex items-center  text-md font-semibold text-gray-500 uppercase">
+            <h5 className="inline-flex items-center text-md font-semibold text-gray-500 uppercase">
               {header}
             </h5>
             <button
-              onClick={() => !loading && setIsOpen((open) => !open)}
+              onClick={toggleDrawer}
               type="button"
-              className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5  inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+              className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
             >
               <svg
                 aria-hidden="true"
@@ -50,10 +52,9 @@ export default function Drawer({
           {children}
         </article>
       </section>
-      <section
-        className="w-screen h-full"
-        onClick={() => !loading && setIsOpen((open) => !open)}
-      ></section>
+      <section className="w-screen h-full" onClick={toggleDrawer}></section>
     </main>
   );
 }
+
+export default Drawer;

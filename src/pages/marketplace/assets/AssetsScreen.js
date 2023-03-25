@@ -10,7 +10,7 @@ import AssetForm from "./AssetForm";
 import AssetTable from "./AssetTable";
 
 const AssetsScreen = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(null);
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
   return (
@@ -20,9 +20,7 @@ const AssetsScreen = () => {
           <Breadcrumb.Item icon={AiFillHome}>
             <NavLink to="/">Home</NavLink>
           </Breadcrumb.Item>
-          <Breadcrumb.Item>
-         Assets
-          </Breadcrumb.Item>
+          <Breadcrumb.Item>Assets</Breadcrumb.Item>
         </Breadcrumb>
         <h1 className="text-3xl my-4 font-semibold text-gray-900">Assets</h1>
         <AssetHeader setIsOpen={setIsOpen} setRefresh={setRefresh} />

@@ -6,7 +6,6 @@ import { dev } from "../../config";
 
 const CustomCard = ({
   asset,
-  index,
   title,
   description,
   amount,

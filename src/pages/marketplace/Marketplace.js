@@ -72,9 +72,8 @@ const Marketplace = () => {
               assets.length > 0 &&
               assets.map((asset, index) => (
                 <CustomCard
-                  asset={asset}
                   key={index}
-                  index={index}
+                  asset={asset}
                   title={asset?.assetTitle}
                   description={asset.assetDescription}
                   amount={asset?.assetAmount}

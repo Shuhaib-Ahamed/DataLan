@@ -1,5 +1,5 @@
 import { FileInput, Label, Spinner } from "flowbite-react";
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +9,6 @@ import CustomDropZone from "../../../components/global/CustomDropZone";
 import FormAlert from "../../../components/global/FormAlert";
 import FormInput from "../../../components/ui/FormInput";
 import PrimaryButton from "../../../components/ui/PrimaryButton";
-import { ENCRYPTION } from "../../../enum";
 import useCredential from "../../../hooks/useCredentialHook";
 import { clearError, setError } from "../../../redux/slices/error";
 import { setMessage } from "../../../redux/slices/message";
@@ -17,7 +16,7 @@ import assetService from "../../../services/asset/assetService";
 import chainService from "../../../services/web3/chainService";
 import LoadingGif from "../../../static/images/block.gif";
 
-const AssetForm = ({ loading, setLoading, setIsOpen, setRefresh }) => {
+const AssetForm = memo(({ loading, setLoading, setIsOpen, setRefresh }) => {
   const { user: currentUser } = useSelector((state) => state.auth);
   const { message } = useSelector((state) => state.message);
   let navigate = useNavigate();
@@ -53,14 +52,6 @@ const AssetForm = ({ loading, setLoading, setIsOpen, setRefresh }) => {
             setLoading(false);
             toast.success("Asset Created Successfully!!!");
             setRefresh((reload) => !reload);
-            console.log(
-              "RESULT",
-              newAsset,
-              "DATA",
-              data,
-              "RESPONSE",
-              assetResponse
-            );
           }
         });
     } catch (error) {
@@ -194,6 +185,6 @@ const AssetForm = ({ loading, setLoading, setIsOpen, setRefresh }) => {
         </div>
       </form>
     );
-};
+});
 
 export default AssetForm;
