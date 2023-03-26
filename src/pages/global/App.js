@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import SettingsScreen from "./SettingsScreen";
@@ -12,8 +12,6 @@ import ModelsScreen from "../automl/ModelsScreen";
 import NotFoundScreen from "../../static/pages/NotFoundScreen";
 import RequestsScreen from "../marketplace/requests/RequestsScreen";
 import LoadingScreen from "../../static/pages/LoadingScreen";
-import authService from "../../services/auth/authService";
-import userService from "../../services/user/userService";
 import ViewAssetScreen from "../marketplace/assets/ViewAssetScreen";
 import { getUser } from "../../redux/slices/auth";
 

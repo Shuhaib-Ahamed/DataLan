@@ -12,27 +12,30 @@ const UserProfileUpload = () => {
   const { user: currentUser } = useSelector((state) => state.auth);
   const [loading, setLoading] = useState(false);
 
-  const onDrop = useCallback(async (acceptedFiles) => {
-    setLoading(true);
-    try {
-      if (acceptedFiles.length > 0) {
-        const photoURL = await uploadFile(acceptedFiles[0], currentUser?._id);
-        const userData = await onUpload(photoURL);
-        if (userData.succeeded) {
-          dispatch(getUser());
-          toast.success("Profile picture updated!");
+  const onDrop = useCallback(
+    async (acceptedFiles) => {
+      setLoading(true);
+      try {
+        if (acceptedFiles.length > 0) {
+          const photoURL = await uploadFile(acceptedFiles[0], currentUser?._id);
+          const userData = await onUpload(photoURL);
+          if (userData.succeeded) {
+            dispatch(getUser());
+            toast.success("Profile picture updated!");
+          } else {
+            toast.error("Error updating profile picture!");
+          }
         } else {
-          toast.error("Error updating profile picture!");
+          toast.warning("Please select a different file!");
         }
-      } else {
-        toast.warning("Please select a different file!");
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+    },
+    [currentUser?._id]
+  );
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     multiple: false,

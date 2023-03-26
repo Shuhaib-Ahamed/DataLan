@@ -1,8 +1,7 @@
 import { Badge, Rating } from "flowbite-react";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { NavLink } from "react-router-dom";
 import { SiStellar } from "react-icons/si";
-import { dev } from "../../config";
 import MemoImage from "../ui/MemoImage";
 
 const CustomCard = ({ asset, title, description, amount, id, rating }) => {

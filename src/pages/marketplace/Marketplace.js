@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import CustomCard from "../../components/global/CustomCard";
 import SkeletonCard from "../../components/global/SkeletonCard";
 import Search from "../../components/ui/Search";

@@ -24,7 +24,7 @@ const RegisterScreen = () => {
     const { username, email, password, confirmPassword } = data;
     setLoading(true);
 
-    if (password != confirmPassword) {
+    if (password !== confirmPassword) {
       window.scrollTo(0, 0);
       dispatch(setError("Password Mismatch!!"));
       setLoading(false);

@@ -2,7 +2,6 @@ import { Label, Select } from "flowbite-react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { ROLE } from "../../../enum";
 import { getUser } from "../../../redux/slices/auth";
