@@ -8,7 +8,6 @@ import moment from "moment/moment";
 import { REQUEST_STATUS, ROLE } from "../../../enum";
 import RequestHeader from "./RequestHeader";
 import CredentialModal from "../../../components/global/CredentialModal";
-import request from "bigchaindb-driver/dist/node/request";
 
 const RequestsTable = () => {
   const { user: currentUser } = useSelector((state) => state.auth);
@@ -17,7 +16,9 @@ const RequestsTable = () => {
   const [requests, setRequests] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
 
-  const acceptRequest = async (request) => {};
+  const acceptRequest = async (request) => {
+    console.log("LOGGED");
+  };
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -192,7 +193,7 @@ const RequestsTable = () => {
                             </td>
                             <CredentialModal
                               setIsOpen={setIsOpen}
-                              authFunction={acceptRequest(request)}
+                              authFunction={() => acceptRequest(request)}
                               loading={loading}
                               isOpen={isOpen}
                             />

@@ -8,7 +8,7 @@ import CustomDropZone from "./CustomDropZone";
 
 const CredentialModal = ({ loading, authFunction, setIsOpen, isOpen }) => {
   const [credFile, setCredFile] = useState(null);
-  const { credentials } = useCredential(credFile);
+  const { credentials, error } = useCredential(credFile);
   const [credInputs, setCredentials] = useState({
     publicKey: "",
     privateKey: "",
@@ -22,6 +22,12 @@ const CredentialModal = ({ loading, authFunction, setIsOpen, isOpen }) => {
   const handleSubmit = () => {
     if (!credInputs.publicKey && !credInputs.privateKey)
       return toast.warning("Please provide credentials");
+
+    if (error) {
+      setCredFile(null);
+      setCredentials({ publicKey: "", privateKey: "" });
+    }
+
     authFunction(credInputs);
   };
 
@@ -39,7 +45,7 @@ const CredentialModal = ({ loading, authFunction, setIsOpen, isOpen }) => {
   }, [credentials]);
 
   return (
-    <div
+    <td
       className={`fixed overflow-hidden z-50 bg-gray-900 bg-opacity-20 inset-0 w-screen h-full ${
         !isOpen && "hidden"
       }`}
@@ -134,7 +140,7 @@ const CredentialModal = ({ loading, authFunction, setIsOpen, isOpen }) => {
           </div>
         </div>
       </div>
-    </div>
+    </td>
   );
 };
 

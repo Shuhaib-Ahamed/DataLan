@@ -23,10 +23,14 @@ const AssetForm = memo(({ loading, setLoading, setIsOpen, setRefresh }) => {
   const { register, handleSubmit, reset } = useForm();
   const dispatch = useDispatch();
   const [credFile, setCredFile] = useState(null);
-  const { credentials } = useCredential(credFile);
+  const { credentials, error } = useCredential(credFile);
 
   const uploadAsset = async (data) => {
     if (!credFile) return dispatch(setError("Please Upload Credentials File"));
+
+    if (error) {
+      setCredFile(null);
+    }
     setLoading(true);
     const metaData = { ...data };
     metaData.assetTitle = metaData.assetTitle + "-" + uuidv4();
