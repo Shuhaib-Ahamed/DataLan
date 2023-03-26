@@ -5,14 +5,16 @@ import { Avatar, Badge, Spinner } from "flowbite-react";
 import { AiFillDelete } from "react-icons/ai";
 
 import moment from "moment/moment";
-import { REQUEST_STATUS } from "../../../enum";
+import { REQUEST_STATUS, ROLE } from "../../../enum";
 import RequestHeader from "./RequestHeader";
+import CredentialModal from "../../../components/global/CredentialModal";
 
 const RequestsTable = () => {
   const { user: currentUser } = useSelector((state) => state.auth);
   const [loading, setLoading] = useState(false);
-  const [type, setType] = useState(0);
+  const [type, setType] = useState(currentUser?.role === ROLE.BUYER ? 1 : 0);
   const [requests, setRequests] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -167,6 +169,7 @@ const RequestsTable = () => {
                             <td className="p-4  space-x-4 whitespace-nowrap">
                               {type === 1 ? (
                                 <button
+                                  onClick={() => setIsOpen(true)}
                                   type="button"
                                   className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-800 focus:ring-4 focus:ring-red-300 dark:focus:ring-red-900"
                                 >
@@ -177,6 +180,7 @@ const RequestsTable = () => {
                                 <button
                                   type="button"
                                   className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                                  onClick={() => setIsOpen(true)}
                                 >
                                   <AiFillDelete className="mr-2" />
                                   Accept
@@ -241,6 +245,11 @@ const RequestsTable = () => {
           </div>
         </div>
       </div>
+      <CredentialModal
+        setIsOpen={setIsOpen}
+        loading={loading}
+        isOpen={isOpen}
+      />
     </div>
   );
 };

@@ -8,6 +8,7 @@ const FormInput = ({
   setInput,
   defaultValue,
   readOnly,
+  value,
 }) => {
   return (
     <div className="form-group">
@@ -21,6 +22,7 @@ const FormInput = ({
       <input
         type={type}
         readOnly={readOnly}
+        value={value}
         name={name}
         disabled={disabled}
         id={name}
