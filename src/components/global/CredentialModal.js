@@ -40,7 +40,7 @@ const CredentialModal = ({ loading, authFunction, setIsOpen, isOpen }) => {
 
   return (
     <div
-      className={`fixed overflow-hidden z-50 bg-gray-900 bg-opacity-50 inset-0 w-screen h-full ${
+      className={`fixed overflow-hidden z-50 bg-gray-900 bg-opacity-20 inset-0 w-screen h-full ${
         !isOpen && "hidden"
       }`}
     >
@@ -55,6 +55,7 @@ const CredentialModal = ({ loading, authFunction, setIsOpen, isOpen }) => {
             </div>
             <button
               type="button"
+              disabled={loading}
               onClick={() => toggleModal()}
               className=" text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white"
             >
@@ -125,6 +126,7 @@ const CredentialModal = ({ loading, authFunction, setIsOpen, isOpen }) => {
             <button
               onClick={() => toggleModal()}
               type="button"
+              disabled={loading}
               className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
             >
               Cancel
