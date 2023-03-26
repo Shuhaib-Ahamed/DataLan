@@ -3,8 +3,8 @@ import { IoMdRefreshCircle } from "react-icons/io";
 
 const AssetHeader = ({ setIsOpen, setRefresh }) => {
   return (
-    <div className="p-8 mb-6 bg-white rounded-lg shadow items-center justify-between block sm:flex md:divide-x md:divide-gray-100 dark:divide-gray-700">
-      <div className="flex items-center mb-4 sm:mb-0">
+    <div className="p-4 bg-white  items-center justify-between block sm:flex md:divide-x md:divide-gray-100 dark:divide-gray-700">
+      <div className="flex items-center">
         <form className="sm:pr-3">
           <div className="relative w-48 mt-1 sm:w-64 xl:w-96">
             <input

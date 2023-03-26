@@ -21,7 +21,14 @@ const HomeScreen = () => {
   return (
     <React.Fragment>
       <DashboardLayout>
-        <Banner /> <Marketplace />
+        <div className="mx-10">
+          <Banner
+            highLight="Better Data."
+            title="Scalable AI"
+            content="Here at AutoCS we focus on markets where technology, innovation, and capital can unlock long-term value and drive economic growth."
+          />
+        </div>
+        <Marketplace />
       </DashboardLayout>
       <Credentials
         show={showCredentials}

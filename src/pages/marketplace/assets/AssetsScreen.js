@@ -8,6 +8,7 @@ import Drawer from "../../../components/global/Drawer";
 import AssetForm from "./AssetForm";
 import AssetTable from "./AssetTable";
 import AssetHeader from "./AssetHeader";
+import Banner from "../../../components/ui/Banner";
 
 const AssetsScreen = () => {
   const [isOpen, setIsOpen] = useState(null);
@@ -23,8 +24,10 @@ const AssetsScreen = () => {
           </Breadcrumb.Item>
           <Breadcrumb.Item>Assets</Breadcrumb.Item>
         </Breadcrumb>
-        <h1 className="text-3xl my-4 font-semibold text-gray-900">Assets</h1>
-        <AssetHeader setIsOpen={setIsOpen} setRefresh={setRefresh} />
+        <Banner
+          highLight="Assets"
+          content="Here at AutoCS we focus on markets where technology, innovation, and capital can unlock long-term value and drive economic growth."
+        />
         <Drawer
           header="Add New Asset"
           isOpen={isOpen}
@@ -38,7 +41,11 @@ const AssetsScreen = () => {
             setRefresh={setRefresh}
           />
         </Drawer>
-        <AssetTable refresh={refresh} />
+        <AssetTable
+          refresh={refresh}
+          setIsOpen={setIsOpen}
+          setRefresh={setRefresh}
+        />
       </div>
     </DashboardLayout>
   );

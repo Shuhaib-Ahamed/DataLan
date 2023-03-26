@@ -5,8 +5,9 @@ import { SiHiveBlockchain } from "react-icons/si";
 import { Badge, Spinner } from "flowbite-react";
 import { SiStellar } from "react-icons/si";
 import { NavLink } from "react-router-dom";
+import AssetHeader from "./AssetHeader";
 
-const AssetTable = ({ refresh }) => {
+const AssetTable = ({ refresh, setIsOpen, setRefresh }) => {
   const { user: currentUser } = useSelector((state) => state.auth);
   const [loading, setLoading] = useState(false);
   const [assets, setAssets] = useState(null);
@@ -35,6 +36,8 @@ const AssetTable = ({ refresh }) => {
     <div className=" bg-white  block ">
       <div className="flex flex-col">
         <div className="overflow-x-auto rounded-lg shadow">
+          {" "}
+          <AssetHeader setIsOpen={setIsOpen} setRefresh={setRefresh} />
           <div className="inline-block min-w-full align-middle">
             <div className="overflow-hidden shadow">
               <table className="min-w-full divide-y divide-gray-200 table-fixed dark:divide-gray-600">

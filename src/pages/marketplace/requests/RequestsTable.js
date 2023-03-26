@@ -6,10 +6,12 @@ import { AiFillDelete } from "react-icons/ai";
 
 import moment from "moment/moment";
 import { REQUEST_STATUS } from "../../../enum";
+import RequestHeader from "./RequestHeader";
 
-const RequestsTable = ({ type }) => {
+const RequestsTable = () => {
   const { user: currentUser } = useSelector((state) => state.auth);
   const [loading, setLoading] = useState(false);
+  const [type, setType] = useState(0);
   const [requests, setRequests] = useState(null);
 
   useEffect(() => {
@@ -44,6 +46,7 @@ const RequestsTable = ({ type }) => {
     <div className=" bg-white  block ">
       <div className="flex flex-col">
         <div className="overflow-x-auto rounded-lg shadow">
+          <RequestHeader setType={setType} type={type} />
           <div className="inline-block min-w-full align-middle">
             <div className="overflow-hidden shadow">
               <table className="min-w-full divide-y divide-gray-200 table-fixed dark:divide-gray-600">
