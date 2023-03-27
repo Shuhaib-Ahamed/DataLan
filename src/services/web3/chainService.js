@@ -199,7 +199,7 @@ const initiateTransferAsset = (
         publicKey: toPublicKey,
         assetData: JSON.stringify(uploadedResponse.assetData),
         ...metadata,
-        status: STATE.TRANSFERD,
+        status: STATE.TRANSFERED,
         encryptionType: ENCRYPTION.RSA,
         originalAssetId: assetId,
       };
