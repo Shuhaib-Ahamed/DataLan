@@ -7,7 +7,6 @@ import { AiFillHome } from "react-icons/ai";
 import Drawer from "../../../components/global/Drawer";
 import AssetForm from "./AssetForm";
 import AssetTable from "./AssetTable";
-import AssetHeader from "./AssetHeader";
 import Banner from "../../../components/ui/Banner";
 
 const AssetsScreen = () => {

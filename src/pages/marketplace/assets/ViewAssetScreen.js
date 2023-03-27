@@ -1,11 +1,4 @@
-import {
-  Badge,
-  Breadcrumb,
-  Label,
-  Spinner,
-  TextInput,
-  Tooltip,
-} from "flowbite-react";
+import { Badge, Breadcrumb, Label, Spinner, TextInput } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import DashboardLayout from "../../../layouts/DashboardLayout";
@@ -21,6 +14,7 @@ import { toast } from "react-toastify";
 import PrimaryButton from "../../../components/ui/PrimaryButton";
 import requestService from "../../../services/request/requestService";
 import assetService from "../../../services/asset/assetService";
+import TransferForm from "./TransferForm";
 
 const ViewAssetScreen = () => {
   let { state } = useLocation();
@@ -310,7 +304,13 @@ const ViewAssetScreen = () => {
           isOpen={isOpen}
           setIsOpen={setIsOpen}
           loading={loading}
-        ></Drawer>
+        >
+          <TransferForm
+            setLoading={setLoading}
+            loading={loading}
+            setIsOpen={setIsOpen}
+          />
+        </Drawer>
       </div>
     </DashboardLayout>
   );
