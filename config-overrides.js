@@ -1,15 +1,22 @@
-const ModuleScopePlugin = require("react-dev-utils/ModuleScopePlugin");
-const path = require("path");
+const webpack = require("webpack");
 
-module.exports = {
-  webpack: {
-    configure: (webpackConfig) => {
-      webpackConfig.resolve.plugins.forEach((plugin) => {
-        if (plugin instanceof ModuleScopePlugin) {
-          plugin.allowedFiles.add(path.resolve("./config.json"));
-        }
-      });
-      return webpackConfig;
+module.exports = function override(config) {
+  const fallback = config.resolve.fallback || {};
+  config.resolve.fallback = fallback;
+  config.plugins = (config.plugins || []).concat([
+    new webpack.ProvidePlugin({
+      process: "process/browser",
+      Buffer: ["buffer", "Buffer"],
+    }),
+  ]);
+  config.ignoreWarnings = [/Failed to parse source map/];
+  config.module.rules.push({
+    test: /\.(js|mjs|jsx)$/,
+    enforce: "pre",
+    loader: require.resolve("source-map-loader"),
+    resolve: {
+      fullySpecified: false,
     },
-  },
+  });
+  return config;
 };
