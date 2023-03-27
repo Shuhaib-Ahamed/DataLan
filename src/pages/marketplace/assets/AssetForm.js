@@ -9,6 +9,7 @@ import CustomDropZone from "../../../components/global/CustomDropZone";
 import FormAlert from "../../../components/global/FormAlert";
 import FormInput from "../../../components/ui/FormInput";
 import PrimaryButton from "../../../components/ui/PrimaryButton";
+import { ENCRYPTION } from "../../../enum";
 import useCredential from "../../../hooks/useCredentialHook";
 import { clearError, setError } from "../../../redux/slices/error";
 import { setMessage } from "../../../redux/slices/message";
@@ -39,7 +40,14 @@ const AssetForm = memo(({ loading, setLoading, setIsOpen, setRefresh }) => {
     try {
       //upload Asset
       await chainService
-        .uploadAsset(data.file[0], metaData, credentials, dispatch)
+        .uploadAsset(
+          data.file[0],
+          metaData,
+          credentials,
+          ENCRYPTION.AES,
+          dispatch,
+          null
+        )
         .then(async (data) => {
           const newAsset = {
             txID: data.response.id,

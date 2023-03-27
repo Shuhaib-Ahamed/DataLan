@@ -14,6 +14,7 @@ export const REQUEST_STATUS = {
   INREVIEW: "INREVIEW",
   GRANTED: "GRANTED",
   REJECTED: "REJECTED",
+  TRANSFERD: "TRANSFERED",
 };
 
 export const ENCRYPTION = {
@@ -24,4 +25,11 @@ export const ENCRYPTION = {
 export const NETWORK = {
   LIVENET: "LIVENET",
   TESTNET: "TESTNET",
+};
+
+export const ACTIONS = {
+  DELETE: "DELETE",
+  ACCEPT: "ACCEPT",
+  TRANSFER: "TRANSFER",
+  VIEW: "VIEW",
 };

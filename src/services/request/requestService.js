@@ -25,9 +25,16 @@ const sendAssetRequest = async (body) => {
   });
 };
 
+//Get Request
+const getRequestByID = async (id) => {
+  return await axios.get(dev.backendURL + "request/" + id, {
+    headers: authHeader(),
+  });
+};
+
 //Send Asset Request
-const accesptAssetRequest = async (body) => {
-  return await axios.post(dev.backendURL + "request/accept", body, {
+const acceptAndUpdateAssetRequest = async (id, body) => {
+  return await axios.put(dev.backendURL + "request/accept/" + id, body, {
     headers: authHeader(),
   });
 };
@@ -35,8 +42,9 @@ const accesptAssetRequest = async (body) => {
 const requestService = {
   getSentRequests,
   sendAssetRequest,
-  accesptAssetRequest,
+  acceptAndUpdateAssetRequest,
   getIncomingRequests,
+  getRequestByID,
 };
 
 export default requestService;

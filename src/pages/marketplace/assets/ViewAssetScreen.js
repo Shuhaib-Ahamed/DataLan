@@ -1,6 +1,6 @@
 import { Badge, Breadcrumb, Label, TextInput } from "flowbite-react";
-import React, {  useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import DashboardLayout from "../../../layouts/DashboardLayout";
 // Icons
 import { AiFillHome } from "react-icons/ai";
@@ -13,12 +13,17 @@ import Drawer from "../../../components/global/Drawer";
 import { toast } from "react-toastify";
 import PrimaryButton from "../../../components/ui/PrimaryButton";
 import requestService from "../../../services/request/requestService";
+import assetService from "../../../services/asset/assetService";
 
 const ViewAssetScreen = () => {
+  let { state } = useLocation();
   const { user: currentUser } = useSelector((state) => state.auth);
   const [isOpen, setIsOpen] = useState(null);
+  const navigate = useNavigate();
+  const { id } = useParams();
   const [loading, setLoading] = useState(false);
-  let { state } = useLocation();
+  const [assetLoading, setAssetLoading] = useState(false);
+  const [asset, setAsset] = useState(false);
 
   const handleTransferOrRequest = async (asset) => {
     if (!currentUser?.data?.userData) {
@@ -67,6 +72,58 @@ const ViewAssetScreen = () => {
     }
   };
 
+  const fetchAssetWithOriginalID = async (id, userPublicKey) => {
+    setAssetLoading(true);
+    try {
+      const res = await assetService.getAssetByOriginalId(id, {
+        userPublicKey: userPublicKey,
+      });
+
+      if (res?.status === 200) {
+        return setAsset(res?.data?.data[0]);
+      }
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      toast.error(message);
+    } finally {
+      setAssetLoading(false);
+    }
+  };
+
+  const fetchAsset = async (id) => {
+    setAssetLoading(true);
+    try {
+      const res = await assetService.getAsset(id);
+      if (res?.status === 200) {
+        return setAsset(res?.data?.data);
+      }
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      toast.error(message);
+    } finally {
+      setAssetLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (state?.userPublicKey) {
+      fetchAssetWithOriginalID(state?.assetId, state?.userPublicKey);
+    } else if (!state) {
+      fetchAsset(id);
+    }
+    window.scrollTo(0, 0);
+  }, [state]);
+
   return (
     <DashboardLayout>
       <div className="mb-4 py-4 px-10 flex flex-col ">
@@ -77,7 +134,7 @@ const ViewAssetScreen = () => {
           <Breadcrumb.Item>
             <NavLink to="/assets">Assets</NavLink>
           </Breadcrumb.Item>
-          <Breadcrumb.Item># {state?.asset?._id}</Breadcrumb.Item>
+          <Breadcrumb.Item># {state?.asset?._id || asset?._id}</Breadcrumb.Item>
         </Breadcrumb>
 
         <h1 className="text-3xl my-4 font-semibold text-gray-900">
@@ -90,12 +147,14 @@ const ViewAssetScreen = () => {
               className=" bg-cover bg-blend-overlay bg-center h-auto w-full text-white py-16 px-10 object-fill bg-gray-800"
               style={{
                 backgroundImage: `url(https://source.unsplash.com/random/?${
-                  state?.asset?.assetTitle?.split(" ")[0]
+                  state?.asset?.assetTitle?.split(" ")[0] ||
+                  asset?.assetTitle?.split(" ")[0]
                 })`,
               }}
             >
               <h1 className="text-4xl font-extrabold text-white">
-                {state?.asset?.assetTitle.split("-")[0]}
+                {state?.asset?.assetTitle?.split("-")[0] ||
+                  asset?.assetTitle?.split("-")[0]}
               </h1>{" "}
             </div>
           </div>
@@ -106,13 +165,15 @@ const ViewAssetScreen = () => {
                 <h3 className="text-2xl font-semibold text-gray-900">About</h3>
                 <Badge color="gray" icon={HiClock}>
                   <p className="text-sm font-medium text-gray-700">
-                    {moment(state?.asset?.createdAt).startOf("day").fromNow()}
+                    {moment(state?.asset?.createdAt || asset?.createdAt)
+                      .startOf("day")
+                      .fromNow()}
                   </p>
                 </Badge>
               </div>
 
               <p className="text-base font-normal mt-4 text-gray-500">
-                {state?.asset?.assetDescription}
+                {state?.asset?.assetDescription || asset?.assetDescription}
               </p>
             </div>
 
@@ -122,12 +183,12 @@ const ViewAssetScreen = () => {
               </div>
               <TextInput
                 id="publicKey"
-                defaultValue={state?.asset?.publicKey}
+                name="publicKey"
+                defaultValue={state?.asset?.publicKey || asset?.publicKey}
                 readOnly
-                required={true}
                 addon={
                   <p className="text-xs font-semibold text-gray-700">
-                    {state?.asset?.status}
+                    {state?.asset?.status || asset?.status}
                   </p>
                 }
               />
@@ -138,9 +199,9 @@ const ViewAssetScreen = () => {
               </div>
               <TextInput
                 id="publicKey"
-                defaultValue={state?.asset?.assetAmount}
+                name="publicKey"
+                defaultValue={state?.asset?.assetAmount || asset?.assetAmount}
                 readOnly
-                required={true}
                 addon={
                   <p className="text-xs font-semibold text-gray-700 flex items-center">
                     LUMENS
@@ -149,15 +210,38 @@ const ViewAssetScreen = () => {
               />
             </div>
 
+            {state?.asset?.originalId ||
+              (asset?.originalId && (
+                <div>
+                  <div className="mb-2 block">
+                    <Label htmlFor="originalAssetId" value="Dataset Origin" />
+                  </div>
+                  <TextInput
+                    onClick={() =>
+                      navigate(
+                        `/assets/${
+                          state?.asset?.originalId || asset?.originalId
+                        }`
+                      )
+                    }
+                    name="originalAssetId"
+                    id="originalAssetId"
+                    defaultValue={state?.asset?.originalId || asset?.originalId}
+                    readOnly
+                  />
+                </div>
+              ))}
+
             <div className="flex items-center justify-end space-x-4 mt-10">
               <button className=" inline-flex items-center py-2.5 px-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                 <SiHiveBlockchain className="w-4 h-4 mr-2" /> View on Blockchain
               </button>
               <PrimaryButton
                 disabled={loading}
-                onClick={() => handleTransferOrRequest(state?.asset)}
+                onClick={() => handleTransferOrRequest(state?.asset || asset)}
                 content={
-                  currentUser?.publicKey === state?.asset?.publicKey
+                  currentUser?.publicKey === state?.asset?.publicKey ||
+                  asset?.publicKey
                     ? "Transfer Asset"
                     : "Request Asset"
                 }

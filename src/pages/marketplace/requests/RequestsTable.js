@@ -1,23 +1,115 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import requestService from "../../../services/request/requestService";
 import { Avatar, Badge, Spinner } from "flowbite-react";
 import { AiFillDelete } from "react-icons/ai";
-
 import moment from "moment/moment";
-import { REQUEST_STATUS, ROLE } from "../../../enum";
+import { ACTIONS, REQUEST_STATUS, ROLE } from "../../../enum";
 import RequestHeader from "./RequestHeader";
 import CredentialModal from "../../../components/global/CredentialModal";
+import { toast } from "react-toastify";
+import assetService from "../../../services/asset/assetService";
+import encryptor from "../../../utils/encryptor";
+import chainService from "../../../services/web3/chainService";
+import { useNavigate } from "react-router-dom";
 
 const RequestsTable = () => {
   const { user: currentUser } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [transferLoading, setTransferLoading] = useState(false);
   const [type, setType] = useState(currentUser?.role === ROLE.BUYER ? 1 : 0);
   const [requests, setRequests] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [currentRequest, setCurrentRequest] = useState({
+    request: null,
+    action: "",
+  });
+  const dispatch = useDispatch();
+  const [keyPair, setCredentials] = useState({
+    publicKey: "",
+    privateKey: "",
+  });
 
-  const acceptRequest = async (request) => {
-    console.log("LOGGED");
+  const acceptRequest = async () => {
+    setTransferLoading(true);
+    try {
+      if (!currentRequest.request) return;
+
+      await validateRequest(
+        currentRequest.request?._id,
+        currentRequest.request?.assetId
+      )
+        .then(async (asset) => {
+          // decrypt assetData from MongoDB
+          const decryptedAssetData = encryptor.symmetricDecryption(
+            asset?.assetData,
+            keyPair?.privateKey
+          );
+          const txId = JSON.parse(decryptedAssetData)?.assetId;
+
+          const initiateTransfer = await chainService.initiateTransferAsset(
+            currentRequest.request?._id,
+            currentRequest.request?.assetId,
+            txId,
+            keyPair,
+            currentRequest.request?.fromPublicKey,
+            dispatch
+          );
+
+          if (initiateTransfer?.status === 204) {
+            return toast.success("Asset transfer initiated successfully");
+          }
+        })
+        .catch((error) => toast.error(error.message));
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setTransferLoading(false);
+      setIsOpen(false);
+    }
+  };
+
+  const validateRequest = (requestId, assetId) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        // Checking if request is valid
+        const requestCheck = await requestService.getRequestByID(requestId);
+        if (requestCheck.status !== 200) {
+          throw new Error("Request not found");
+        }
+
+        // Checking if request is status
+        if (
+          requestCheck.data.data.status === REQUEST_STATUS.GRANTED ||
+          requestCheck.data.data.status === REQUEST_STATUS.TRANSFERD
+        ) {
+          throw new Error("Request already granted or transfered");
+        }
+
+        // Checking if asset is valid
+        const assetCheck = await assetService.getAsset(assetId);
+        if (assetCheck.status !== 200) {
+          throw new Error("Asset not found");
+        }
+
+        resolve(assetCheck?.data?.data); // If all checks passed, resolve with true
+      } catch (error) {
+        reject(error); // If any checks failed, reject with the error message
+      }
+    });
+  };
+
+  const toggleModal = (request, action) => {
+    if (action === ACTIONS.TRANSFER)
+      return navigate(`/assets/${request?.assetId}`, {
+        state: {
+          assetId: request?.assetId,
+          userPublicKey: request?.fromPublicKey,
+        },
+      });
+    setIsOpen(!isOpen);
+    setCurrentRequest({ request: request, action: action });
   };
 
   useEffect(() => {
@@ -160,11 +252,11 @@ const RequestsTable = () => {
                               <Badge
                                 className="flex justify-center"
                                 color={
-                                  REQUEST_STATUS.INREVIEW
+                                  request.status === REQUEST_STATUS.INREVIEW
                                     ? "warning"
-                                    : REQUEST_STATUS.GRANTED
-                                    ? "success"
-                                    : "failure"
+                                    : request.status === REQUEST_STATUS.GRANTED
+                                    ? "indigo"
+                                    : "success"
                                 }
                               >
                                 {request?.status}
@@ -172,30 +264,58 @@ const RequestsTable = () => {
                             </td>
                             <td className="p-4  space-x-4 whitespace-nowrap">
                               {type === 1 ? (
-                                <button
-                                  onClick={() => setIsOpen(true)}
-                                  type="button"
-                                  className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-800 focus:ring-4 focus:ring-red-300 dark:focus:ring-red-900"
-                                >
-                                  <AiFillDelete className="mr-2" />
-                                  Delete
-                                </button>
+                                <React.Fragment>
+                                  {request?.status ===
+                                  REQUEST_STATUS.INREVIEW ? (
+                                    <button
+                                      onClick={() =>
+                                        toggleModal(request, ACTIONS.DELETE)
+                                      }
+                                      type="button"
+                                      className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-800 focus:ring-4 focus:ring-red-300 dark:focus:ring-red-900"
+                                    >
+                                      <AiFillDelete className="mr-2" />
+                                      Delete
+                                    </button>
+                                  ) : (
+                                    <button
+                                      type="button"
+                                      className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                                      onClick={() =>
+                                        toggleModal(request, ACTIONS.TRANSFER)
+                                      }
+                                    >
+                                      <AiFillDelete className="mr-2" />
+                                      Transfer
+                                    </button>
+                                  )}
+                                </React.Fragment>
                               ) : (
-                                <button
-                                  type="button"
-                                  className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                                  onClick={() => setIsOpen(true)}
-                                >
-                                  <AiFillDelete className="mr-2" />
-                                  Accept
-                                </button>
+                                <React.Fragment>
+                                  {request?.status ===
+                                    REQUEST_STATUS.INREVIEW && (
+                                    <button
+                                      type="button"
+                                      className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                                      onClick={() =>
+                                        toggleModal(request, ACTIONS.ACCEPT)
+                                      }
+                                    >
+                                      <AiFillDelete className="mr-2" />
+                                      Accept
+                                    </button>
+                                  )}
+                                </React.Fragment>
                               )}
                             </td>
                             <CredentialModal
+                              action="Tranfering Asset"
                               setIsOpen={setIsOpen}
-                              authFunction={() => acceptRequest(request)}
-                              loading={loading}
+                              authFunction={() => acceptRequest()}
+                              loading={transferLoading}
                               isOpen={isOpen}
+                              credInputs={keyPair}
+                              setCredentials={setCredentials}
                             />
                           </tr>
                         ))}
