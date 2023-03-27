@@ -6,6 +6,7 @@ import { IoSettingsSharp } from "react-icons/io5";
 import { NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../../redux/slices/auth";
+import { Tooltip } from "flowbite-react";
 
 const SideMenu = () => {
   const dispatch = useDispatch();
@@ -198,11 +199,14 @@ const SideMenu = () => {
               </svg>
               Sign Out
             </button>
+
             <NavLink
               to="/settings"
               className="p-2 text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700"
             >
-              <IoSettingsSharp size="24" />
+              <Tooltip content="Settings">
+                <IoSettingsSharp size="24" />
+              </Tooltip>
             </NavLink>
           </div>
         </div>
