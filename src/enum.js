@@ -7,7 +7,7 @@ export const ROLE = {
 
 export const STATE = {
   OWNED: "OWNED",
-  TRANSFERD: "TRANSFERED",
+  TRANSFERED: "TRANSFERED",
 };
 
 export const REQUEST_STATUS = {

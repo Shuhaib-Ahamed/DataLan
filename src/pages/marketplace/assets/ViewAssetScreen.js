@@ -15,7 +15,7 @@ import { HiClock } from "react-icons/hi";
 import { SiHiveBlockchain } from "react-icons/si";
 import moment from "moment/moment";
 import { useSelector } from "react-redux";
-import { ROLE } from "../../../enum";
+import { ROLE, STATE } from "../../../enum";
 import Drawer from "../../../components/global/Drawer";
 import { toast } from "react-toastify";
 import PrimaryButton from "../../../components/ui/PrimaryButton";
@@ -36,16 +36,16 @@ const ViewAssetScreen = () => {
     if (!currentUser?.data?.userData) {
       return toast.warning("Please add your user details first");
     }
-
     if (!loading) {
       if (
-        currentUser?.publicKey === state?.asset?.publicKey &&
-        currentUser?.role === ROLE.PROVIDER
+        currentUser?.publicKey === state?.asset?.publicKey ||
+        currentUser?.publicKey === asset?.publicKey
       ) {
         setIsOpen((open) => !open);
       } else if (
-        currentUser?.publicKey !== state?.asset?.publicKey &&
-        currentUser?.role === ROLE.BUYER
+        currentUser?.publicKey !== state?.asset?.publicKey ||
+        currentUser?.publicKey !==
+          (asset?.publicKey && currentUser?.role === ROLE.BUYER)
       ) {
         try {
           setLoading(true);
@@ -293,7 +293,7 @@ const ViewAssetScreen = () => {
                   onClick={() => handleTransferOrRequest(state?.asset || asset)}
                   content={
                     currentUser?.publicKey === state?.asset?.publicKey ||
-                    asset?.publicKey
+                    currentUser?.publicKey === asset?.publicKey
                       ? "Transfer Asset"
                       : "Request Asset"
                   }

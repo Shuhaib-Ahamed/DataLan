@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import requestService from "../../../services/request/requestService";
 import { Avatar, Badge, Spinner } from "flowbite-react";
@@ -192,7 +192,7 @@ const RequestsTable = () => {
                           scope="col"
                           className="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400"
                         >
-                          {type === 0 ? "Sent By" : "Sent To"}
+                          {type === 0 ? "Sent To" : "Sent By"}
                         </th>
                         <th
                           scope="col"
@@ -278,16 +278,23 @@ const RequestsTable = () => {
                                       Delete
                                     </button>
                                   ) : (
-                                    <button
-                                      type="button"
-                                      className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                                      onClick={() =>
-                                        toggleModal(request, ACTIONS.TRANSFER)
-                                      }
-                                    >
-                                      <AiFillDelete className="mr-2" />
-                                      Transfer
-                                    </button>
+                                    <React.Fragment>
+                                      {currentUser?.role !== ROLE.PROVIDER && (
+                                        <button
+                                          type="button"
+                                          className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                                          onClick={() =>
+                                            toggleModal(
+                                              request,
+                                              ACTIONS.TRANSFER
+                                            )
+                                          }
+                                        >
+                                          <AiFillDelete className="mr-2" />
+                                          View
+                                        </button>
+                                      )}
+                                    </React.Fragment>
                                   )}
                                 </React.Fragment>
                               ) : (
@@ -309,7 +316,7 @@ const RequestsTable = () => {
                               )}
                             </td>
                             <CredentialModal
-                              action="Tranfering Asset"
+                              action="Grant Transfer Access"
                               setIsOpen={setIsOpen}
                               authFunction={() => acceptRequest()}
                               loading={transferLoading}
