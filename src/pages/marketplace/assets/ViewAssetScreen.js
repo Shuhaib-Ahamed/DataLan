@@ -1,11 +1,4 @@
-import {
-  Badge,
-  Breadcrumb,
-  Label,
-  Spinner,
-  TextInput,
-  Tooltip,
-} from "flowbite-react";
+import { Badge, Breadcrumb, Label, Spinner, TextInput } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import DashboardLayout from "../../../layouts/DashboardLayout";
@@ -14,7 +7,7 @@ import { AiFillHome } from "react-icons/ai";
 import { HiClock } from "react-icons/hi";
 import { SiHiveBlockchain } from "react-icons/si";
 import moment from "moment/moment";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ROLE, STATE } from "../../../enum";
 import Drawer from "../../../components/global/Drawer";
 import { toast } from "react-toastify";
@@ -23,9 +16,11 @@ import requestService from "../../../services/request/requestService";
 import assetService from "../../../services/asset/assetService";
 import TransferForm from "./TransferForm";
 import { dev } from "../../../config";
+import { getTransaction } from "../../../redux/slices/modal";
 
 const ViewAssetScreen = () => {
-  let { state } = useLocation();
+  const { state } = useLocation();
+  const dispatch = useDispatch();
   const { user: currentUser } = useSelector((state) => state.auth);
   const [isOpen, setIsOpen] = useState(null);
   const navigate = useNavigate();
@@ -321,7 +316,12 @@ const ViewAssetScreen = () => {
                 <></>
               )}
               <div className="flex items-center justify-end space-x-4 mt-10">
-                <button className=" inline-flex items-center py-2.5 px-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                <button
+                  onClick={() =>
+                    dispatch(getTransaction(state?.asset?.txID || asset?.txID))
+                  }
+                  className=" inline-flex items-center py-2.5 px-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                >
                   <SiHiveBlockchain className="w-4 h-4 mr-2" /> View on
                   Blockchain
                 </button>

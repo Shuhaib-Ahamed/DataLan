@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import assetService from "../../../services/asset/assetService";
 import { SiHiveBlockchain } from "react-icons/si";
 import { Badge, Spinner } from "flowbite-react";
 import { SiStellar } from "react-icons/si";
 import { NavLink } from "react-router-dom";
 import AssetHeader from "./AssetHeader";
+import { getTransaction } from "../../../redux/slices/modal";
 
 const AssetTable = ({ refresh, setIsOpen, setRefresh }) => {
   const { user: currentUser } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [assets, setAssets] = useState(null);
 
@@ -144,7 +146,12 @@ const AssetTable = ({ refresh, setIsOpen, setRefresh }) => {
                               >
                                 View Asset
                               </NavLink>
-                              <button className=" inline-flex items-center py-2 px-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                              <button
+                                onClick={() =>
+                                  dispatch(getTransaction(asset?.txID))
+                                }
+                                className=" inline-flex items-center py-2 px-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                              >
                                 <SiHiveBlockchain className="w-4 h-4 mr-2" />{" "}
                                 View on Blockchain
                               </button>

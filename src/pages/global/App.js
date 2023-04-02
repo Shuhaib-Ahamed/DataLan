@@ -14,6 +14,7 @@ import RequestsScreen from "../marketplace/requests/RequestsScreen";
 import LoadingScreen from "../../static/pages/LoadingScreen";
 import ViewAssetScreen from "../marketplace/assets/ViewAssetScreen";
 import { getUser } from "../../redux/slices/auth";
+import JSONModal from "../../components/global/JSONModal";
 
 const App = () => {
   const { user: currentUser, loading } = useSelector((state) => state.auth);
@@ -55,6 +56,7 @@ const App = () => {
             <Route path="/models" element={<ModelsScreen />} />
             <Route path="*" element={<NotFoundScreen />} />
           </Routes>
+          <JSONModal />
         </React.Fragment>
       )}
     </React.Fragment>

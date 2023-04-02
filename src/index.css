@@ -51,3 +51,23 @@ code {
 .cursor {
   cursor: pointer !important;
 }
+
+.__json-pretty__ {
+  overflow: auto;
+}
+
+.__json-key__ {
+  color: rgb(246, 17, 17);
+}
+
+.__json-value__ {
+  color: rgb(22, 185, 128);
+}
+
+.__json-string__ {
+  color: rgb(13, 61, 221);
+}
+
+.__json-boolean__ {
+  color: rgb(22, 185, 128);
+}

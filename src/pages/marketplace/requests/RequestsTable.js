@@ -224,7 +224,11 @@ const RequestsTable = () => {
                           >
                             <td className="flex items-center p-4 space-x-6 whitespace-nowrap">
                               <Avatar
-                                img={request?.userData?.photoURL}
+                                className="bg-gray-800 rounded-full"
+                                img={
+                                  request?.userData?.photoURL ??
+                                  `https://robohash.org/${currentUser?.username}.png?set=set1`
+                                }
                                 rounded={true}
                               />
                               <div className="text-sm font-normal text-gray-500 dark:text-gray-400">
