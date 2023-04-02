@@ -118,10 +118,10 @@ function Nav() {
               className="flex mr-3 text-base bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
             >
               <Avatar
-                className="cursor-pointer"
+                className="cursor-pointer bg-gray-800 rounded-full"
                 img={
                   currentUser?.data?.userData?.photoURL ||
-                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNL_ZnOTpXSvhf1UaK7beHey2BX42U6solRA&usqp=CAU"
+                  `https://robohash.org/${currentUser?.username}.png?set=set1`
                 }
                 status="online"
                 rounded={true}

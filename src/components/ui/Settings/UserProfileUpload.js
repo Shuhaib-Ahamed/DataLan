@@ -81,12 +81,12 @@ const UserProfileUpload = () => {
     <div className="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 sm:p-6 dark:bg-gray-800">
       <div className="items-center flex space-x-4">
         <img
-          className="rounded-lg w-28 h-28"
+          className="rounded-lg w-28 h-28 border bg-gray-800"
           src={
             loading
               ? Loader
               : currentUser?.data?.userData?.photoURL ||
-                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNL_ZnOTpXSvhf1UaK7beHey2BX42U6solRA&usqp=CAU"
+                `https://robohash.org/${currentUser?.username}.png?set=set1`
           }
           alt={currentUser?.userName}
         />

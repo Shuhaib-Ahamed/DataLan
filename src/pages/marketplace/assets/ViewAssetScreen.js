@@ -277,18 +277,18 @@ const ViewAssetScreen = () => {
                   }
                 />
               </div>
-              {state?.asset?.originalId ? (
+              {state?.asset?.originalAssetId ? (
                 <div>
                   <div className="mb-2 block">
                     <Label htmlFor="originalAssetId" value="Dataset Origin" />
                   </div>{" "}
                   <TextInput
                     onClick={() =>
-                      navigate(`/assets/${state?.asset?.originalId}`)
+                      navigate(`/assets/${state?.asset?.originalAssetId}`)
                     }
                     name="originalAssetId"
                     id="originalAssetId"
-                    defaultValue={state?.asset?.originalId}
+                    defaultValue={state?.asset?.originalAssetId}
                     readOnly
                     addon={
                       <p className="text-xs font-semibold text-gray-700 flex items-center">
@@ -297,16 +297,18 @@ const ViewAssetScreen = () => {
                     }
                   />{" "}
                 </div>
-              ) : asset?.originalId ? (
+              ) : asset?.originalAssetId ? (
                 <div>
                   <div className="mb-2 block">
                     <Label htmlFor="originalAssetId" value="Dataset Origin" />
                   </div>
                   <TextInput
-                    onClick={() => navigate(`/assets/${asset?.originalId}`)}
+                    onClick={() =>
+                      navigate(`/assets/${asset?.originalAssetId}`)
+                    }
                     name="originalAssetId"
                     id="originalAssetId"
-                    defaultValue={asset?.originalId}
+                    defaultValue={asset?.originalAssetId}
                     readOnly
                     addon={
                       <p className="text-xs font-semibold text-gray-700 flex items-center">
