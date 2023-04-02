@@ -48,6 +48,20 @@ export default {
     return crypto.createHash("sha256").update(value).digest("hex");
   },
 
+  isJSON: (value) => {
+    const regex = /^[\],:{}\s]*$/;
+    regex.test(
+      value
+        .replace(/\\["\\\/bfnrtu]/g, "@")
+        .replace(
+          /"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g,
+          "]"
+        )
+        .replace(/(?:^|:|,)(?:\s*\[)+/g, "")
+    );
+    return regex;
+  },
+
   //   proxyEncrypt: (field, fromSecretKey, toPublicKey) => {
   //     const fromEncrypter = new RSAProxyReencrypt({
   //       rsa: { privateKey: fromSecretKey },

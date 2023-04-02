@@ -90,6 +90,11 @@ const uploadAsset = (
         assetKeyPair: bigChainKeyPair,
       };
 
+      if (type === ENCRYPTION.RSA) {
+        delete encryptedBuffer.encryptedData;
+        newAsset.encriptionObject = encryptedBuffer;
+      }
+
       // Next, you'll need to load the account that you want to add data to
       const sourceKeypair = StellarSdk.Keypair.fromSecret(
         setllarKeypair.privateKey
@@ -221,11 +226,132 @@ const initiateTransferAsset = (
     }
   });
 };
+const transferAsset = (assetData, fromKeyPair, metaData, dispatch) => {
+  const senderKeyPair = new BigchainDB.Ed25519Keypair();
+
+  dispatch(setMessage("Encrypting Data!!!"));
+
+  const encryptedAssetData = JSON.parse(assetData);
+
+  //decrypt assetData
+  const decryptedAssetData = encryptor.asymmetricDecryption(
+    encryptedAssetData,
+    fromKeyPair?.privateKey
+  );
+
+  const { assetId, assetKeyPair, encriptionObject } =
+    JSON.parse(decryptedAssetData);
+
+  return new Promise(async (resolve, reject) => {
+    try {
+      dispatch(setMessage("Fetching asset from BigchainDB!!!"));
+      let tx = await chainConnection.getTransaction(assetId);
+
+      if (!tx) throw new Error("Asset not found!!!");
+
+      //append the encrypted data in bigchain to the encryption object
+      const encModel = tx?.asset.data.data.model.encrypted_model;
+      encriptionObject.encryptedData = encModel;
+
+      //decrypt the asset object
+      const decryptedFile = encryptor.asymmetricDecryption(
+        encriptionObject,
+        fromKeyPair?.privateKey
+      );
+
+      //Reencrypt the file
+      const reEncryptFile = encryptor.symmetricEncryption(
+        decryptedFile,
+        fromKeyPair?.privateKey
+      );
+      tx.asset.data.data.model.encrypted_model = reEncryptFile;
+
+      const txTransfer = BigchainDB.Transaction.makeTransferTransaction(
+        [{ tx: tx, output_index: 0 }],
+        [
+          BigchainDB.Transaction.makeOutput(
+            BigchainDB.Transaction.makeEd25519Condition(senderKeyPair.publicKey)
+          ),
+        ],
+        metaData
+      );
+
+      const txTransferSigned = BigchainDB.Transaction.signTransaction(
+        txTransfer,
+        assetKeyPair.privateKey
+      );
+
+      const postResponse = await chainConnection.postTransaction(
+        txTransferSigned
+      );
+      dispatch(setMessage("Retrieving transaction!!!"));
+      const retrieveTransaction = await chainConnection.getTransaction(
+        postResponse.id
+      );
+
+      if (!retrieveTransaction) throw new Error("Transaction not found!!!");
+
+      const newAsset = {
+        assetId: retrieveTransaction.id,
+        assetKeyPair: senderKeyPair,
+      };
+
+      // Next, you'll need to load the account that you want to add data to
+      const sourceKeypair = StellarSdk.Keypair.fromSecret(
+        fromKeyPair.privateKey
+      );
+
+      dispatch(setMessage("Loading Stellar account..."));
+      const sourceAccount = await setllarConnection.loadAccount(
+        sourceKeypair.publicKey()
+      );
+
+      // Then, you can create a transaction to add data to the account
+      var transaction = new StellarSdk.TransactionBuilder(sourceAccount, {
+        fee: StellarSdk.BASE_FEE,
+        networkPassphrase: StellarSdk.Networks.TESTNET,
+      })
+        .addOperation(
+          StellarSdk.Operation.manageData({
+            name: metaData.assetTitle,
+            value: encryptor.generateHash(JSON.stringify(newAsset)),
+          })
+        )
+        .setTimeout(30)
+        .addOperation(
+          StellarSdk.Operation.payment({
+            destination: fromKeyPair.publicKey,
+            asset: StellarSdk.Asset.native(),
+            amount: metaData.assetAmount.toString(), // deduct the asset price from the destination account
+          })
+        )
+        .build();
+
+      // Sign the transaction with the account's secret key
+      transaction.sign(sourceKeypair);
+
+      const encryptedAssetData = encryptor.symmetricEncryption(
+        JSON.stringify(newAsset),
+        fromKeyPair.privateKey
+      );
+
+      // Finally, submit the transaction to the network
+      dispatch(setMessage("Signing transaction..."));
+      const response = await setllarConnection.submitTransaction(transaction);
+
+      resolve({ assetData: encryptedAssetData, response: response });
+    } catch (err) {
+      console.log(err);
+      reject(err);
+    }
+  });
+};
 
 const chainService = {
   uploadAsset,
   initiateTransferAsset,
   searchAndDecryptAsset,
+  transferAsset,
 };
 
 export default chainService;

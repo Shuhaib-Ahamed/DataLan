@@ -47,3 +47,7 @@ code {
   text-overflow: ellipsis;
   -webkit-line-clamp: 3;
 }
+
+.cursor {
+  cursor: pointer !important;
+}

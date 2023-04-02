@@ -38,12 +38,19 @@ const createAsset = async (body) => {
   });
 };
 
+const updateAsset = async (body, id) => {
+  return await axios.put(dev.backendURL + "assets/" + id, body, {
+    headers: authHeader(),
+  });
+};
+
 const assetService = {
   getAsset,
   getAssets,
   createAsset,
   getAssetByPublicKey,
   getAssetByOriginalId,
+  updateAsset,
 };
 
 export default assetService;

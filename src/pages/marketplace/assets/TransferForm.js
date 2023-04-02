@@ -1,4 +1,4 @@
-import { FileInput, Label, Spinner } from "flowbite-react";
+import { Spinner } from "flowbite-react";
 import React, { memo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,7 +9,7 @@ import CustomDropZone from "../../../components/global/CustomDropZone";
 import FormAlert from "../../../components/global/FormAlert";
 import FormInput from "../../../components/ui/FormInput";
 import PrimaryButton from "../../../components/ui/PrimaryButton";
-import { ENCRYPTION } from "../../../enum";
+import { ENCRYPTION, STATE } from "../../../enum";
 import useCredential from "../../../hooks/useCredentialHook";
 import { clearError, setError } from "../../../redux/slices/error";
 import { setMessage } from "../../../redux/slices/message";
@@ -17,8 +17,7 @@ import assetService from "../../../services/asset/assetService";
 import chainService from "../../../services/web3/chainService";
 import LoadingGif from "../../../static/images/block.gif";
 
-const TransferForm = memo(({ loading, setLoading, setIsOpen, setRefresh }) => {
-  const { user: currentUser } = useSelector((state) => state.auth);
+const TransferForm = memo(({ loading, setLoading, setIsOpen, asset }) => {
   const { message } = useSelector((state) => state.message);
   let navigate = useNavigate();
   const { register, handleSubmit, reset } = useForm();
@@ -27,45 +26,51 @@ const TransferForm = memo(({ loading, setLoading, setIsOpen, setRefresh }) => {
   const { credentials, error } = useCredential(credFile);
 
   const transferAsset = async (data) => {
+    if (!asset) return toast.error("Asset not found!!!");
     if (!credFile) return dispatch(setError("Please Upload Credentials File"));
 
     if (error) {
       setCredFile(null);
     }
     setLoading(true);
-    const metaData = { ...data };
+    let metaData = { ...data };
     metaData.assetTitle = metaData.assetTitle + "-" + uuidv4();
+    metaData.assetAmount = asset?.assetAmount;
     delete metaData.file;
 
     try {
-      //upload Asset
-      await chainService
-        .uploadAsset(
-          data.file[0],
-          metaData,
-          credentials,
-          ENCRYPTION.AES,
-          dispatch,
-          null
-        )
-        .then(async (data) => {
-          const newAsset = {
-            txID: data.response.id,
-            publicKey: currentUser.publicKey,
-            assetData: data.assetData,
-            ...metaData,
-          };
+      const getAsset = await assetService.getAsset(asset?._id);
 
-          dispatch(setMessage("Creating an asset!!!"));
-          const assetResponse = await assetService.createAsset(newAsset);
+      if (getAsset.status === 200) {
+        await chainService
+          .transferAsset(
+            getAsset?.data?.data?.assetData,
+            credentials,
+            metaData,
+            dispatch
+          )
+          .then(async (data) => {
+            const updateAsset = {
+              txID: data.response.id,
+              assetData: data.assetData,
+              status: STATE.OWNED,
+              encryptionType: ENCRYPTION.AES,
+              ...metaData,
+            };
 
-          if (assetResponse.status === 201) {
-            setIsOpen(false);
-            setLoading(false);
-            toast.success("Asset Created Successfully!!!");
-            setRefresh((reload) => !reload);
-          }
-        });
+            dispatch(setMessage("Updating asset!!!"));
+            const assetResponse = await assetService.updateAsset(
+              updateAsset,
+              asset._id
+            );
+
+            if (assetResponse.status === 200) {
+              setIsOpen(false);
+              setLoading(false);
+              toast.success("Asset Transfered Successfully!!!");
+            }
+          });
+      }
     } catch (error) {
       console.log("ERROR", error);
       const message =
@@ -98,14 +103,15 @@ const TransferForm = memo(({ loading, setLoading, setIsOpen, setRefresh }) => {
         <div className="flex flex-col space-y-4 mb-16">
           <FormAlert color="failure" />
           <FormInput
-            name="recieverComment"
-            placeholder="Comment"
-            required={true}
+            name="assetTitle"
             type="text"
-            label="Reciever Comment"
+            placeholder="Asset Title"
+            required={true}
+            label="Asset Title"
             setInput={register}
             disabled={loading}
-          />{" "}
+          />
+
           <div className="flex flex-col w-full mb-4">
             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
               Asset Description

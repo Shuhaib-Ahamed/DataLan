@@ -1,4 +1,11 @@
-import { Badge, Breadcrumb, Label, Spinner, TextInput } from "flowbite-react";
+import {
+  Badge,
+  Breadcrumb,
+  Label,
+  Spinner,
+  TextInput,
+  Tooltip,
+} from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import DashboardLayout from "../../../layouts/DashboardLayout";
@@ -15,6 +22,7 @@ import PrimaryButton from "../../../components/ui/PrimaryButton";
 import requestService from "../../../services/request/requestService";
 import assetService from "../../../services/asset/assetService";
 import TransferForm from "./TransferForm";
+import { dev } from "../../../config";
 
 const ViewAssetScreen = () => {
   let { state } = useLocation();
@@ -200,11 +208,11 @@ const ViewAssetScreen = () => {
                   {state?.asset?.assetDescription || asset?.assetDescription}
                 </p>
               </div>
-
               <div>
                 <div className="mb-2 block">
                   <Label htmlFor="publicKey" value="Owner Public Key" />
                 </div>
+
                 <TextInput
                   id="publicKey"
                   name="publicKey"
@@ -216,6 +224,32 @@ const ViewAssetScreen = () => {
                     </p>
                   }
                 />
+              </div>{" "}
+              <div>
+                <div className="mb-2 block cursor-pointer">
+                  <Label htmlFor="txId" value="Stellar Transaction ID" />
+                </div>
+
+                <a
+                  target="_blank"
+                  href={
+                    dev.setllarURL + "/transactions/" + state?.asset?.txID ||
+                    asset?.txID
+                  }
+                >
+                  <TextInput
+                    className="w-100 "
+                    id="txID"
+                    name="txID"
+                    defaultValue={state?.asset?.txID || asset?.txID}
+                    readOnly
+                    addon={
+                      <p className="text-xs font-semibold text-gray-700 flex items-center">
+                        TXID
+                      </p>
+                    }
+                  />
+                </a>
               </div>
               <div>
                 <div className="mb-2 block cursor-pointer">
@@ -234,12 +268,11 @@ const ViewAssetScreen = () => {
                   }
                 />
               </div>
-
               {state?.asset?.originalId ? (
                 <div>
                   <div className="mb-2 block">
                     <Label htmlFor="originalAssetId" value="Dataset Origin" />
-                  </div>
+                  </div>{" "}
                   <TextInput
                     onClick={() =>
                       navigate(`/assets/${state?.asset?.originalId}`)
@@ -253,7 +286,7 @@ const ViewAssetScreen = () => {
                         #
                       </p>
                     }
-                  />
+                  />{" "}
                 </div>
               ) : asset?.originalId ? (
                 <div>
@@ -271,29 +304,39 @@ const ViewAssetScreen = () => {
                         #
                       </p>
                     }
-                  />
+                  />{" "}
                 </div>
               ) : (
                 <></>
               )}
-
               <div className="flex items-center justify-end space-x-4 mt-10">
                 <button className=" inline-flex items-center py-2.5 px-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                   <SiHiveBlockchain className="w-4 h-4 mr-2" /> View on
                   Blockchain
                 </button>
-                <PrimaryButton
-                  disabled={loading}
-                  onClick={() => handleTransferOrRequest(state?.asset || asset)}
-                  content={
-                    currentUser?.publicKey === state?.asset?.publicKey ||
-                    currentUser?.publicKey === asset?.publicKey
-                      ? "Transfer Asset"
-                      : "Request Asset"
-                  }
-                  status="Sending Request"
-                  loading={loading}
-                />
+                {currentUser?.publicKey === state?.asset?.publicKey ||
+                  (currentUser?.publicKey === asset?.publicKey &&
+                  asset.status === STATE.TRANSFERED ? (
+                    <PrimaryButton
+                      disabled={loading}
+                      onClick={() =>
+                        handleTransferOrRequest(state?.asset || asset)
+                      }
+                      content={"Transfer Asset"}
+                      status="Sending Request"
+                      loading={loading}
+                    />
+                  ) : (
+                    <PrimaryButton
+                      disabled={loading}
+                      onClick={() =>
+                        handleTransferOrRequest(state?.asset || asset)
+                      }
+                      content={"Request Asset"}
+                      status="Sending Request"
+                      loading={loading}
+                    />
+                  ))}
               </div>
             </div>
           </div>
@@ -309,6 +352,7 @@ const ViewAssetScreen = () => {
             setLoading={setLoading}
             loading={loading}
             setIsOpen={setIsOpen}
+            asset={state?.asset || asset}
           />
         </Drawer>
       </div>
