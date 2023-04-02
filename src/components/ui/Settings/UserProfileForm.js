@@ -8,6 +8,7 @@ import { getUser } from "../../../redux/slices/auth";
 import userService from "../../../services/user/userService";
 import FormInput from "../FormInput";
 import PrimaryButton from "../PrimaryButton";
+import { dev } from "../../../config";
 
 const UserProfileForm = () => {
   const { user: currentUser } = useSelector((state) => state.auth);
@@ -51,14 +52,19 @@ const UserProfileForm = () => {
       <form onSubmit={handleSubmit(handleUserInfo)}>
         <div className="grid grid-cols-6 gap-6">
           <div className="col-span-full">
-            <FormInput
-              disabled={true}
-              type="text"
-              readOnly
-              setInput={() => {}}
-              label="Public Key"
-              defaultValue={currentUser?.publicKey}
-            />
+            <a
+              target="_blank"
+              href={dev.setllarURL + "/accounts/" + currentUser?.publicKey}
+            >
+              <FormInput
+                disabled={true}
+                type="text"
+                readOnly
+                setInput={() => {}}
+                label="Public Key"
+                defaultValue={currentUser?.publicKey}
+              />
+            </a>
           </div>
 
           <div className="col-span-6 sm:col-span-3">

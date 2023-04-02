@@ -34,50 +34,52 @@ const ViewAssetScreen = () => {
   const [assetLoading, setAssetLoading] = useState(false);
   const [asset, setAsset] = useState(false);
 
-  const handleTransferOrRequest = async (asset) => {
+  const handleTransfer = async () => {
+    setIsOpen((open) => !open);
+  };
+
+  const handleRequest = async (asset) => {
+    if (asset.originalId) return toast.warning("Duplicate Asset!!");
+    if (!asset) return toast.warning("Asset not found!!");
     if (!currentUser?.data?.userData) {
       return toast.warning("Please add your user details first");
+    } else if (loading) return;
+    else if (currentUser?.role !== ROLE.BUYER) {
+      return toast.warning("Please change your user role");
+    } else if (asset.status !== STATE.OWNED) {
+      return toast.warning("Asset is not transfered yet");
+    } else if (currentUser?.publicKey === asset?.publicKey) {
+      return toast.warning("You are owner of this asset");
     }
+
     if (!loading) {
-      if (
-        currentUser?.publicKey === state?.asset?.publicKey ||
-        currentUser?.publicKey === asset?.publicKey
-      ) {
-        setIsOpen((open) => !open);
-      } else if (
-        currentUser?.publicKey !== state?.asset?.publicKey ||
-        currentUser?.publicKey !==
-          (asset?.publicKey && currentUser?.role === ROLE.BUYER)
-      ) {
-        try {
-          setLoading(true);
-          if (!asset) return toast.warning("Asset not found!!");
+      try {
+        setLoading(true);
 
-          const response = await requestService.sendAssetRequest({
-            assetId: asset?._id,
-            toPublicKey: asset?.publicKey,
-            fromPublicKey: currentUser?.publicKey,
-            userData: {
-              ...currentUser?.data?.userData,
-              email: currentUser?.email,
-            },
-          });
+        const response = await requestService.sendAssetRequest({
+          assetId: asset?._id,
+          toPublicKey: asset?.publicKey,
+          fromPublicKey: currentUser?.publicKey,
+          userData: {
+            ...currentUser?.data?.userData,
+            email: currentUser?.email,
+          },
+        });
 
-          if (response?.status === 201) {
-            return toast.success("Asset request sent successfully");
-          }
-        } catch (error) {
-          const message =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
-          toast.error(message);
-        } finally {
-          setLoading(false);
+        if (response?.status === 201) {
+          return toast.success("Asset request sent successfully");
         }
-      } else toast.warning("Please change your user role");
+      } catch (error) {
+        const message =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+        toast.error(message);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -212,18 +214,25 @@ const ViewAssetScreen = () => {
                 <div className="mb-2 block">
                   <Label htmlFor="publicKey" value="Owner Public Key" />
                 </div>
-
-                <TextInput
-                  id="publicKey"
-                  name="publicKey"
-                  defaultValue={state?.asset?.publicKey || asset?.publicKey}
-                  readOnly
-                  addon={
-                    <p className="text-xs font-semibold text-gray-700">
-                      {state?.asset?.status || asset?.status}
-                    </p>
+                <a
+                  target="_blank"
+                  href={
+                    dev.setllarURL + "/accounts/" + state?.asset?.publicKey ||
+                    asset?.publicKey
                   }
-                />
+                >
+                  <TextInput
+                    id="publicKey"
+                    name="publicKey"
+                    defaultValue={state?.asset?.publicKey || asset?.publicKey}
+                    readOnly
+                    addon={
+                      <p className="text-xs font-semibold text-gray-700">
+                        {state?.asset?.status || asset?.status}
+                      </p>
+                    }
+                  />
+                </a>
               </div>{" "}
               <div>
                 <div className="mb-2 block cursor-pointer">
@@ -314,29 +323,27 @@ const ViewAssetScreen = () => {
                   <SiHiveBlockchain className="w-4 h-4 mr-2" /> View on
                   Blockchain
                 </button>
-                {currentUser?.publicKey === state?.asset?.publicKey ||
-                  (currentUser?.publicKey === asset?.publicKey &&
-                  asset.status === STATE.TRANSFERED ? (
+
+                {currentUser?.publicKey === state?.asset?.publicKey &&
+                  state?.asset.status === STATE.TRANSFERED && (
                     <PrimaryButton
                       disabled={loading}
-                      onClick={() =>
-                        handleTransferOrRequest(state?.asset || asset)
-                      }
-                      content={"Transfer Asset"}
-                      status="Sending Request"
+                      onClick={() => handleTransfer(state?.asset || asset)}
+                      content="Transfer Asset"
                       loading={loading}
                     />
-                  ) : (
+                  )}
+
+                {currentUser?.publicKey !== state?.asset?.publicKey &&
+                  state?.asset.status === STATE.OWNED && (
                     <PrimaryButton
                       disabled={loading}
-                      onClick={() =>
-                        handleTransferOrRequest(state?.asset || asset)
-                      }
+                      onClick={() => handleRequest(state?.asset || asset)}
                       content={"Request Asset"}
                       status="Sending Request"
                       loading={loading}
                     />
-                  ))}
+                  )}
               </div>
             </div>
           </div>
