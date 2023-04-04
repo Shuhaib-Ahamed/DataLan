@@ -1,8 +1,9 @@
 import { Breadcrumb } from "flowbite-react";
 import React from "react";
-import { NavLink } from "react-router-dom";
-import DashboardLayout from "../../layouts/DashboardLayout";
 import { AiFillHome } from "react-icons/ai";
+import { NavLink } from "react-router-dom";
+import Banner from "../../components/ui/Banner";
+import DashboardLayout from "../../layouts/DashboardLayout";
 
 const ModelsScreen = () => {
   return (
@@ -12,11 +13,12 @@ const ModelsScreen = () => {
           <Breadcrumb.Item icon={AiFillHome}>
             <NavLink to="/">Home</NavLink>
           </Breadcrumb.Item>
-          <Breadcrumb.Item>
-          Models
-          </Breadcrumb.Item>
+          <Breadcrumb.Item>Models</Breadcrumb.Item>
         </Breadcrumb>
-        <h1 className="text-3xl mt-4 font-semibold text-gray-900">Models</h1>
+        <Banner
+          highLight="Models"
+          content="Here at AutoCS we focus on markets where technology, innovation, and capital can unlock long-term value and drive economic growth."
+        />
       </div>
     </DashboardLayout>
   );

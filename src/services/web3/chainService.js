@@ -24,18 +24,14 @@ const uploadAsset = (
     try {
       // Create a keypair for the asset
       const bigChainKeyPair = new BigchainDB.Ed25519Keypair();
-      let getByteArray = null;
+
       let encryptedBuffer = null;
       let encryptedAssetData = null;
 
-      if (type === ENCRYPTION.AES) {
-        getByteArray = await fileService.getAsByteArray(file);
-      }
-
       // Encrypt the file
       if (type === ENCRYPTION.AES) {
-        encryptedBuffer = encryptor.symmetricEncryption(
-          JSON.stringify(getByteArray),
+        encryptedBuffer = await fileService.encryptAESFile(
+          file,
           setllarKeypair.privateKey
         );
       } else if (type === ENCRYPTION.RSA) {
@@ -45,8 +41,6 @@ const uploadAsset = (
           setllarKeypair.privateKey
         );
       }
-      // Convert the encrypted data to a Blob
-      // const encryptedBlob = new Blob([encryptedBuffer], { type: file.type });
 
       //Decrypt the file with the owners private key
       const asset = {
@@ -226,6 +220,7 @@ const initiateTransferAsset = (
     }
   });
 };
+
 const transferAsset = (assetData, fromKeyPair, metaData, dispatch) => {
   const senderKeyPair = new BigchainDB.Ed25519Keypair();
 
@@ -347,11 +342,24 @@ const transferAsset = (assetData, fromKeyPair, metaData, dispatch) => {
   });
 };
 
+const getWeb3AssetById = (txID) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const tx = await chainConnection.getTransaction(txID);
+      const encModel = tx?.asset.data.data.model.encrypted_model;
+      resolve({ data: encModel });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
 const chainService = {
   uploadAsset,
   initiateTransferAsset,
   searchAndDecryptAsset,
   transferAsset,
+  getWeb3AssetById,
 };
 
 export default chainService;

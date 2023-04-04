@@ -48,11 +48,13 @@ const CredentialModal = ({
   useEffect(() => {
     if (credentials?.publicKey && credentials?.privateKey)
       setCredentials(credentials);
+
+    return () => setCredentials({ publicKey: "", privateKey: "" });
   }, [credentials]);
 
   return (
     <div
-      className={`fixed overflow-hidden z-50 bg-gray-900 bg-opacity-20 inset-0 w-screen h-full ${
+      className={`fixed overflow-hidden z-50 bg-gray-900 bg-opacity-50 inset-0 w-screen h-full ${
         !isOpen && "hidden"
       }`}
     >
@@ -79,7 +81,7 @@ const CredentialModal = ({
               <div className="flex items-center">
                 <img src={LogoImage} className="mr-2 h-6" alt="Datalan-Logo" />
                 <span className="self-center hidden sm:flex text-xl font-medium text-gray-900 dark:text-white">
-                  Authorize Action
+                  {action}
                 </span>
               </div>
               <button
@@ -149,7 +151,7 @@ const CredentialModal = ({
                 fullSized
                 onClick={() => handleSubmit()}
                 loading={loading}
-                content="Authorize Transaction"
+                content={action}
                 status="Loading"
               />
               <button

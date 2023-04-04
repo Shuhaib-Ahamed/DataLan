@@ -45,7 +45,7 @@ const updateAsset = async (body, id) => {
 };
 
 const assetService = {
-  getAsset,
+  getAssetByID: getAsset,
   getAssets,
   createAsset,
   getAssetByPublicKey,

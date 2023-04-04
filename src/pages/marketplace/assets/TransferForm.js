@@ -39,7 +39,7 @@ const TransferForm = memo(({ loading, setLoading, setIsOpen, asset }) => {
     delete metaData.file;
 
     try {
-      const getAsset = await assetService.getAsset(asset?._id);
+      const getAsset = await assetService.getAssetByID(asset?._id);
 
       if (getAsset.status === 200) {
         await chainService

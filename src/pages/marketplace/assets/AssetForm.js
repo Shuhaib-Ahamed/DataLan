@@ -16,6 +16,7 @@ import { setMessage } from "../../../redux/slices/message";
 import assetService from "../../../services/asset/assetService";
 import chainService from "../../../services/web3/chainService";
 import LoadingGif from "../../../static/images/block.gif";
+import fileService from "../../../utils/file";
 
 const AssetForm = memo(({ loading, setLoading, setIsOpen, setRefresh }) => {
   const { user: currentUser } = useSelector((state) => state.auth);
@@ -27,14 +28,22 @@ const AssetForm = memo(({ loading, setLoading, setIsOpen, setRefresh }) => {
   const { credentials, error } = useCredential(credFile);
 
   const uploadAsset = async (data) => {
+    setLoading(true);
     if (!credFile) return dispatch(setError("Please Upload Credentials File"));
 
     if (error) {
       setCredFile(null);
     }
-    setLoading(true);
+
+    const { fileLength, columns } = await fileService.parseCSVFile(
+      data.file[0]
+    );
+
     const metaData = { ...data };
     metaData.assetTitle = metaData.assetTitle + "-" + uuidv4();
+    metaData.size = data.file[0].size;
+    metaData.columns = columns;
+    metaData.length = fileLength;
     delete metaData.file;
 
     try {
@@ -77,9 +86,9 @@ const AssetForm = memo(({ loading, setLoading, setIsOpen, setRefresh }) => {
       dispatch(setError(message));
     } finally {
       setLoading(false);
+      // reset();
       setCredFile(null);
       dispatch(clearError());
-      reset();
       navigate("/assets");
     }
   };

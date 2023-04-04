@@ -7,7 +7,6 @@ import HomeScreen from "./HomeScreen";
 import LoginScreen from "./LoginScreen";
 import RegisterScreen from "./RegisterScreen";
 import AssetsScreen from "../marketplace/assets/AssetsScreen";
-import AutoMLTrain from "../marketplace/buyer/AutoMLTraining";
 import ModelsScreen from "../automl/ModelsScreen";
 import NotFoundScreen from "../../static/pages/NotFoundScreen";
 import RequestsScreen from "../marketplace/requests/RequestsScreen";
@@ -15,6 +14,7 @@ import LoadingScreen from "../../static/pages/LoadingScreen";
 import ViewAssetScreen from "../marketplace/assets/ViewAssetScreen";
 import { getUser } from "../../redux/slices/auth";
 import JSONModal from "../../components/global/JSONModal";
+import AutoMLTrain from "../automl/AutoMLTraining";
 
 const App = () => {
   const { user: currentUser, loading } = useSelector((state) => state.auth);

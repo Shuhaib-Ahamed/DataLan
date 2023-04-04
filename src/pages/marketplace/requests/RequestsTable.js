@@ -1,17 +1,17 @@
-import React, { Fragment, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import requestService from "../../../services/request/requestService";
 import { Avatar, Badge, Spinner } from "flowbite-react";
-import { AiFillDelete } from "react-icons/ai";
 import moment from "moment/moment";
-import { ACTIONS, REQUEST_STATUS, ROLE } from "../../../enum";
-import RequestHeader from "./RequestHeader";
-import CredentialModal from "../../../components/global/CredentialModal";
-import { toast } from "react-toastify";
-import assetService from "../../../services/asset/assetService";
-import encryptor from "../../../utils/encryptor";
-import chainService from "../../../services/web3/chainService";
+import React, { useEffect, useState } from "react";
+import { AiFillDelete } from "react-icons/ai";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import CredentialModal from "../../../components/global/CredentialModal";
+import { ACTIONS, REQUEST_STATUS, ROLE } from "../../../enum";
+import assetService from "../../../services/asset/assetService";
+import requestService from "../../../services/request/requestService";
+import chainService from "../../../services/web3/chainService";
+import encryptor from "../../../utils/encryptor";
+import RequestHeader from "./RequestHeader";
 
 const RequestsTable = () => {
   const { user: currentUser } = useSelector((state) => state.auth);
@@ -88,7 +88,7 @@ const RequestsTable = () => {
         }
 
         // Checking if asset is valid
-        const assetCheck = await assetService.getAsset(assetId);
+        const assetCheck = await assetService.getAssetByID(assetId);
         if (assetCheck.status !== 200) {
           throw new Error("Asset not found");
         }

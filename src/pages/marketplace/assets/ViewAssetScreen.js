@@ -3,20 +3,24 @@ import React, { useEffect, useState } from "react";
 import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import DashboardLayout from "../../../layouts/DashboardLayout";
 // Icons
+import moment from "moment/moment";
 import { AiFillHome } from "react-icons/ai";
 import { HiClock } from "react-icons/hi";
 import { SiHiveBlockchain } from "react-icons/si";
-import moment from "moment/moment";
 import { useDispatch, useSelector } from "react-redux";
-import { ROLE, STATE } from "../../../enum";
-import Drawer from "../../../components/global/Drawer";
 import { toast } from "react-toastify";
+import CredentialModal from "../../../components/global/CredentialModal";
+import Drawer from "../../../components/global/Drawer";
 import PrimaryButton from "../../../components/ui/PrimaryButton";
-import requestService from "../../../services/request/requestService";
-import assetService from "../../../services/asset/assetService";
-import TransferForm from "./TransferForm";
 import { dev } from "../../../config";
+import { ROLE, STATE } from "../../../enum";
 import { getTransaction } from "../../../redux/slices/modal";
+import assetService from "../../../services/asset/assetService";
+import requestService from "../../../services/request/requestService";
+import TransferForm from "./TransferForm";
+import encryptor from "../../../utils/encryptor";
+import chainService from "../../../services/web3/chainService";
+import fileService from "../../../utils/file";
 
 const ViewAssetScreen = () => {
   const { state } = useLocation();
@@ -28,9 +32,42 @@ const ViewAssetScreen = () => {
   const [loading, setLoading] = useState(false);
   const [assetLoading, setAssetLoading] = useState(false);
   const [asset, setAsset] = useState(false);
+  const [keyPair, setCredentials] = useState({
+    publicKey: "",
+    privateKey: "",
+  });
+  const [transferLoading, setDecryptLoading] = useState(false);
+  const [isDecryptOpen, setIsDecryptOpen] = useState(false);
 
   const handleTransfer = async () => {
     setIsOpen((open) => !open);
+  };
+
+  const downloadAsset = async (asset) => {
+    setDecryptLoading(true);
+    try {
+      await assetService.getAssetByID(asset?._id).then(async (response) => {
+        if (response?.data?.data) {
+          const decryptedAssetData = encryptor.symmetricDecryption(
+            response?.data?.data?.assetData,
+            keyPair?.privateKey
+          );
+          const txID = JSON.parse(decryptedAssetData)?.assetId;
+          await chainService.getWeb3AssetById(txID).then(async (response) => {
+            await fileService.decryptAESFile(
+              response?.data,
+              keyPair?.privateKey,
+              `${asset?.assetTitle}.csv`
+            );
+          });
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setDecryptLoading(false);
+      setIsDecryptOpen(false);
+    }
   };
 
   const handleRequest = async (asset) => {
@@ -104,7 +141,7 @@ const ViewAssetScreen = () => {
   const fetchAsset = async (id) => {
     setAssetLoading(true);
     try {
-      const res = await assetService.getAsset(id);
+      const res = await assetService.getAssetByID(id);
       if (res?.status === 200) {
         return setAsset(res?.data?.data);
       }
@@ -205,6 +242,24 @@ const ViewAssetScreen = () => {
                   {state?.asset?.assetDescription || asset?.assetDescription}
                 </p>
               </div>
+              <div className="flex flex-wrap gap-2 mb-4">
+                {state?.asset?.columns
+                  ? state?.asset?.columns[0]?.map((el, index) => (
+                      <Badge key={index}>
+                        <p className="text-sm font-medium text-gray-700">
+                          {el}
+                        </p>
+                      </Badge>
+                    ))
+                  : asset?.columns &&
+                    asset?.columns[0]?.map((el, index) => (
+                      <Badge key={index}>
+                        <p className="text-sm font-medium text-gray-700">
+                          {el}
+                        </p>
+                      </Badge>
+                    ))}
+              </div>
               <div>
                 <div className="mb-2 block">
                   <Label htmlFor="publicKey" value="Owner Public Key" />
@@ -255,22 +310,60 @@ const ViewAssetScreen = () => {
                   />
                 </a>
               </div>
-              <div>
-                <div className="mb-2 block cursor-pointer">
-                  <Label htmlFor="publicKey" value="Asset Amount" />
-                </div>
+              <div class="grid grid-cols-3 gap-4">
+                <div>
+                  <div className="mb-2 block cursor-pointer">
+                    <Label htmlFor="size" value="Dataset Size" />
+                  </div>
 
-                <TextInput
-                  id="publicKey"
-                  name="publicKey"
-                  defaultValue={state?.asset?.assetAmount || asset?.assetAmount}
-                  readOnly
-                  addon={
-                    <p className="text-xs font-semibold text-gray-700 flex items-center">
-                      LUMENS
-                    </p>
-                  }
-                />
+                  <TextInput
+                    id="size"
+                    name="size"
+                    defaultValue={state?.asset?.size || asset?.size}
+                    readOnly
+                    addon={
+                      <p className="text-xs font-semibold text-gray-700 flex items-center">
+                        KB
+                      </p>
+                    }
+                  />
+                </div>
+                <div>
+                  <div className="mb-2 block cursor-pointer">
+                    <Label htmlFor="length" value="Number of Rows" />
+                  </div>
+
+                  <TextInput
+                    id="length"
+                    name="length"
+                    defaultValue={state?.asset?.length || asset?.length}
+                    readOnly
+                    addon={
+                      <p className="text-xs font-semibold text-gray-700 flex items-center">
+                        Rows
+                      </p>
+                    }
+                  />
+                </div>
+                <div>
+                  <div className="mb-2 block cursor-pointer">
+                    <Label htmlFor="amount" value="Asset Amount" />
+                  </div>
+
+                  <TextInput
+                    id="amount"
+                    name="amount"
+                    defaultValue={
+                      state?.asset?.assetAmount || asset?.assetAmount
+                    }
+                    readOnly
+                    addon={
+                      <p className="text-xs font-semibold text-gray-700 flex items-center">
+                        LUMENS
+                      </p>
+                    }
+                  />
+                </div>
               </div>
               {state?.asset?.originalAssetId ? (
                 <div>
@@ -316,6 +409,14 @@ const ViewAssetScreen = () => {
                 <></>
               )}
               <div className="flex items-center justify-end space-x-4 mt-10">
+                {currentUser?.publicKey === state?.asset?.publicKey &&
+                  state?.asset?.status === STATE.OWNED && (
+                    <PrimaryButton
+                      onClick={() => setIsDecryptOpen(true)}
+                      content={"Download Dataset"}
+                    />
+                  )}
+
                 <button
                   onClick={() =>
                     dispatch(getTransaction(state?.asset?.txID || asset?.txID))
@@ -327,7 +428,7 @@ const ViewAssetScreen = () => {
                 </button>
 
                 {currentUser?.publicKey === state?.asset?.publicKey &&
-                  state?.asset.status === STATE.TRANSFERED && (
+                  state?.asset?.status === STATE.TRANSFERED && (
                     <PrimaryButton
                       disabled={loading}
                       onClick={() => handleTransfer(state?.asset || asset)}
@@ -337,7 +438,7 @@ const ViewAssetScreen = () => {
                   )}
 
                 {currentUser?.publicKey !== state?.asset?.publicKey &&
-                  state?.asset.status === STATE.OWNED && (
+                  state?.asset?.status === STATE.OWNED && (
                     <PrimaryButton
                       disabled={loading}
                       onClick={() => handleRequest(state?.asset || asset)}
@@ -350,6 +451,15 @@ const ViewAssetScreen = () => {
             </div>
           </div>
         )}
+        <CredentialModal
+          action="Download Dataset"
+          setIsOpen={setIsDecryptOpen}
+          authFunction={() => downloadAsset(state?.asset || asset)}
+          loading={transferLoading}
+          isOpen={isDecryptOpen}
+          credInputs={keyPair}
+          setCredentials={setCredentials}
+        />
 
         <Drawer
           header="Transfer Asset"
