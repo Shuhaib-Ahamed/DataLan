@@ -54,7 +54,7 @@ const CredentialModal = ({
 
   return (
     <div
-      className={`fixed overflow-hidden z-50 bg-gray-900 bg-opacity-50 inset-0 w-screen h-full ${
+      className={`fixed overflow-hidden z-50 bg-gray-900 bg-opacity-30 inset-0 w-screen h-full ${
         !isOpen && "hidden"
       }`}
     >

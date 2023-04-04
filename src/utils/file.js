@@ -134,15 +134,19 @@ const decryptAESFile = (encryptedData, privateKey, fileName) => {
   return new Promise((resolve, reject) => {
     try {
       const decryptedData = encryptor.symmetricDecryption(
-        encryptedData,
+       encryptedData,
         privateKey
       );
+
       const decryptedFile = new Blob([decryptedData], {
         type: "text/plain;charset=utf-8",
       });
 
-      resolve(saveAs(decryptedFile, fileName));
+      saveAs(decryptedFile, fileName);
+
+      resolve(toast.success("File Downloaded!!!"));
     } catch (error) {
+      console.log(error);
       reject(error);
     }
   });

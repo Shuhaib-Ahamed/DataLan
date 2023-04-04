@@ -53,6 +53,7 @@ const ViewAssetScreen = () => {
             keyPair?.privateKey
           );
           const txID = JSON.parse(decryptedAssetData)?.assetId;
+          
           await chainService.getWeb3AssetById(txID).then(async (response) => {
             await fileService.decryptAESFile(
               response?.data,
@@ -64,6 +65,13 @@ const ViewAssetScreen = () => {
       });
     } catch (error) {
       console.log(error);
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      toast.error(message);
     } finally {
       setDecryptLoading(false);
       setIsDecryptOpen(false);

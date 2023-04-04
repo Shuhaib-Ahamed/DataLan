@@ -9,6 +9,7 @@ import requestService from "../request/requestService";
 import assetService from "../asset/assetService";
 import { v4 as uuidv4 } from "uuid";
 
+
 const chainConnection = new BigchainDB.Connection(dev.bigchainURL);
 const setllarConnection = new StellarSdk.Server(dev.setllarURL);
 
@@ -18,7 +19,7 @@ const uploadAsset = (
   setllarKeypair,
   type,
   dispatch,
-  fromPublicKey
+  toPublicKey
 ) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -37,7 +38,7 @@ const uploadAsset = (
       } else if (type === ENCRYPTION.RSA) {
         encryptedBuffer = encryptor.asymmetricEncryption(
           file,
-          fromPublicKey,
+          toPublicKey,
           setllarKeypair.privateKey
         );
       }
@@ -51,7 +52,7 @@ const uploadAsset = (
             encrypted_model:
               type === ENCRYPTION.AES
                 ? encryptedBuffer
-                : encryptedBuffer.encryptedData,
+                : encryptedBuffer?.encryptedData,
           },
         },
       };
@@ -126,7 +127,7 @@ const uploadAsset = (
       if (type === ENCRYPTION.RSA) {
         encryptedAssetData = encryptor.asymmetricEncryption(
           JSON.stringify(newAsset),
-          fromPublicKey,
+          toPublicKey,
           setllarKeypair.privateKey
         );
       } else if (type === ENCRYPTION.AES) {
@@ -178,7 +179,7 @@ const initiateTransferAsset = (
       const metadata = getAssetByID?.metadata;
       metadata.assetTitle = metadata.assetTitle.split("-")[0] + "-" + uuidv4();
 
-      const encModel = getAssetByID.asset.data.data.model.encrypted_model;
+      const encModel = getAssetByID.asset?.data?.data?.model?.encrypted_model;
       const decryptedBuffer = encryptor.symmetricDecryption(
         encModel,
         setllarKeypair.privateKey
@@ -261,6 +262,8 @@ const transferAsset = (assetData, fromKeyPair, metaData, dispatch) => {
       );
       tx.asset.data.data.model.encrypted_model = reEncryptFile;
 
+      console.log(reEncryptFile);
+
       const txTransfer = BigchainDB.Transaction.makeTransferTransaction(
         [{ tx: tx, output_index: 0 }],
         [
@@ -287,7 +290,7 @@ const transferAsset = (assetData, fromKeyPair, metaData, dispatch) => {
       if (!retrieveTransaction) throw new Error("Transaction not found!!!");
 
       const newAsset = {
-        assetId: retrieveTransaction.id,
+        assetId: tx?.id,
         assetKeyPair: senderKeyPair,
       };
 

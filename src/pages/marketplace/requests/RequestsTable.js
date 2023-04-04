@@ -18,7 +18,9 @@ const RequestsTable = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [transferLoading, setTransferLoading] = useState(false);
-  const [type, setType] = useState(currentUser?.role === ROLE.BUYER ? 1 : 0);
+  const [type, setType] = useState(() =>
+    currentUser?.role === ROLE.BUYER ? 1 : 0
+  );
   const [requests, setRequests] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [currentRequest, setCurrentRequest] = useState({
@@ -58,6 +60,7 @@ const RequestsTable = () => {
           );
 
           if (initiateTransfer?.status === 204) {
+            navigate("/requests");
             return toast.success("Asset transfer initiated successfully");
           }
         })
