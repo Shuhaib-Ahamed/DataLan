@@ -346,7 +346,7 @@ const getWeb3AssetById = (txID) => {
   return new Promise(async (resolve, reject) => {
     try {
       const tx = await chainConnection.getTransaction(txID);
-      const encModel = tx?.asset.data.data.model.encrypted_model;
+      const encModel = tx?.asset?.data?.data?.model?.encrypted_model;
       resolve({ data: encModel });
     } catch (error) {
       reject(error);

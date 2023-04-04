@@ -244,7 +244,7 @@ const ViewAssetScreen = () => {
               </div>
               <div className="flex flex-wrap gap-2 mb-4">
                 {state?.asset?.columns
-                  ? state?.asset?.columns[0]?.map((el, index) => (
+                  ? state?.asset?.columns?.map((el, index) => (
                       <Badge key={index}>
                         <p className="text-sm font-medium text-gray-700">
                           {el}
@@ -252,7 +252,7 @@ const ViewAssetScreen = () => {
                       </Badge>
                     ))
                   : asset?.columns &&
-                    asset?.columns[0]?.map((el, index) => (
+                    asset?.columns?.map((el, index) => (
                       <Badge key={index}>
                         <p className="text-sm font-medium text-gray-700">
                           {el}
