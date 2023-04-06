@@ -45,7 +45,7 @@ const ViewAssetScreen = () => {
 
   const downloadAsset = async (asset) => {
     setDecryptLoading(true);
-    let type = null;
+
     let decryptedAssetData = null;
     let parsedData = null;
     try {
@@ -338,7 +338,7 @@ const ViewAssetScreen = () => {
                   />
                 </a>
               </div>
-              <div class="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-3 gap-4">
                 <div>
                   <div className="mb-2 block cursor-pointer">
                     <Label htmlFor="size" value="Dataset Size" />

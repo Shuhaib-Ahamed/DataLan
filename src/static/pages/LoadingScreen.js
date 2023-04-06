@@ -5,7 +5,6 @@ const LoadingScreen = () => {
 
       <div className="bg-blue-400 w-24 h-24 absolute animate-ping rounded-full shadow-xl"></div>
 
-      {/* <div class="bg-white w-16 h-16 absolute animate-pulse rounded-full shadow-xl"></div> */}
       <svg
         width="108"
         height="108"
