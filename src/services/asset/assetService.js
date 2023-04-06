@@ -4,7 +4,7 @@ import { dev } from "../../config";
 import authHeader from "../auth/auth-header";
 
 //Get Asset
-const getAsset = async (id) => {
+const getAssetByID = async (id) => {
   return await axios.get(dev.backendURL + "assets/" + id, {
     headers: authHeader(),
   });
@@ -45,7 +45,7 @@ const updateAsset = async (body, id) => {
 };
 
 const assetService = {
-  getAssetByID: getAsset,
+  getAssetByID,
   getAssets,
   createAsset,
   getAssetByPublicKey,
