@@ -10,31 +10,32 @@ const TrainingForm = () => {
   const [selectedColumn, setSelectedColumn] = useState([]);
   const [assets, setAssets] = useState([]);
   const [columns, setCloumns] = useState([]);
+  
+  const getOwnedAssets = useCallback(async () => {
+    try {
+      setLoading(true);
+      const getOwnedAssets = await assetService.getAssets();
+
+      if (getOwnedAssets.status === 200) {
+        let dummyArr = [];
+        let columnArr = [];
+        getOwnedAssets?.data?.data?.map((asset) => {
+          dummyArr.push({
+            value: asset,
+            label: asset?.assetTitle?.split("-")[0],
+          });
+
+          return setAssets(dummyArr);
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    const getOwnedAssets = useCallback(async () => {
-      try {
-        setLoading(true);
-        const getOwnedAssets = await assetService.getAssets();
-
-        if (getOwnedAssets.status === 200) {
-          let dummyArr = [];
-          let columnArr = [];
-          getOwnedAssets?.data?.data?.map((asset) => {
-            dummyArr.push({
-              value: asset,
-              label: asset?.assetTitle?.split("-")[0],
-            });
-
-            return setAssets(dummyArr);
-          });
-        }
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    }, []);
     getOwnedAssets();
   }, []);
 
