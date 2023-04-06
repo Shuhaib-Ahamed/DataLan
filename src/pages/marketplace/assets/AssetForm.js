@@ -76,7 +76,7 @@ const AssetForm = memo(({ loading, setLoading, setIsOpen, setRefresh }) => {
           }
         });
     } catch (error) {
-      console.log("ERROR", error);
+      console.log( error);
       const message =
         (error.response &&
           error.response.data &&

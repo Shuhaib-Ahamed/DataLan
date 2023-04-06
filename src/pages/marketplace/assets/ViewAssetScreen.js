@@ -67,8 +67,6 @@ const ViewAssetScreen = () => {
 
           parsedData = JSON.parse(decryptedAssetData);
 
-          console.log(parsedData);
-
           await chainService
             .getWeb3AssetById(parsedData?.assetId)
             .then(async (encModel) => {

@@ -19,10 +19,6 @@ export default function JSONModal() {
     }
   };
 
-  useEffect(() => {
-    console.log(data, loading, isOpen);
-  }, [data, loading, isOpen]);
-
   return (
     <Fragment>
       <div
