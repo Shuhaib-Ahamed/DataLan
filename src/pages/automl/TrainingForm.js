@@ -11,46 +11,44 @@ const TrainingForm = () => {
   const [assets, setAssets] = useState([]);
   const [columns, setCloumns] = useState([]);
 
-  const getOwnedAssets = useCallback(async () => {
-    try {
-      setLoading(true);
-      const getOwnedAssets = await assetService.getAssets();
-
-      if (getOwnedAssets.status === 200) {
-        let dummyArr = [];
-        let columnArr = [];
-        getOwnedAssets?.data?.data?.map((asset) => {
-          dummyArr.push({
-            value: asset,
-            label: asset?.assetTitle?.split("-")[0],
-          });
-
-          return setAssets(dummyArr);
-        });
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  const getColumnNames = () => {
-    let cloumnArr = [];
-    selectedAsset?.value?.columns?.map((column) => {
-      cloumnArr.push({
-        value: column,
-        label: column,
-      });
-      return setCloumns(cloumnArr);
-    });
-  };
-
   useEffect(() => {
+    const getOwnedAssets = useCallback(async () => {
+      try {
+        setLoading(true);
+        const getOwnedAssets = await assetService.getAssets();
+
+        if (getOwnedAssets.status === 200) {
+          let dummyArr = [];
+          let columnArr = [];
+          getOwnedAssets?.data?.data?.map((asset) => {
+            dummyArr.push({
+              value: asset,
+              label: asset?.assetTitle?.split("-")[0],
+            });
+
+            return setAssets(dummyArr);
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    }, []);
     getOwnedAssets();
   }, []);
 
   useEffect(() => {
+    const getColumnNames = () => {
+      let cloumnArr = [];
+      selectedAsset?.value?.columns?.map((column) => {
+        cloumnArr.push({
+          value: column,
+          label: column,
+        });
+        return setCloumns(cloumnArr);
+      });
+    };
     getColumnNames();
   }, [selectedAsset]);
 
