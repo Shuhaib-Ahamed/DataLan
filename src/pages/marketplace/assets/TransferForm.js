@@ -54,16 +54,13 @@ const TransferForm = memo(({ loading, setLoading, setIsOpen, asset }) => {
               txID: data.response.id,
               assetData: data.assetData,
               status: STATE.OWNED,
-              encryptionType: ENCRYPTION.AES,
               ...metaData,
             };
-
             dispatch(setMessage("Updating asset!!!"));
             const assetResponse = await assetService.updateAsset(
               updateAsset,
               asset._id
             );
-
             if (assetResponse.status === 200) {
               setIsOpen(false);
               setLoading(false);

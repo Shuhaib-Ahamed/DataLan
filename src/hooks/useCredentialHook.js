@@ -14,10 +14,12 @@ const useCredential = (file) => {
     fileService
       .readFromFile(file)
       .then((keys) => {
+        setCredentials(keys);
         if (keys?.publicKey === currentUser?.publicKey) {
           setCredentials(keys);
         } else {
           setError(true);
+          setCredentials(null);
           return toast.error("Invalid credential file");
         }
       })
@@ -30,6 +32,10 @@ const useCredential = (file) => {
           error.toString();
         dispatch(setError(message));
       });
+
+    return () => {
+      setCredentials(null);
+    };
   }, [file]);
   return { credentials, error };
 };

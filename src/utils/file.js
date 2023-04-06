@@ -2,6 +2,7 @@ import { toast } from "react-toastify";
 import encryptor from "./encryptor";
 import { saveAs } from "file-saver";
 import Papa from "papaparse";
+import { ENCRYPTION } from "../enum";
 
 const arrayBufferToString = (buffer) => {
   const uint8Array = new Uint8Array(buffer);
@@ -9,7 +10,7 @@ const arrayBufferToString = (buffer) => {
   return decoder.decode(uint8Array);
 };
 
-const writeToCredFile = (content) => {
+const writeToFile = (content) => {
   // Convert the keys to a string
   const keysString = `publicKey:${content.publicKey}\nprivateKey:${content.privateKey}`;
 
@@ -130,21 +131,32 @@ const parseCSVFile = (file) => {
   });
 };
 
-const decryptAESFile = (encryptedData, privateKey, fileName) => {
+const decryptAESFile = (encModel, privateKey, parsedData, fileName, type) => {
   return new Promise((resolve, reject) => {
     try {
-      const decryptedData = encryptor.symmetricDecryption(
-       encryptedData,
-        privateKey
-      );
+      let decryptedBuffer = null;
+      if (!encModel || !privateKey || !fileName || !type) {
+        reject("Invalid Arguments");
+      }
 
-      const decryptedFile = new Blob([decryptedData], {
-        type: "text/plain;charset=utf-8",
+      // // Decrypt the file
+      if (type === ENCRYPTION.AES) {
+        decryptedBuffer = encryptor.symmetricDecryption(encModel, privateKey);
+      } else if (type === ENCRYPTION.RSA) {
+        parsedData.encryptionObject.encryptedData = encModel;
+
+        decryptedBuffer = encryptor.asymmetricDecryption(
+          parsedData?.encryptionObject,
+          privateKey
+        );
+      }
+      if (decryptedBuffer === null) reject("Invalid Encryption Model!!!");
+
+      const decryptedFile = new Blob([decryptedBuffer], {
+        type: "text/csv;charset=utf-8;",
       });
 
-      saveAs(decryptedFile, fileName);
-
-      resolve(toast.success("File Downloaded!!!"));
+      if (decryptedFile) resolve(saveAs(decryptedFile, fileName));
     } catch (error) {
       console.log(error);
       reject(error);
@@ -153,7 +165,7 @@ const decryptAESFile = (encryptedData, privateKey, fileName) => {
 };
 
 const fileService = {
-  writeToCredFile,
+  writeToFile,
   readFromFile,
   readFile,
   getAsByteArray,

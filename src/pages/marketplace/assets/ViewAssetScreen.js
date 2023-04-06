@@ -13,7 +13,7 @@ import CredentialModal from "../../../components/global/CredentialModal";
 import Drawer from "../../../components/global/Drawer";
 import PrimaryButton from "../../../components/ui/PrimaryButton";
 import { dev } from "../../../config";
-import { ROLE, STATE } from "../../../enum";
+import { ENCRYPTION, ROLE, STATE } from "../../../enum";
 import { getTransaction } from "../../../redux/slices/modal";
 import assetService from "../../../services/asset/assetService";
 import requestService from "../../../services/request/requestService";
@@ -45,22 +45,44 @@ const ViewAssetScreen = () => {
 
   const downloadAsset = async (asset) => {
     setDecryptLoading(true);
+    let type = null;
+    let decryptedAssetData = null;
+    let parsedData = null;
     try {
       await assetService.getAssetByID(asset?._id).then(async (response) => {
-        if (response?.data?.data) {
-          const decryptedAssetData = encryptor.symmetricDecryption(
-            response?.data?.data?.assetData,
-            keyPair?.privateKey
-          );
-          const txID = JSON.parse(decryptedAssetData)?.assetId;
-          
-          await chainService.getWeb3AssetById(txID).then(async (response) => {
-            await fileService.decryptAESFile(
-              response?.data,
-              keyPair?.privateKey,
-              `${asset?.assetTitle}.csv`
+        const asset = response?.data?.data;
+        if (asset) {
+          // Encrypt the file
+          if (asset?.encryptionType === ENCRYPTION.AES) {
+            decryptedAssetData = encryptor.symmetricDecryption(
+              asset.assetData,
+              keyPair?.privateKey
             );
-          });
+          } else if (asset?.encryptionType === ENCRYPTION.RSA) {
+            decryptedAssetData = encryptor.asymmetricDecryption(
+              JSON.parse(asset.assetData),
+              keyPair?.privateKey
+            );
+          }
+
+          parsedData = JSON.parse(decryptedAssetData);
+
+          console.log(parsedData);
+
+          await chainService
+            .getWeb3AssetById(parsedData?.assetId)
+            .then(async (encModel) => {
+              if (encModel) {
+                await fileService.decryptAESFile(
+                  encModel,
+                  keyPair?.privateKey,
+                  parsedData,
+                  `${asset?.assetTitle}.csv`,
+                  asset?.encryptionType
+                );
+                toast.success("File Downloaded!!!");
+              } else throw new Error("Asset not found");
+            });
         }
       });
     } catch (error) {
@@ -348,7 +370,7 @@ const ViewAssetScreen = () => {
                     readOnly
                     addon={
                       <p className="text-xs font-semibold text-gray-700 flex items-center">
-                        Rows
+                        ROWS
                       </p>
                     }
                   />

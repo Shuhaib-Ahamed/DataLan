@@ -6,12 +6,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import CredentialModal from "../../../components/global/CredentialModal";
-import { ACTIONS, REQUEST_STATUS, ROLE } from "../../../enum";
+import { ACTIONS, ENCRYPTION, REQUEST_STATUS, ROLE } from "../../../enum";
 import assetService from "../../../services/asset/assetService";
 import requestService from "../../../services/request/requestService";
 import chainService from "../../../services/web3/chainService";
 import encryptor from "../../../utils/encryptor";
 import RequestHeader from "./RequestHeader";
+import { setMessage } from "../../../redux/slices/message";
 
 const RequestsTable = () => {
   const { user: currentUser } = useSelector((state) => state.auth);
@@ -34,8 +35,10 @@ const RequestsTable = () => {
   });
 
   const acceptRequest = async () => {
+    let decryptedAssetData = null;
     setTransferLoading(true);
     try {
+      dispatch(setMessage("Decrypting asset data..."));
       if (!currentRequest.request) return;
 
       await validateRequest(
@@ -43,20 +46,30 @@ const RequestsTable = () => {
         currentRequest.request?.assetId
       )
         .then(async (asset) => {
-          // decrypt assetData from MongoDB
-          const decryptedAssetData = encryptor.symmetricDecryption(
-            asset?.assetData,
-            keyPair?.privateKey
-          );
-          const txId = JSON.parse(decryptedAssetData)?.assetId;
+          if (asset?.encryptionType === ENCRYPTION.AES) {
+            // decrypt assetData from MongoDB
+            decryptedAssetData = encryptor.symmetricDecryption(
+              asset?.assetData,
+              keyPair?.privateKey
+            );
+          } else if (asset?.encryptionType === ENCRYPTION.RSA) {
+            // decrypt assetData from MongoDB
+            decryptedAssetData = encryptor.asymmetricDecryption(
+              JSON.parse(asset?.assetData),
+              keyPair?.privateKey
+            );
+          } else {
+            throw new Error("Could not decrypt asset data");
+          }
 
           const initiateTransfer = await chainService.initiateTransferAsset(
             currentRequest.request?._id,
             currentRequest.request?.assetId,
-            txId,
+            decryptedAssetData,
             keyPair,
             currentRequest.request?.fromPublicKey,
-            dispatch
+            dispatch,
+            asset?.encryptionType
           );
 
           if (initiateTransfer?.status === 204) {

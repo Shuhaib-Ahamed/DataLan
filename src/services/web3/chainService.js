@@ -9,7 +9,6 @@ import requestService from "../request/requestService";
 import assetService from "../asset/assetService";
 import { v4 as uuidv4 } from "uuid";
 
-
 const chainConnection = new BigchainDB.Connection(dev.bigchainURL);
 const setllarConnection = new StellarSdk.Server(dev.setllarURL);
 
@@ -52,7 +51,7 @@ const uploadAsset = (
             encrypted_model:
               type === ENCRYPTION.AES
                 ? encryptedBuffer
-                : encryptedBuffer?.encryptedData,
+                : encryptedBuffer.encryptedData,
           },
         },
       };
@@ -87,7 +86,7 @@ const uploadAsset = (
 
       if (type === ENCRYPTION.RSA) {
         delete encryptedBuffer.encryptedData;
-        newAsset.encriptionObject = encryptedBuffer;
+        newAsset.encryptionObject = encryptedBuffer;
       }
 
       // Next, you'll need to load the account that you want to add data to
@@ -167,23 +166,40 @@ const searchAndDecryptAsset = async (body) => {
 const initiateTransferAsset = (
   requestId,
   assetId,
-  txID,
+  decryptedAssetData,
   setllarKeypair,
   toPublicKey,
-  dispatch
+  dispatch,
+  type
 ) => {
   return new Promise(async (resolve, reject) => {
+    let decryptedBuffer = null;
     try {
-      let getAssetByID = await chainConnection.getTransaction(txID);
+      let parsedData = JSON.parse(decryptedAssetData);
+
+      let getAssetByID = await chainConnection.getTransaction(
+        parsedData?.assetId
+      );
 
       const metadata = getAssetByID?.metadata;
       metadata.assetTitle = metadata.assetTitle.split("-")[0] + "-" + uuidv4();
 
       const encModel = getAssetByID.asset?.data?.data?.model?.encrypted_model;
-      const decryptedBuffer = encryptor.symmetricDecryption(
-        encModel,
-        setllarKeypair.privateKey
-      );
+
+      // Decrypt the file
+      if (type === ENCRYPTION.AES) {
+        decryptedBuffer = encryptor.symmetricDecryption(
+          encModel,
+          setllarKeypair.privateKey
+        );
+      } else if (type === ENCRYPTION.RSA) {
+        parsedData.encryptionObject.encryptedData = encModel;
+
+        decryptedBuffer = encryptor.asymmetricDecryption(
+          parsedData.encryptionObject,
+          setllarKeypair.privateKey
+        );
+      }
 
       const uploadedResponse = await uploadAsset(
         decryptedBuffer,
@@ -214,7 +230,6 @@ const initiateTransferAsset = (
           assetId: assetResponse?._id,
         }
       );
-
       resolve(response);
     } catch (error) {
       reject(error);
@@ -223,49 +238,29 @@ const initiateTransferAsset = (
 };
 
 const transferAsset = (assetData, fromKeyPair, metaData, dispatch) => {
-  const senderKeyPair = new BigchainDB.Ed25519Keypair();
-
-  dispatch(setMessage("Encrypting Data!!!"));
-
-  const encryptedAssetData = JSON.parse(assetData);
-
-  //decrypt assetData
-  const decryptedAssetData = encryptor.asymmetricDecryption(
-    encryptedAssetData,
-    fromKeyPair?.privateKey
-  );
-
-  const { assetId, assetKeyPair, encriptionObject } =
-    JSON.parse(decryptedAssetData);
-
   return new Promise(async (resolve, reject) => {
+    const senderKeyPair = new BigchainDB.Ed25519Keypair();
+
+    dispatch(setMessage("Encrypting Data!!!"));
+
+    const encryptedAssetData = JSON.parse(assetData);
+
+    //decrypt assetData
+    const decryptedAssetData = encryptor.asymmetricDecryption(
+      encryptedAssetData,
+      fromKeyPair?.privateKey
+    );
+
+    const { assetId, assetKeyPair } = JSON.parse(decryptedAssetData);
+
     try {
       dispatch(setMessage("Fetching asset from BigchainDB!!!"));
-      let tx = await chainConnection.getTransaction(assetId);
+      let getAsset = await chainConnection.getTransaction(assetId);
 
-      if (!tx) throw new Error("Asset not found!!!");
-
-      //append the encrypted data in bigchain to the encryption object
-      const encModel = tx?.asset.data.data.model.encrypted_model;
-      encriptionObject.encryptedData = encModel;
-
-      //decrypt the asset object
-      const decryptedFile = encryptor.asymmetricDecryption(
-        encriptionObject,
-        fromKeyPair?.privateKey
-      );
-
-      //Reencrypt the file
-      const reEncryptFile = encryptor.symmetricEncryption(
-        decryptedFile,
-        fromKeyPair?.privateKey
-      );
-      tx.asset.data.data.model.encrypted_model = reEncryptFile;
-
-      console.log(reEncryptFile);
+      if (!getAsset) throw new Error("Asset not found!!!");
 
       const txTransfer = BigchainDB.Transaction.makeTransferTransaction(
-        [{ tx: tx, output_index: 0 }],
+        [{ tx: getAsset, output_index: 0 }],
         [
           BigchainDB.Transaction.makeOutput(
             BigchainDB.Transaction.makeEd25519Condition(senderKeyPair.publicKey)
@@ -282,7 +277,9 @@ const transferAsset = (assetData, fromKeyPair, metaData, dispatch) => {
       const postResponse = await chainConnection.postTransaction(
         txTransferSigned
       );
+
       dispatch(setMessage("Retrieving transaction!!!"));
+
       const retrieveTransaction = await chainConnection.getTransaction(
         postResponse.id
       );
@@ -290,7 +287,7 @@ const transferAsset = (assetData, fromKeyPair, metaData, dispatch) => {
       if (!retrieveTransaction) throw new Error("Transaction not found!!!");
 
       const newAsset = {
-        assetId: tx?.id,
+        assetId: retrieveTransaction?.asset?.id,
         assetKeyPair: senderKeyPair,
       };
 
@@ -328,16 +325,11 @@ const transferAsset = (assetData, fromKeyPair, metaData, dispatch) => {
       // Sign the transaction with the account's secret key
       transaction.sign(sourceKeypair);
 
-      const encryptedAssetData = encryptor.symmetricEncryption(
-        JSON.stringify(newAsset),
-        fromKeyPair.privateKey
-      );
-
       // Finally, submit the transaction to the network
       dispatch(setMessage("Signing transaction..."));
       const response = await setllarConnection.submitTransaction(transaction);
 
-      resolve({ assetData: encryptedAssetData, response: response });
+      resolve({ response: response });
     } catch (err) {
       console.log(err);
       reject(err);
@@ -349,8 +341,9 @@ const getWeb3AssetById = (txID) => {
   return new Promise(async (resolve, reject) => {
     try {
       const tx = await chainConnection.getTransaction(txID);
+      console.log("txID", tx);
       const encModel = tx?.asset?.data?.data?.model?.encrypted_model;
-      resolve({ data: encModel });
+      resolve(encModel);
     } catch (error) {
       reject(error);
     }

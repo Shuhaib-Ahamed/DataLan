@@ -36,6 +36,7 @@ export default {
     );
     return response;
   },
+
   symmetricDecryption: (encryptedField, fromSecretKey) => {
     const response = NIFTRON.utils.symmetricEncryption.decrypt(
       encryptedField,
@@ -62,35 +63,4 @@ export default {
     return regex;
   },
 
-  //   proxyEncrypt: (field, fromSecretKey, toPublicKey) => {
-  //     const fromEncrypter = new RSAProxyReencrypt({
-  //       rsa: { privateKey: fromSecretKey },
-  //     });
-  //     const { proxyKey, userKey } =
-  //       fromEncrypter.generateReencryptionKey(toPublicKey);
-  //     const toChipherText = fromEncrypter.encrypt(field);
-
-  //     return { proxyKey, userKey, toChipherText };
-  //   },
-
-  //   proxyReEncrypt: (proxyKey, chipherText) => {
-  //     const proxyEncrypter = new RSAProxyReencrypt({
-  //       rsa: { privateKey: proxyKey },
-  //     });
-
-  //     //decryptable cipher -> user
-  //     const toCipherText = proxyEncrypter.decrypt(chipherText, {
-  //       partial: true,
-  //     });
-  //     return { toCipherText };
-  //   },
-
-  //   proxyDeCrypt: (fromSecretKey, toCipherText) => {
-  //     const toEncrypter = new RSAProxyReencrypt({
-  //       //Users SecretKey
-  //       rsa: { privateKey: fromSecretKey },
-  //     });
-  //     const decryptedField = toEncrypter.decrypt(toCipherText);
-  //     return { decryptedField };
-  //   },
 };
