@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 import CredentialModal from "../../../components/global/CredentialModal";
 import Drawer from "../../../components/global/Drawer";
 import PrimaryButton from "../../../components/ui/PrimaryButton";
-import { dev } from "../../../config";
+import { devNGROCK } from "../../../config";
 import { ENCRYPTION, ROLE, STATE } from "../../../enum";
 import { getTransaction } from "../../../redux/slices/modal";
 import assetService from "../../../services/asset/assetService";
@@ -295,7 +295,7 @@ const ViewAssetScreen = () => {
                 <a
                   target="_blank"
                   href={
-                    dev.setllarURL + "/accounts/" + state?.asset?.publicKey ||
+                    devNGROCK.setllarURL + "/accounts/" + state?.asset?.publicKey ||
                     asset?.publicKey
                   }
                 >
@@ -320,7 +320,7 @@ const ViewAssetScreen = () => {
                 <a
                   target="_blank"
                   href={
-                    dev.setllarURL + "/transactions/" + state?.asset?.txID ||
+                    devNGROCK.setllarURL + "/transactions/" + state?.asset?.txID ||
                     asset?.txID
                   }
                 >
