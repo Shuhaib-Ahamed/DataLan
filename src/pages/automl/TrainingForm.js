@@ -79,6 +79,7 @@ const TrainingForm = () => {
                   newModel.publicKey = currentUser?.publicKey;
                   newModel.assetId = asset?._id;
                   newModel.url = trainedModel?.model_url;
+                  newModel.assetTitle = asset?.assetTitle;
 
                   dispatch(setMessage("Saving Model!!!"));
                   const modelResponse = await modelService.createModel(
