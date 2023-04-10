@@ -16,13 +16,15 @@ import { setMessage } from "../../../redux/slices/message";
 import assetService from "../../../services/asset/assetService";
 import chainService from "../../../services/web3/chainService";
 import LoadingGif from "../../../static/images/block.gif";
-import useTransactionsHook from "../../../hooks/useStellarMetrics";
 import { dev } from "../../../config";
 import StellarSdk from "stellar-sdk";
+import useStellarMetrics from "../../../hooks/useStellarMetrics";
 
 const setllarConnection = new StellarSdk.Server(dev.setllarURL);
 
 const TransferForm = memo(({ loading, setLoading, setIsOpen, asset }) => {
+  const { transactionsPerSecond, blockIndex } =
+    useStellarMetrics(setllarConnection);
   const { message } = useSelector((state) => state.message);
   let navigate = useNavigate();
   const { register, handleSubmit, reset } = useForm();
@@ -89,6 +91,10 @@ const TransferForm = memo(({ loading, setLoading, setIsOpen, asset }) => {
       dispatch(clearError());
       reset();
       navigate("/assets");
+      console.table("EVALUATION METRICS TRANSFER ", {
+        tps: transactionsPerSecond,
+        blockIndex: blockIndex,
+      });
     }
   };
 

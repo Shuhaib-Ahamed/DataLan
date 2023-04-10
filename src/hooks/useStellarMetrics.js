@@ -27,7 +27,7 @@ const useStellarMetrics = (setllarConnection) => {
       transactionCount++;
       const elapsedTime = (Date.now() - startTime) / 1000;
       const fixedTransaction = transactionCount / elapsedTime;
-      setTransactionsPerSecond(fixedTransaction);
+      setTransactionsPerSecond(fixedTransaction.toFixed(2));
     };
     eventSource = setllarConnection
       .transactions()

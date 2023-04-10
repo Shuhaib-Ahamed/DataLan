@@ -100,9 +100,9 @@ const AssetForm = memo(({ loading, setLoading, setIsOpen, setRefresh }) => {
       dispatch(clearError());
       navigate("/assets");
 
-      console.table("EVALUATION METRICS", {
-        transactionsPerSecond,
-        blockIndex,
+      console.table("EVALUATION METRICS UPLOAD ", {
+        tps: transactionsPerSecond,
+        blockIndex: blockIndex,
       });
     }
   };
