@@ -10,7 +10,6 @@ import assetService from "../asset/assetService";
 import { v4 as uuidv4 } from "uuid";
 
 const chainConnection = new BigchainDB.Connection(dev.bigchainURL);
-const setllarConnection = new StellarSdk.Server(dev.setllarURL);
 
 const uploadAsset = (
   file,
@@ -18,7 +17,8 @@ const uploadAsset = (
   setllarKeypair,
   type,
   dispatch,
-  toPublicKey
+  toPublicKey,
+  setllarConnection
 ) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -139,6 +139,7 @@ const uploadAsset = (
       resolve({
         assetData: encryptedAssetData,
         response: response,
+        txAssetID: tx?.id,
       });
     } catch (error) {
       reject(error);
@@ -214,6 +215,7 @@ const initiateTransferAsset = (
         txID: uploadedResponse.response.id,
         publicKey: toPublicKey,
         assetData: JSON.stringify(uploadedResponse.assetData),
+        txAssetID: uploadedResponse?.txAssetID,
         ...metadata,
         status: STATE.TRANSFERED,
         encryptionType: ENCRYPTION.RSA,
@@ -237,7 +239,13 @@ const initiateTransferAsset = (
   });
 };
 
-const transferAsset = (assetData, fromKeyPair, metaData, dispatch) => {
+const transferAsset = (
+  assetData,
+  fromKeyPair,
+  metaData,
+  dispatch,
+  setllarConnection
+) => {
   return new Promise(async (resolve, reject) => {
     const senderKeyPair = new BigchainDB.Ed25519Keypair();
 
@@ -329,7 +337,10 @@ const transferAsset = (assetData, fromKeyPair, metaData, dispatch) => {
       dispatch(setMessage("Signing transaction..."));
       const response = await setllarConnection.submitTransaction(transaction);
 
-      resolve({ response: response });
+      resolve({
+        response: response,
+        txAssetID: retrieveTransaction?.asset?.id,
+      });
     } catch (err) {
       console.log(err);
       reject(err);
@@ -349,12 +360,24 @@ const getWeb3AssetById = (txID) => {
   });
 };
 
+const serachAssetById = (txID) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const tx = await chainConnection.getTransaction(txID);
+      resolve(tx);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
 const chainService = {
   uploadAsset,
   initiateTransferAsset,
   searchAndDecryptAsset,
   transferAsset,
   getWeb3AssetById,
+  serachAssetById,
 };
 
 export default chainService;

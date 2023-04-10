@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import JSONPretty from "react-json-pretty";
 import { useDispatch } from "react-redux";
 import { closeJSONModal } from "../../redux/slices/modal";
@@ -11,11 +11,18 @@ import { dev } from "../../config";
 
 export default function JSONModal() {
   const { data, loading, isOpen } = useSelector((state) => state.modal);
+  const [mode, setMode] = useState(0);
   const dispatch = useDispatch();
 
   const toggleModal = () => {
     if (!loading) {
       dispatch(closeJSONModal());
+    }
+  };
+
+  const toggleMode = () => {
+    if (!loading) {
+      setMode((prev) => (prev === 0 ? 1 : 0));
     }
   };
 
@@ -37,15 +44,13 @@ export default function JSONModal() {
                     alt="Datalan-Logo"
                   />
                   <span className="self-center hidden sm:flex text-xl font-medium text-gray-900 dark:text-white">
-                    Stellar Net View
+                    {mode === 0 ? "Stellar Net View " : "Bigchain Network Data"}
                   </span>
                 </div>
               </div>
               <div className="flex flex-col pt-10 pb-16 justify-center space-y-6 items-center h-full">
                 <img className="w-72 h-72" src={LoadingGif} alt="loading" />
-                <h3 className="font-base text-md">
-                  Loading Stellar Network Data
-                </h3>
+                <h3 className="font-base text-md">Blockchain Network Data</h3>
                 <Spinner size="lg" />
               </div>
             </div>
@@ -59,7 +64,7 @@ export default function JSONModal() {
                     alt="Datalan-Logo"
                   />
                   <span className="self-center hidden sm:flex text-xl font-medium text-gray-900 dark:text-white">
-                    Transaction Data
+                    {mode === 0 ? "Transaction Data" : "Asset Data"}
                   </span>
                 </div>
                 <button
@@ -86,12 +91,24 @@ export default function JSONModal() {
               <div className="flex flex-col space-y-4 px-8 pt-4 pb-6 max-h-96 overflow-auto">
                 <JSONPretty
                   style={{ fontSize: ".8em" }}
-                  data={data}
+                  data={mode === 0 ? data?.stellarData : data?.chainData}
                 ></JSONPretty>
               </div>
               <div className="flex justify-center items-center py-6 px-8 space-x-6 border-t border-gray-200 rounded-b dark:border-gray-600">
                 <a
-                  href={dev.setllarURL + "/transactions/" + data?.id}
+                  href={
+                    mode === 0
+                      ? `${
+                          dev.setllarURL +
+                          "/transactions/" +
+                          data?.stellarData?.id
+                        }`
+                      : `${
+                          dev.bigchainURL +
+                          "transactions/" +
+                          data?.chainData?.id
+                        }`
+                  }
                   target="_blank"
                   className="w-full"
                 >
@@ -105,12 +122,12 @@ export default function JSONModal() {
                 </a>
 
                 <button
-                  onClick={() => toggleModal()}
+                  onClick={() => toggleMode()}
                   type="button"
                   disabled={loading}
-                  className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+                  className="text-gray-500 w-full bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
                 >
-                  Cancel
+                  {mode === 0 ? "View Asset Data" : "View Transaction Data"}
                 </button>
               </div>
             </div>

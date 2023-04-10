@@ -17,8 +17,15 @@ import assetService from "../../../services/asset/assetService";
 import chainService from "../../../services/web3/chainService";
 import LoadingGif from "../../../static/images/block.gif";
 import fileService from "../../../utils/file";
+import useStellarMetrics from "../../../hooks/useStellarMetrics";
+import { dev } from "../../../config";
+import StellarSdk from "stellar-sdk";
+
+const setllarConnection = new StellarSdk.Server(dev.setllarURL);
 
 const AssetForm = memo(({ loading, setLoading, setIsOpen, setRefresh }) => {
+  const { transactionsPerSecond, blockIndex } =
+    useStellarMetrics(setllarConnection);
   const { user: currentUser } = useSelector((state) => state.auth);
   const { message } = useSelector((state) => state.message);
   let navigate = useNavigate();
@@ -55,11 +62,13 @@ const AssetForm = memo(({ loading, setLoading, setIsOpen, setRefresh }) => {
           credentials,
           ENCRYPTION.AES,
           dispatch,
-          null
+          null,
+          setllarConnection
         )
         .then(async (data) => {
           const newAsset = {
             txID: data.response.id,
+            txAssetID: data.txAssetID,
             publicKey: currentUser.publicKey,
             assetData: data.assetData,
             ...metaData,
@@ -76,7 +85,7 @@ const AssetForm = memo(({ loading, setLoading, setIsOpen, setRefresh }) => {
           }
         });
     } catch (error) {
-      console.log( error);
+      console.log(error);
       const message =
         (error.response &&
           error.response.data &&
@@ -90,6 +99,11 @@ const AssetForm = memo(({ loading, setLoading, setIsOpen, setRefresh }) => {
       setCredFile(null);
       dispatch(clearError());
       navigate("/assets");
+
+      console.table("EVALUATION METRICS", {
+        transactionsPerSecond,
+        blockIndex,
+      });
     }
   };
 

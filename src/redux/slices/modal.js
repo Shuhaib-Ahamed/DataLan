@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import stellarService from "../../services/web3/stellarService";
+import chainService from "../../services/web3/chainService";
 
 const initialState = {
   isOpen: false,
@@ -9,12 +10,16 @@ const initialState = {
 
 export const getTransaction = createAsyncThunk(
   "modal/getTransaction",
-  async (txID, thunkAPI) => {
+  async ({ txID, txAssetID }, thunkAPI) => {
+    console.log(txID, txAssetID);
     try {
       thunkAPI.dispatch(openJSONModal());
-      const response = await stellarService.getTransactionById(txID);
-      return { data: response?.data };
+      const stellarRes = await stellarService.getTransactionById(txID);
+      const chainRes = await chainService.serachAssetById(txAssetID);
+
+      return { data: { stellarData: stellarRes?.data, chainData: chainRes } };
     } catch (error) {
+      console.log(error);
       thunkAPI.dispatch(closeJSONModal());
       return thunkAPI.rejectWithValue();
     }

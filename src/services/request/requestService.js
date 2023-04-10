@@ -4,7 +4,6 @@ import { dev } from "../../config";
 import authHeader from "../auth/auth-header";
 
 //Get Assets by publicKey
-//Get Assets by publicKey
 const getSentRequests = async (id) => {
   return await axios.get(dev.backendURL + "request/sent/" + id, {
     headers: authHeader(),

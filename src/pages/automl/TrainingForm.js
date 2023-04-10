@@ -59,7 +59,7 @@ const TrainingForm = () => {
             .getWeb3AssetById(parsedData?.assetId)
             .then(async (encModel) => {
               if (encModel) {
-                dispatch(setMessage("Runing computations!!!"));
+                dispatch(setMessage("Running computations!!!"));
                 await sendData(
                   encModel,
                   keyPair?.privateKey,
@@ -119,6 +119,7 @@ const TrainingForm = () => {
 
           if (train.status === 200) {
             toast.success("Model Trained Successfully");
+            console.log("MODEL", train);
             resolve(train);
           } else {
             reject("Error");
@@ -238,6 +239,7 @@ const TrainingForm = () => {
       </div>
       <CredentialModal
         action="Train Dataset"
+        isML
         setIsOpen={setIsDecryptOpen}
         authFunction={() => trainAsset(selectedAsset.value)}
         loading={loading}

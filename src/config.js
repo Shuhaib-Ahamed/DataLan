@@ -5,6 +5,8 @@ export const dev = {
   fastAPIURL: "http://localhost:8000",
 };
 
+//CLIENT = https://datalan.netlify.app/
+
 export const devNGROCK = {
   backendURL: "https://6979-116-206-246-217.ngrok-free.app/api/v1/",
   setllarURL: "https://horizon-testnet.stellar.org",
