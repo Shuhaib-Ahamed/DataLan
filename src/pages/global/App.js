@@ -54,6 +54,7 @@ const App = () => {
             <Route path="/training" element={<AutoMLTrain />} />
             <Route path="/requests" element={<RequestsScreen />} />
             <Route path="/models" element={<ModelsScreen />} />
+            <Route path="/models/:id" element={<ModelsScreen />} />
             <Route path="*" element={<NotFoundScreen />} />
           </Routes>
           <JSONModal />

@@ -11,13 +11,16 @@ import chainService from "../../services/web3/chainService";
 import autoMLService from "../../services/automl/automlService";
 import { useDispatch, useSelector } from "react-redux";
 import { clearMessage, setMessage } from "../../redux/slices/message";
+import modelService from "../../services/models/modelService";
+import { NavLink } from "react-router-dom";
 
 const TrainingForm = () => {
+  const [model, setModel] = useState(null);
   const { user: currentUser } = useSelector((state) => state.auth);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const [loadingAsset, setLoadingAsset] = useState(false);
-  const [selectedAsset, setSelectedAsset] = useState();
+  const [selectedAsset, setSelectedAsset] = useState(null);
   const [selectedColumn, setSelectedColumn] = useState([]);
   const [assets, setAssets] = useState([]);
   const [columns, setCloumns] = useState([]);
@@ -60,12 +63,34 @@ const TrainingForm = () => {
             .then(async (encModel) => {
               if (encModel) {
                 dispatch(setMessage("Running computations!!!"));
-                await sendData(
+                const trainedModel = await sendData(
                   encModel,
                   keyPair?.privateKey,
                   parsedData,
-                  asset?.encryptionType
+                  asset?.encryptionType,
+                  currentUser?._id,
+                  asset?._id
                 );
+
+                if (trainedModel) {
+                  const newModel = parseClassifierString(
+                    trainedModel?.response
+                  );
+                  newModel.publicKey = currentUser?.publicKey;
+                  newModel.assetId = asset?._id;
+                  newModel.url = trainedModel?.model_url;
+
+                  dispatch(setMessage("Saving Model!!!"));
+                  const modelResponse = await modelService.createModel(
+                    newModel
+                  );
+
+                  console.log("MODEL", modelResponse);
+                  if (modelResponse?.status === 201) {
+                    setModel(modelResponse?.data?.data);
+                    toast.success("Model Saved successfully");
+                  }
+                }
               } else throw new Error("Asset not found");
             });
         }
@@ -82,11 +107,22 @@ const TrainingForm = () => {
     } finally {
       setLoading(false);
       setIsDecryptOpen(false);
+      setAssets([]);
+      setSelectedColumn([]);
+      setSelectedAsset(null);
+
       dispatch(clearMessage());
     }
   };
 
-  const sendData = (encModel, privateKey, parsedData, type) => {
+  const sendData = (
+    encModel,
+    privateKey,
+    parsedData,
+    type,
+    userId,
+    assetId
+  ) => {
     return new Promise(async (resolve, reject) => {
       try {
         let decryptedBuffer = null;
@@ -113,14 +149,14 @@ const TrainingForm = () => {
         if (decryptedFile) {
           const form = new FormData();
           form.append("file", decryptedFile);
+          form.append("userId", userId);
+          form.append("assetId", assetId);
           form.append("target_column", selectedColumn?.value);
 
           const train = await autoMLService.trainDataSet(form);
 
           if (train.status === 200) {
-            toast.success("Model Trained Successfully");
-            console.log("MODEL", train);
-            resolve(train);
+            resolve(train.data);
           } else {
             reject("Error");
           }
@@ -156,6 +192,31 @@ const TrainingForm = () => {
       setLoadingAsset(false);
     }
   }, []);
+
+  function parseClassifierString(classifierString) {
+    // Remove whitespaces and split the string by '('
+    const splitString = classifierString.replace(/\s/g, "").split("(");
+
+    // Extract the classifier name and parameters
+    const classifierName = splitString[0];
+    const paramString = splitString[1].replace(")", "");
+
+    // Convert the parameters to an object
+    const paramArray = paramString.split(",");
+    const params = {};
+    paramArray.forEach((param) => {
+      const [key, value] = param.split("=");
+      params[key] = value;
+    });
+
+    // Wrap the classifier name and parameters in an object
+    const classifier = {
+      classifier: classifierName,
+      params: params,
+    };
+
+    return classifier;
+  }
 
   useEffect(() => {
     getOwnedAssets();
@@ -234,6 +295,16 @@ const TrainingForm = () => {
               loading={loading}
               onClick={() => setIsDecryptOpen(true)}
             />
+
+            {model && (
+              <NavLink
+                className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+                to={`/models/${model?._id}`}
+                state={{ model: model }}
+              >
+                View Model
+              </NavLink>
+            )}
           </div>
         </div>
       </div>

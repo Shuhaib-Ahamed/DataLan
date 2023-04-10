@@ -1,11 +1,14 @@
 import { Breadcrumb } from "flowbite-react";
 import React from "react";
 import { AiFillHome } from "react-icons/ai";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import Banner from "../../components/ui/Banner";
 import DashboardLayout from "../../layouts/DashboardLayout";
 
 const ModelsScreen = () => {
+  const { state } = useLocation();
+
+  console.log("STATE", state);
   return (
     <DashboardLayout>
       <div className="mb-4 py-4 px-10 ">
