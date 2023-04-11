@@ -1,6 +1,6 @@
 import encryptor from "../../utils/encryptor";
 import StellarSdk from "stellar-sdk";
-import { devNGROCK } from "../../config";
+import { dev, devNGROCK } from "../../config";
 import * as BigchainDB from "bigchaindb-driver";
 import fileService from "../../utils/file";
 import { setMessage } from "../../redux/slices/message";
@@ -9,7 +9,7 @@ import requestService from "../request/requestService";
 import assetService from "../asset/assetService";
 import { v4 as uuidv4 } from "uuid";
 
-const chainConnection = new BigchainDB.Connection(dev.bigchainURL);
+const chainConnection = new BigchainDB.Connection(devNGROCK.bigchainURL);
 
 const uploadAsset = (
   file,
