@@ -9,15 +9,22 @@ import CustomDropZone from "../../../components/global/CustomDropZone";
 import FormAlert from "../../../components/global/FormAlert";
 import FormInput from "../../../components/ui/FormInput";
 import PrimaryButton from "../../../components/ui/PrimaryButton";
-import { ENCRYPTION, STATE } from "../../../enum";
+import { STATE } from "../../../enum";
 import useCredential from "../../../hooks/useCredentialHook";
 import { clearError, setError } from "../../../redux/slices/error";
 import { setMessage } from "../../../redux/slices/message";
 import assetService from "../../../services/asset/assetService";
 import chainService from "../../../services/web3/chainService";
 import LoadingGif from "../../../static/images/block.gif";
+import { dev } from "../../../config";
+import StellarSdk from "stellar-sdk";
+import useStellarMetrics from "../../../hooks/useStellarMetrics";
+
+const setllarConnection = new StellarSdk.Server(dev.setllarURL);
 
 const TransferForm = memo(({ loading, setLoading, setIsOpen, asset }) => {
+  const { transactionsPerSecond, blockIndex } =
+    useStellarMetrics(setllarConnection);
   const { message } = useSelector((state) => state.message);
   let navigate = useNavigate();
   const { register, handleSubmit, reset } = useForm();
@@ -47,12 +54,13 @@ const TransferForm = memo(({ loading, setLoading, setIsOpen, asset }) => {
             getAsset?.data?.data?.assetData,
             credentials,
             metaData,
-            dispatch
+            dispatch,
+            setllarConnection
           )
           .then(async (data) => {
             const updateAsset = {
-              txID: data.response.id,
-              assetData: data.assetData,
+              txID: data?.response?.id,
+              txAssetID: data?.txAssetID,
               status: STATE.OWNED,
               ...metaData,
             };
@@ -69,7 +77,7 @@ const TransferForm = memo(({ loading, setLoading, setIsOpen, asset }) => {
           });
       }
     } catch (error) {
-      console.log( error);
+      console.log(error);
       const message =
         (error.response &&
           error.response.data &&
@@ -83,6 +91,10 @@ const TransferForm = memo(({ loading, setLoading, setIsOpen, asset }) => {
       dispatch(clearError());
       reset();
       navigate("/assets");
+      console.table("EVALUATION METRICS TRANSFER ", {
+        tps: transactionsPerSecond,
+        blockIndex: blockIndex,
+      });
     }
   };
 

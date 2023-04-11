@@ -7,6 +7,7 @@ import LogoImage from "../../static/images/logo.svg";
 import PrimaryButton from "../ui/PrimaryButton";
 import CustomDropZone from "./CustomDropZone";
 import LoadingGif from "../../static/images/block.gif";
+import MLGif from "../../static/images/Train.gif";
 
 const CredentialModal = ({
   loading,
@@ -16,6 +17,7 @@ const CredentialModal = ({
   credInputs,
   action,
   setCredentials,
+  isML,
 }) => {
   const { message } = useSelector((state) => state.message);
   const [credFile, setCredFile] = useState(null);
@@ -70,7 +72,11 @@ const CredentialModal = ({
               </div>
             </div>
             <div className="flex flex-col pt-10 pb-16 justify-center space-y-6 items-center h-full">
-              <img className="w-72 h-72" src={LoadingGif} alt="loading" />
+              {isML ? (
+                <img className="w-72 h-72" src={MLGif} alt="loading" />
+              ) : (
+                <img className="w-72 h-72" src={LoadingGif} alt="loading" />
+              )}
               <h3 className="font-base text-md">{message}</h3>
               <Spinner size="lg" />
             </div>

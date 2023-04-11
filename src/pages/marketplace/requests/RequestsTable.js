@@ -83,6 +83,7 @@ const RequestsTable = () => {
     } finally {
       setTransferLoading(false);
       setIsOpen(false);
+      setType((prev) => (prev === 0 ? 1 : 0));
     }
   };
 

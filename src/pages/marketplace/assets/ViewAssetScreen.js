@@ -437,6 +437,20 @@ const ViewAssetScreen = () => {
                 <></>
               )}
               <div className="flex items-center justify-end space-x-4 mt-10">
+                <button
+                  onClick={() =>
+                    dispatch(
+                      getTransaction({
+                        txID: state?.asset?.txID || asset?.txID,
+                        txAssetID: state?.asset?.txAssetID || asset?.txAssetID,
+                      })
+                    )
+                  }
+                  className=" inline-flex items-center py-2.5 px-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                >
+                  <SiHiveBlockchain className="w-4 h-4 mr-2" /> View on
+                  Blockchain
+                </button>{" "}
                 {currentUser?.publicKey === state?.asset?.publicKey &&
                   state?.asset?.status === STATE.OWNED && (
                     <PrimaryButton
@@ -444,17 +458,6 @@ const ViewAssetScreen = () => {
                       content={"Download Dataset"}
                     />
                   )}
-
-                <button
-                  onClick={() =>
-                    dispatch(getTransaction(state?.asset?.txID || asset?.txID))
-                  }
-                  className=" inline-flex items-center py-2.5 px-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-                >
-                  <SiHiveBlockchain className="w-4 h-4 mr-2" /> View on
-                  Blockchain
-                </button>
-
                 {currentUser?.publicKey === state?.asset?.publicKey &&
                   state?.asset?.status === STATE.TRANSFERED && (
                     <PrimaryButton
@@ -464,7 +467,6 @@ const ViewAssetScreen = () => {
                       loading={loading}
                     />
                   )}
-
                 {currentUser?.publicKey !== state?.asset?.publicKey &&
                   state?.asset?.status === STATE.OWNED && (
                     <PrimaryButton

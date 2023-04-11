@@ -1,9 +1,10 @@
 import { Breadcrumb } from "flowbite-react";
 import React from "react";
 import { AiFillHome } from "react-icons/ai";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import Banner from "../../components/ui/Banner";
 import DashboardLayout from "../../layouts/DashboardLayout";
+import ModelTable from "./ModelTable";
 
 const ModelsScreen = () => {
   return (
@@ -19,6 +20,7 @@ const ModelsScreen = () => {
           highLight="Models"
           content="Here at AutoCS we focus on markets where technology, innovation, and capital can unlock long-term value and drive economic growth."
         />
+        <ModelTable />
       </div>
     </DashboardLayout>
   );

@@ -57,22 +57,15 @@ async function byteArrayToFile(byteArray, fileName) {
   return new File([blob], fileName);
 }
 
-// const byteArrayToFile = async (byteArray, fileName) => {
-//   const blob = new Blob([byteArray], { type: "application/octet-stream" });
-//   // Create a download link for the Blob object
-//   const link = document.createElement("a");
-//   link.href = window.URL.createObjectURL(blob);
-//   link.download = fileName;
-
-//   // Append the link to the document and click it to start the download
-//   document.body.appendChild(link);
-
-//   link.click();
-//   toast.success("File Downloaded!!!");
-
-//   // Remove the link from the document
-//   document.body.removeChild(link);
-// };
+const getDataFromURL = (url) =>
+  new Promise((resolve, reject) => {
+    fetch(url)
+      .then((response) => response.text())
+      .then((data) => {
+        resolve(data);
+      })
+      .catch((err) => reject(err));
+  }, 2000);
 
 const readFile = (file) => {
   return new Promise((resolve, reject) => {
@@ -173,6 +166,7 @@ const fileService = {
   encryptAESFile,
   decryptAESFile,
   parseCSVFile,
+  getDataFromURL,
 };
 
 export default fileService;

@@ -15,6 +15,7 @@ import ViewAssetScreen from "../marketplace/assets/ViewAssetScreen";
 import { getUser } from "../../redux/slices/auth";
 import JSONModal from "../../components/global/JSONModal";
 import AutoMLTrain from "../automl/AutoMLTraining";
+import ViewModelScreen from "../automl/ViewModelScreen";
 
 const App = () => {
   const { user: currentUser, loading } = useSelector((state) => state.auth);
@@ -54,6 +55,7 @@ const App = () => {
             <Route path="/training" element={<AutoMLTrain />} />
             <Route path="/requests" element={<RequestsScreen />} />
             <Route path="/models" element={<ModelsScreen />} />
+            <Route path="/models/:id" element={<ViewModelScreen />} />
             <Route path="*" element={<NotFoundScreen />} />
           </Routes>
           <JSONModal />

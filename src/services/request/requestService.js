@@ -4,7 +4,6 @@ import { devNGROCK } from "../../config";
 import authHeader from "../auth/auth-header";
 
 //Get Assets by publicKey
-//Get Assets by publicKey
 const getSentRequests = async (id) => {
   return await axios.get(devNGROCK.backendURL + "request/sent/" + id, {
     headers: authHeader(),
