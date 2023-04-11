@@ -7,6 +7,7 @@ const PrimaryButton = ({
   status,
   fullSized,
   onClick,
+  children,
 }) => {
   return (
     <Button
@@ -39,6 +40,7 @@ const PrimaryButton = ({
       ) : (
         <>{content}</>
       )}
+      {children}
     </Button>
   );
 };

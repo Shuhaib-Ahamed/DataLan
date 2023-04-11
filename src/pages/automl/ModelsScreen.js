@@ -7,9 +7,6 @@ import DashboardLayout from "../../layouts/DashboardLayout";
 import ModelTable from "./ModelTable";
 
 const ModelsScreen = () => {
-  const { state } = useLocation();
-
-  console.log("STATE", state);
   return (
     <DashboardLayout>
       <div className="mb-4 py-4 px-10 ">

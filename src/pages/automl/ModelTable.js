@@ -112,7 +112,7 @@ const ModelTable = () => {
                             <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-gray-400">
                               <span className="text-base font-semibold text-gray-900 dark:text-white">
                                 {model?.assetTitle?.split("-")[0]}
-                                &nbsp;
+                                &nbsp;Model
                               </span>
                             </td>
                             <td className="p-4 max-w-xs overflow-hidden text-base font-normal text-gray-500 truncate dark:text-gray-400">
@@ -131,7 +131,7 @@ const ModelTable = () => {
                               <NavLink
                                 className="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                                 to={`/models/${model?._id}`}
-                                state={{ asset: model }}
+                                state={{ model: model }}
                               >
                                 View Model
                               </NavLink>
@@ -142,12 +142,16 @@ const ModelTable = () => {
                                   style={{ textDecoration: "none" }}
                                   tagName="button"
                                   label="Download Model"
-                                  filename={model?.url}
-                                  exportFile={() =>
-                                    Promise.resolve(
-                                      toast.success("Model Downloaded!!!")
-                                    )
+                                  filename={
+                                    model?.assetTitle?.split("-")[0] +
+                                    "+best_model" +
+                                    ".pkl"
                                   }
+                                  exportFile={() => {
+                                    Promise.resolve(model?.url).then((res) => {
+                                      toast.success("Model Downloaded");
+                                    });
+                                  }}
                                 />
                               </a>
                             </td>
