@@ -1,0 +1,88 @@
+{
+  "name": "data-market",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@react-icons/all-files": "^4.1.0",
+    "@reduxjs/toolkit": "^1.9.3",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^13.0.0",
+    "@testing-library/user-event": "^13.2.1",
+    "axios": "^1.3.4",
+    "base-x": "^3.0.4",
+    "bigchaindb-driver": "^4.1.0",
+    "bip39": "^2.5.0",
+    "core-js": "^3.29.1",
+    "crypto": "^1.0.1",
+    "dotenv": "^10.0.0",
+    "file-saver": "^2.0.5",
+    "firebase": "^9.18.0",
+    "flowbite": "^1.6.4",
+    "flowbite-react": "^0.4.2",
+    "fs": "^0.0.1-security",
+    "jsonwebtoken": "^9.0.0",
+    "moment": "^2.29.4",
+    "niftron-client-sdk": "^0.0.27",
+    "papaparse": "^5.4.1",
+    "prop-types": "^15.8.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-download-link": "^2.3.0",
+    "react-dropzone": "^14.2.3",
+    "react-hook-form": "^7.43.5",
+    "react-json-pretty": "^2.2.0",
+    "react-redux": "^8.0.5",
+    "react-router-dom": "^6.9.0",
+    "react-scripts": "5.0.1",
+    "react-select": "^5.7.2",
+    "react-toastify": "^9.1.1",
+    "uuidv4": "^6.2.13",
+    "web-vitals": "^2.1.0",
+    "webpack": "5.73.0"
+  },
+  "scripts": {
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browser": {
+    "fs": false,
+    "os": false,
+    "path": false
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@iconify/react": "^4.1.0",
+    "assert": "^2.0.0",
+    "autoprefixer": "^10.4.14",
+    "buffer": "^6.0.3",
+    "crypto-browserify": "^3.12.0",
+    "https-browserify": "^1.0.0",
+    "os-browserify": "^0.3.0",
+    "postcss": "^8.4.21",
+    "process": "^0.11.10",
+    "react-app-rewired": "^2.2.1",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
+    "tailwindcss": "^3.2.7",
+    "url": "^0.11.0"
+  }
+}
