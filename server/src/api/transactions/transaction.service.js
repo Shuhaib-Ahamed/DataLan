@@ -32,9 +32,10 @@ export default {
       .then(function () {
         return setllarServer.loadAccount(sourceKeys.publicKey());
       })
-      .then(function (sourceAccount) {
+      .then(async function (sourceAccount) {
         // Start building the transaction.
         transaction = new StellarSdk.TransactionBuilder(sourceAccount, {
+          timebounds: await setllarServer.fetchTimebounds(100),
           fee: StellarSdk.BASE_FEE,
           networkPassphrase: StellarSdk.Networks.TESTNET,
         })

@@ -36,9 +36,9 @@ export default {
 
       // the JS SDK uses promises for most actions, such as retrieving an account
 
-      const account = await setllarServer.loadAccount(user.publicKey);
+      const account = await setllarServer?.loadAccount(user.publicKey);
 
-      account.balances.forEach(function (balance) {
+      account?.balances?.forEach(function (balance) {
         const account = {
           type: balance.asset_type,
           balance: balance.balance,
@@ -48,12 +48,16 @@ export default {
 
       // Login successful, write token, and send back user
       const userData = {
-        id: user.id,
+        _id: user.id,
         name: user.name,
         email: user.email,
+        isVerified: user.isVerified,
+        role: user.role,
+        data: user?.data,
         username: user.username,
-        account: { ...accountArray, account },
+        publicKey: user.publicKey,
       };
+
       return {
         token: user.generateJWT(),
         user: userData,

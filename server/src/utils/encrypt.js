@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import { NIFTRON } from "niftron-client-sdk";
+import RSAProxyReencrypt from "rsa-proxy-reencrypt";
 
 export default {
   generateSalt: () => {
@@ -45,5 +46,37 @@ export default {
 
   generateHash: (value) => {
     return crypto.createHash("sha256").update(value).digest("hex");
+  },
+
+  proxyEncrypt: (field, fromSecretKey, toPublicKey) => {
+    const fromEncrypter = new RSAProxyReencrypt({
+      rsa: { privateKey: fromSecretKey },
+    });
+    const { proxyKey, userKey } =
+      fromEncrypter.generateReencryptionKey(toPublicKey);
+    const toChipherText = fromEncrypter.encrypt(field);
+
+    return { proxyKey, userKey, toChipherText };
+  },
+
+  proxyReEncrypt: (proxyKey, chipherText) => {
+    const proxyEncrypter = new RSAProxyReencrypt({
+      rsa: { privateKey: proxyKey },
+    });
+
+    //decryptable cipher -> user
+    const toCipherText = proxyEncrypter.decrypt(chipherText, {
+      partial: true,
+    });
+    return { toCipherText };
+  },
+
+  proxyDeCrypt: (fromSecretKey, toCipherText) => {
+    const toEncrypter = new RSAProxyReencrypt({
+      //Users SecretKey
+      rsa: { privateKey: fromSecretKey },
+    });
+    const decryptedField = toEncrypter.decrypt(toCipherText);
+    return { decryptedField };
   },
 };

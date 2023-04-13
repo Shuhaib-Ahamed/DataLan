@@ -49,6 +49,18 @@ router.post(
   controller.decryptAssetObject
 );
 
-router.post("/createAsset",  upload.single("file"), controller.createAsset);
+router.post(
+  "/sendAssetRequest",
+  upload.fields(),
+  authenticate,
+  controller.sendAssetRequest
+);
+
+router.post(
+  "/acceptAssetRequest",
+  upload.fields(),
+  authenticate,
+  controller.acceptAssetRequest
+);
 
 export default router;

@@ -1,4 +1,3 @@
-import chainFunctions from "../../utils/chainLogic.js";
 import { success } from "../../utils/responseApi.js";
 import chainService from "./chain.service.js";
 
@@ -6,6 +5,7 @@ export default {
   uploadAsset: async (req, res, next) => {
     try {
       const result = await chainService.upload(req);
+
       success(res, 200, result);
     } catch (error) {
       return next(error);
@@ -30,6 +30,7 @@ export default {
       return next(error);
     }
   },
+
   searchAssetById: async (req, res, next) => {
     try {
       const result = await chainService.searchAssetById(req.body);
@@ -38,6 +39,7 @@ export default {
       return next(error);
     }
   },
+
   searchAssetByMetadata: async (req, res, next) => {
     try {
       const result = await chainService.searchAssetByMetadata(req.body);
@@ -56,10 +58,18 @@ export default {
     }
   },
 
-  createAsset: async (req, res, next) => {
+  sendAssetRequest: async (req, res, next) => {
     try {
-      const result = await chainFunctions.createAsset(req.body);
-      success(res, 200, result);
+      return await chainService.sendAssetRequest(req, res);
+    } catch (error) {
+      return next(error);
+    }
+  },
+
+  acceptAssetRequest: async (req, res, next) => {
+    try {
+      const result = await chainService.acceptAssetRequest(req.body);
+      success(res, 201, result);
     } catch (error) {
       return next(error);
     }

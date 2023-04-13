@@ -12,7 +12,7 @@ import NotFoundScreen from "../../static/pages/NotFoundScreen";
 import RequestsScreen from "../marketplace/requests/RequestsScreen";
 import LoadingScreen from "../../static/pages/LoadingScreen";
 import ViewAssetScreen from "../marketplace/assets/ViewAssetScreen";
-import { getUser } from "../../redux/slices/auth";
+import { getUser, logout } from "../../redux/slices/auth";
 import JSONModal from "../../components/global/JSONModal";
 import AutoMLTrain from "../automl/AutoMLTraining";
 import ViewModelScreen from "../automl/ViewModelScreen";
@@ -35,6 +35,9 @@ const App = () => {
     };
     if (currentUser) {
       fetchUser();
+    } else {
+      navigate("/login");
+      dispatch(logout());
     }
   }, []);
 
