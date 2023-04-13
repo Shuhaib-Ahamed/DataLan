@@ -1,10 +1,10 @@
 import axios from "axios";
-import { devNGROCK } from "../../config";
+import { dev } from "../../config";
 import jwt from "jsonwebtoken";
 
 const register = (username, email, password) => {
   return axios.post(
-    devNGROCK.backendURL + "auth/account/create",
+    dev.backendURL + "auth/account/create",
     {
       username,
       email,
@@ -20,7 +20,7 @@ const register = (username, email, password) => {
 
 const login = async (email, password) => {
   const { data } = await axios.post(
-    devNGROCK.backendURL + "auth/login",
+    dev.backendURL + "auth/login",
     {
       email,
       password,

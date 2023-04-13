@@ -8,7 +8,7 @@ import { getUser } from "../../../redux/slices/auth";
 import userService from "../../../services/user/userService";
 import FormInput from "../FormInput";
 import PrimaryButton from "../PrimaryButton";
-import { devNGROCK } from "../../../config";
+import { dev } from "../../../config";
 
 const UserProfileForm = () => {
   const { user: currentUser } = useSelector((state) => state.auth);
@@ -55,7 +55,7 @@ const UserProfileForm = () => {
             <a
               target="_blank"
               href={
-                devNGROCK.setllarURL + "/accounts/" + currentUser?.publicKey
+                dev.setllarURL + "/accounts/" + currentUser?.publicKey
               }
             >
               <FormInput

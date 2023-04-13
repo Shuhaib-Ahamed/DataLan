@@ -1,5 +1,5 @@
 import axios from "axios";
-import { devNGROCK } from "../../config";
+import { dev } from "../../config";
 
 import authHeader from "../auth/auth-header";
 import authService from "../auth/authService";
@@ -8,7 +8,7 @@ const user = authService.decodeToken(localStorage.getItem("token"));
 
 //Get Current User
 const getCurrentUser = async () => {
-  return await axios.get(devNGROCK.backendURL + "user/" + user.id, {
+  return await axios.get(dev.backendURL + "user/" + user.id, {
     headers: authHeader(),
   });
 };
@@ -16,7 +16,7 @@ const getCurrentUser = async () => {
 //Update User Role
 const updateUserRole = async (role) => {
   return await axios.put(
-    devNGROCK.backendURL + "user/" + user.id + "/role",
+    dev.backendURL + "user/" + user.id + "/role",
     {
       role: role,
     },
@@ -28,14 +28,14 @@ const updateUserRole = async (role) => {
 
 //Update User
 const updateUser = async (body) => {
-  return await axios.put(devNGROCK.backendURL + "user/" + user.id, body, {
+  return await axios.put(dev.backendURL + "user/" + user.id, body, {
     headers: authHeader(),
   });
 };
 
 //Update User
 const updateUserByPublicKey = async (body, publicKey) => {
-  return await axios.put(devNGROCK.backendURL + "user/publicKey/" + publicKey, body, {
+  return await axios.put(dev.backendURL + "user/publicKey/" + publicKey, body, {
     headers: authHeader(),
   });
 };

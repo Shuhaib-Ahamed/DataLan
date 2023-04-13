@@ -1,45 +1,45 @@
 import axios from "axios";
-import { devNGROCK } from "../../config";
+import { dev } from "../../config";
 
 import authHeader from "../auth/auth-header";
 
 //Get Asset
 const getAssetByID = async (id) => {
-  return await axios.get(devNGROCK.backendURL + "assets/" + id, {
+  return await axios.get(dev.backendURL + "assets/" + id, {
     headers: authHeader(),
   });
 };
 
 //Get Asset By Original ID
 const getAssetByOriginalId = async (id, body) => {
-  return await axios.post(devNGROCK.backendURL + "assets/original/" + id, body, {
+  return await axios.post(dev.backendURL + "assets/original/" + id, body, {
     headers: authHeader(),
   });
 };
 
 //Get All Assets
 const getAssets = async () => {
-  return await axios.get(devNGROCK.backendURL + "assets/", {
+  return await axios.get(dev.backendURL + "assets/", {
     headers: authHeader(),
   });
 };
 
 //Get Assets by publicKey
 const getAssetByPublicKey = async (id) => {
-  return await axios.get(devNGROCK.backendURL + "assets/user/" + id, {
+  return await axios.get(dev.backendURL + "assets/user/" + id, {
     headers: authHeader(),
   });
 };
 
 //Create Assets
 const createAsset = async (body) => {
-  return await axios.post(devNGROCK.backendURL + "assets/create", body, {
+  return await axios.post(dev.backendURL + "assets/create", body, {
     headers: authHeader(),
   });
 };
 
 const updateAsset = async (body, id) => {
-  return await axios.put(devNGROCK.backendURL + "assets/" + id, body, {
+  return await axios.put(dev.backendURL + "assets/" + id, body, {
     headers: authHeader(),
   });
 };
