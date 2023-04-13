@@ -1,6 +1,6 @@
 # DataLan : A Decentralised Data Marketplace Based On AutoML
 
-![alt text](https://firebasestorage.googleapis.com/v0/b/shuhaib-ahamed.appspot.com/o/Demo.gif?alt=media&token=ce7551c6-70b5-433b-b36c-6cb4d602a81f)
+![alt text](![alt text](https://firebasestorage.googleapis.com/v0/b/shuhaib-ahamed.appspot.com/o/Screenshot%202023-04-13%20200304.png?alt=media&token=ab6d0cba-b8b2-4e8b-bb39-4a4880360e4a))
 
 The project proposes developing an open, decentralized, and automated customer service architecture for Small and Medium Enterprises (SMEs) using AutoML and the Internet of Things. The proposed architecture includes a transparent and automated customer service that utilizes Blockchain technology for secure data exchange, data trading platform for SMEs, and homomorphic encryption to improve system security and performance. The study aims to contribute to the research domain by facilitating the integration of open automated customer services, increasing revenue and customer satisfaction among small businesses. SMEs can benefit from the proposed architecture by automating customer service, enhancing customer satisfaction, and increasing revenue.
 
@@ -19,6 +19,8 @@ Various data masking techniques have been described in the blockchain and machin
 **Databases:** MongoDB, Firebase, BigchainDB
 
 **Blockchain:** Stellar Blockchain
+
+![alt text](https://firebasestorage.googleapis.com/v0/b/shuhaib-ahamed.appspot.com/o/Demo.gif?alt=media&token=ce7551c6-70b5-433b-b36c-6cb4d602a81f)
 
 ## Run Locally
 
