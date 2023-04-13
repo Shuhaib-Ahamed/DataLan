@@ -16,6 +16,7 @@ import { getUser, logout } from "../../redux/slices/auth";
 import JSONModal from "../../components/global/JSONModal";
 import AutoMLTrain from "../automl/AutoMLTraining";
 import ViewModelScreen from "../automl/ViewModelScreen";
+import Documentation from "../../components/global/Documentation";
 
 const App = () => {
   const { user: currentUser, loading } = useSelector((state) => state.auth);
@@ -59,6 +60,7 @@ const App = () => {
             <Route path="/requests" element={<RequestsScreen />} />
             <Route path="/models" element={<ModelsScreen />} />
             <Route path="/models/:id" element={<ViewModelScreen />} />
+            <Route path="/documentation" element={<Documentation />} />
             <Route path="*" element={<NotFoundScreen />} />
           </Routes>
           <JSONModal />

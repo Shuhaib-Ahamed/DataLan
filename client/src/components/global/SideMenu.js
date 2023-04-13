@@ -142,7 +142,7 @@ const SideMenu = () => {
               </ul>
               <div className="pt-2 space-y-2">
                 <a
-                  href="https://github.com/shuhaib-ahamed/data-market"
+                  href="https://github.com/Shuhaib-Ahamed/DataLan"
                   target="_blank"
                   className="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700"
                 >
@@ -158,9 +158,8 @@ const SideMenu = () => {
                   <span className="ml-3">GitHub Repository</span>
                 </a>
 
-                <a
-                  href="#"
-                  target="_blank"
+                <NavLink
+                  to="/documentation"
                   className="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700"
                 >
                   <svg
@@ -175,8 +174,8 @@ const SideMenu = () => {
                       clipRule="evenodd"
                     ></path>
                   </svg>
-                  <span className="ml-3">Support</span>
-                </a>
+                  <span className="ml-3">Documentation</span>
+                </NavLink>
               </div>
             </div>
           </div>
