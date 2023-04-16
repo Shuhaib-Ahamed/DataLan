@@ -7,10 +7,13 @@ import { AiFillHome } from "react-icons/ai";
 import moment from "moment";
 import stellarService from "../../../services/web3/stellarService";
 import { useSelector } from "react-redux";
+import AnimatedNumber from "animated-number-react";
 
 const Dashboard = () => {
   const { user: currentUser } = useSelector((state) => state.auth);
   const [account, setAccount] = useState(null);
+
+  const formatValue = (value) => `${Number(value).toFixed(2)}`;
 
   useEffect(() => {
     const getAccount = async () => {
@@ -44,9 +47,8 @@ const Dashboard = () => {
                   <h3 className="text-3xl font-semibold  text-white">
                     Stellar Account Balance
                   </h3>
-                  <p className="mt-2 text-gray-400">
-                    With supporting text below as a natural lead-in to
-                    additional content.
+                  <p className="mt-2 text-gray-400 text-xs">
+                    {currentUser?.publicKey}
                   </p>
                   <a
                     className="inline-flex items-center justify-center gap-2 mt-5 text-sm font-medium text-blue-500 hover:text-blue-700"
@@ -73,8 +75,15 @@ const Dashboard = () => {
                 <div className="flex items-center justify-center w-1/2 p-8">
                   <div className="flex gap-3 items-end">
                     <h1 className="font-bold text-7xl text-white">
-                      {account?.balances?.length > 0 &&
-                        Number(account?.balances[0]?.balance).toFixed(3)}
+                      {account?.balances?.length > 0 ? (
+                        <AnimatedNumber
+                          value={account?.balances[0]?.balance}
+                          formatValue={formatValue}
+                          duration={1000}
+                        />
+                      ) : (
+                        "000,000"
+                      )}
                     </h1>
                     <p className="text-gray-400">LUMENS</p>
                   </div>
