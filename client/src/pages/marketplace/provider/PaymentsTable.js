@@ -5,10 +5,8 @@ import { Badge, Spinner } from "flowbite-react";
 import { SiStellar } from "react-icons/si";
 import stellarService from "../../../services/web3/stellarService";
 
-const PaymentsTable = () => {
+const PaymentsTable = ({ loading, setLoading }) => {
   const { user: currentUser } = useSelector((state) => state.auth);
-  const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
   const [payments, setPayments] = useState(null);
 
   useEffect(() => {

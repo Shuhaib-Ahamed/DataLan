@@ -11,6 +11,7 @@ import { dev } from "../../../config";
 import PaymentsTable from "./PaymentsTable";
 
 const Dashboard = () => {
+  const [loading, setLoading] = useState(false);
   const { user: currentUser } = useSelector((state) => state.auth);
   const [account, setAccount] = useState(null);
 
@@ -42,7 +43,7 @@ const Dashboard = () => {
         <h1 className="text-3xl mt-4 font-semibold text-gray-900">Dashboard</h1>
         <div className=" my-6  bg-white rounded-lg shadow md:flex md:items-center md:justify-between dark:bg-gray-800">
           <div className="flex flex-col w-full ">
-            <div className="flex flex-col  border rounded-lg bg-gray-800 ">
+            <div className="flex flex-col py-6  border rounded-lg bg-gray-800 ">
               <div className="flex items-start justify-between">
                 <div className="p-8">
                   <h3 className="text-3xl font-semibold  text-white">
@@ -53,7 +54,7 @@ const Dashboard = () => {
                   </p>
                   <a
                     target="_blank"
-                    className="inline-flex items-center justify-center gap-2 mt-5 text-sm font-medium text-blue-500 hover:text-blue-700"
+                    className="inline-flex items-center justify-center gap-2 mt-5  font-medium text-blue-500 hover:text-blue-700"
                     href={
                       dev.setllarURL + "/accounts/" + currentUser?.publicKey
                     }
@@ -90,16 +91,18 @@ const Dashboard = () => {
                           "..."
                         )}
                       </h1>
-                      <p className="mt-2 text-green-400">
-                        Actual Balance {account?.balances[0]?.balance} LUMENS
-                      </p>
+                      {!loading && (
+                        <p className="mt-2 text-green-400">
+                          Actual Balance {account?.balances[0]?.balance} LUMENS
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>
               </div>
             </div>
             <div className="p-8">
-              <PaymentsTable />
+              <PaymentsTable loading={loading} setLoading={setLoading} />
             </div>
           </div>
         </div>
