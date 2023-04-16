@@ -11,7 +11,7 @@ export default {
     try {
       const { fromPublicKey, toPublicKey, assetId } = body;
 
-      console.log("ASSET ID: ", assetId);
+
       //set request status
       body.status = REQUEST_STATUS.INREVIEW;
 

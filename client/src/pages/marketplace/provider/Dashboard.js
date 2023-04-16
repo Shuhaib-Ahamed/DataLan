@@ -20,7 +20,7 @@ const Dashboard = () => {
     const getAccount = async () => {
       try {
         const res = await stellarService.getAccountById(currentUser?.publicKey);
-        console.log(res?.data);
+    
         if (res?.status === 200) {
           setAccount(res?.data);
         }

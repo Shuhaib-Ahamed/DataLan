@@ -11,7 +11,7 @@ const initialState = {
 export const getTransaction = createAsyncThunk(
   "modal/getTransaction",
   async ({ txID, txAssetID }, thunkAPI) => {
-    console.log(txID, txAssetID);
+
     try {
       thunkAPI.dispatch(openJSONModal());
       const stellarRes = await stellarService.getTransactionById(txID);
