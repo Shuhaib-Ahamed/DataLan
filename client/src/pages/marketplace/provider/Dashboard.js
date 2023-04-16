@@ -20,7 +20,7 @@ const Dashboard = () => {
     const getAccount = async () => {
       try {
         const res = await stellarService.getAccountById(currentUser?.publicKey);
-    
+
         if (res?.status === 200) {
           setAccount(res?.data);
         }
@@ -77,19 +77,23 @@ const Dashboard = () => {
                   </a>
                 </div>
                 <div className="flex items-center justify-center w-1/2 p-8">
-                  <div className="flex gap-3 items-end">
-                    <h1 className="font-bold text-7xl text-white">
-                      {account?.balances?.length > 0 ? (
-                        <AnimatedNumber
-                          value={account?.balances[0]?.balance}
-                          formatValue={formatValue}
-                          duration={1000}
-                        />
-                      ) : (
-                        "..."
-                      )}
-                    </h1>
-                    <p className="text-gray-400">LUMENS</p>
+                  <div className="flex gap-3 items-end justify-center">
+                    <div className="flex-col gap-2">
+                      <h1 className="font-bold text-7xl text-white">
+                        {account?.balances?.length > 0 ? (
+                          <AnimatedNumber
+                            value={account?.balances[0]?.balance}
+                            formatValue={formatValue}
+                            duration={1000}
+                          />
+                        ) : (
+                          "..."
+                        )}
+                      </h1>
+                      <p className="mt-2 text-green-400">
+                        Actual Balance {account?.balances[0]?.balance} LUMENS
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
