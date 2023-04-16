@@ -4,7 +4,6 @@ import { NavLink } from "react-router-dom";
 import DashboardLayout from "../../../layouts/DashboardLayout";
 // Icons
 import { AiFillHome } from "react-icons/ai";
-import moment from "moment";
 import stellarService from "../../../services/web3/stellarService";
 import { useSelector } from "react-redux";
 import AnimatedNumber from "animated-number-react";
@@ -92,11 +91,6 @@ const Dashboard = () => {
                     <p className="text-gray-400">LUMENS</p>
                   </div>
                 </div>
-              </div>
-              <div className="bg-gray-50 py-3 px-4 md:py-4 md:px-5">
-                <p className="mt-1 text-sm text-gray-500 dark:text-gray-500">
-                  Last updated {moment(new Date()).fromNow()}
-                </p>
               </div>
             </div>
           </div>
