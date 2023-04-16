@@ -259,9 +259,9 @@ const ViewAssetScreen = () => {
                   </h3>
                   <Badge color="gray" icon={HiClock}>
                     <p className="text-sm font-medium text-gray-700">
-                      {moment(state?.asset?.createdAt || asset?.createdAt)
-                        .startOf("day")
-                        .fromNow()}
+                      {moment(
+                        state?.asset?.createdAt || asset?.createdAt
+                      ).fromNow()}
                     </p>
                   </Badge>
                 </div>

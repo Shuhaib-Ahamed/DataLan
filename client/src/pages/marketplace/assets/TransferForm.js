@@ -18,13 +18,11 @@ import chainService from "../../../services/web3/chainService";
 import LoadingGif from "../../../static/images/block.gif";
 import { dev } from "../../../config";
 import StellarSdk from "stellar-sdk";
-import useStellarMetrics from "../../../hooks/useStellarMetrics";
+
 
 const setllarConnection = new StellarSdk.Server(dev.setllarURL);
 
 const TransferForm = memo(({ loading, setLoading, setIsOpen, asset }) => {
-  const { transactionsPerSecond, blockIndex } =
-    useStellarMetrics(setllarConnection);
   const { message } = useSelector((state) => state.message);
   let navigate = useNavigate();
   const { register, handleSubmit, reset } = useForm();

@@ -121,9 +121,7 @@ const ModelTable = () => {
 
                             <td className="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
                               <div className="flex gap-1 items-center">
-                                {moment(model?.createdAt)
-                                  .startOf("day")
-                                  .fromNow()}
+                                {moment(model?.createdAt).fromNow()}
                               </div>
                             </td>
 

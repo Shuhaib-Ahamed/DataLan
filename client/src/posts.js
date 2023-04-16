@@ -24,7 +24,7 @@ export const posts = [
     description:
       "Change your role to a buyer and request an asset. The request will be sent to the provider to review and accept You can also view all the requests you have made.",
     link: "/requests",
-    linkHeading: "View Marketplace",
+    linkHeading: "View Requests",
   },
   {
     intro: "Training",

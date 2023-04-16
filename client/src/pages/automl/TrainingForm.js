@@ -86,9 +86,10 @@ const TrainingForm = () => {
                     newModel
                   );
 
-                  console.log("MODEL", modelResponse);
                   if (modelResponse?.status === 201) {
+                    console.log(modelResponse?.data?.data);
                     setModel(modelResponse?.data?.data);
+                    setSelectedAsset(null);
                     toast.success("Model Saved successfully");
                   }
                 }
@@ -110,8 +111,6 @@ const TrainingForm = () => {
       setIsDecryptOpen(false);
       setAssets([]);
       setSelectedColumn([]);
-      setSelectedAsset(null);
-
       dispatch(clearMessage());
     }
   };

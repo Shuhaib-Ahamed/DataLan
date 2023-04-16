@@ -17,15 +17,12 @@ import assetService from "../../../services/asset/assetService";
 import chainService from "../../../services/web3/chainService";
 import LoadingGif from "../../../static/images/block.gif";
 import fileService from "../../../utils/file";
-import useStellarMetrics from "../../../hooks/useStellarMetrics";
 import { dev } from "../../../config";
 import StellarSdk from "stellar-sdk";
 
 const setllarConnection = new StellarSdk.Server(dev.setllarURL);
 
 const AssetForm = memo(({ loading, setLoading, setIsOpen, setRefresh }) => {
-  const { transactionsPerSecond, blockIndex } =
-    useStellarMetrics(setllarConnection);
   const { user: currentUser } = useSelector((state) => state.auth);
   const { message } = useSelector((state) => state.message);
   let navigate = useNavigate();
