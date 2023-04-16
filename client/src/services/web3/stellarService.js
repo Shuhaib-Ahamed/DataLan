@@ -1,21 +1,13 @@
-import axios from "axios";
-import { dev } from "../../config";
-
-//Get Current User
-const getTransactionById = async (txID) => {
-  return await axios.get(dev.setllarURL + "/transactions/" + txID);
+const getAccountById = async (publicKey, server) => {
+  return await server.loadAccount(publicKey);
 };
 
-//Get Current User
-const getAccountById = async (publicKey) => {
-  return await axios.get(dev.setllarURL + "/accounts/" + publicKey);
+const getPaymentByPublicKey = async (publicKey, server) => {
+  return await server.payments().forAccount(publicKey).call();
 };
 
-//Get Current User
-const getPaymentByPublicKey = async (publicKey) => {
-  return await axios.get(
-    dev.setllarURL + "/accounts/" + publicKey + "/payments"
-  );
+const getTransactionById = async (txID, server) => {
+  return await server.transactions().transaction(txID).call();
 };
 
 const stellarService = {

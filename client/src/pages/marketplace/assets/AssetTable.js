@@ -7,8 +7,15 @@ import { SiStellar } from "react-icons/si";
 import { NavLink } from "react-router-dom";
 import AssetHeader from "./AssetHeader";
 import { getTransaction } from "../../../redux/slices/modal";
+import StellarSdk from "stellar-sdk";
+import { dev } from "../../../config";
+import useStellarMetrics from "../../../hooks/useStellarMetrics";
+
+var stellarConnection = new StellarSdk.Server(dev.setllarURL);
 
 const AssetTable = ({ refresh, setIsOpen, setRefresh }) => {
+  const { blockIndex, transactionsPerSecond, blockSize } =
+    useStellarMetrics(stellarConnection);
   const { user: currentUser } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
@@ -33,6 +40,12 @@ const AssetTable = ({ refresh, setIsOpen, setRefresh }) => {
     };
     fetchAssets();
   }, [refresh]);
+
+  console.table("EVALUATION METRICS GET TRANSACTION ", {
+    tps: transactionsPerSecond,
+    blockIndex: blockIndex,
+    blockSize: blockSize,
+  });
 
   return (
     <div className=" bg-white  block ">
@@ -152,6 +165,7 @@ const AssetTable = ({ refresh, setIsOpen, setRefresh }) => {
                                     getTransaction({
                                       txID: asset?.txID,
                                       txAssetID: asset?.txAssetID,
+                                      stellarConnection: stellarConnection,
                                     })
                                   )
                                 }

@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { SiHiveBlockchain } from "react-icons/si";
 import { Badge, Spinner } from "flowbite-react";
 import { SiStellar } from "react-icons/si";
 import stellarService from "../../../services/web3/stellarService";
+import StellarSdk from "stellar-sdk";
+import { dev } from "../../../config";
+import useStellarMetrics from "../../../hooks/useStellarMetrics";
+var stellarConnection = new StellarSdk.Server(dev.setllarURL);
 
 const PaymentsTable = () => {
+  const { blockIndex, transactionsPerSecond, blockSize } =
+    useStellarMetrics(stellarConnection);
   const { user: currentUser } = useSelector((state) => state.auth);
-  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [payments, setPayments] = useState(null);
 
@@ -16,10 +20,11 @@ const PaymentsTable = () => {
       setLoading(true);
       try {
         const res = await stellarService.getPaymentByPublicKey(
-          currentUser?.publicKey
+          currentUser?.publicKey,
+          stellarConnection
         );
-        if (res.status === 200) {
-          setPayments(res.data?._embedded?.records);
+        if (res) {
+          setPayments(res?.records);
         }
       } catch (error) {
         console.log(error);
@@ -30,7 +35,12 @@ const PaymentsTable = () => {
     fetchPayments();
   }, []);
 
-  console.log("payme", payments);
+  console.table("EVALUATION METRICS GET PAYMENTS ", {
+    tps: transactionsPerSecond,
+    blockIndex: blockIndex,
+    blockSize: blockSize,
+  });
+
   return (
     <div className=" bg-white  block ">
       <div className="flex flex-col">

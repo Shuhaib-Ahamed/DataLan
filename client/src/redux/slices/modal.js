@@ -10,11 +10,13 @@ const initialState = {
 
 export const getTransaction = createAsyncThunk(
   "modal/getTransaction",
-  async ({ txID, txAssetID }, thunkAPI) => {
-
+  async ({ txID, txAssetID, stellarConnection }, thunkAPI) => {
     try {
       thunkAPI.dispatch(openJSONModal());
-      const stellarRes = await stellarService.getTransactionById(txID);
+      const stellarRes = await stellarService.getTransactionById(
+        txID,
+        stellarConnection
+      );
       const chainRes = await chainService.serachAssetById(txAssetID);
 
       return { data: { stellarData: stellarRes?.data, chainData: chainRes } };
