@@ -8,6 +8,7 @@ import moment from "moment";
 import stellarService from "../../../services/web3/stellarService";
 import { useSelector } from "react-redux";
 import AnimatedNumber from "animated-number-react";
+import { dev } from "../../../config";
 
 const Dashboard = () => {
   const { user: currentUser } = useSelector((state) => state.auth);
@@ -51,8 +52,11 @@ const Dashboard = () => {
                     {currentUser?.publicKey}
                   </p>
                   <a
+                    target="_blank"
                     className="inline-flex items-center justify-center gap-2 mt-5 text-sm font-medium text-blue-500 hover:text-blue-700"
-                    href="#"
+                    href={
+                      dev.setllarURL + "/accounts/" + currentUser?.publicKey
+                    }
                   >
                     View in Stellar Laboratory
                     <svg
@@ -82,7 +86,7 @@ const Dashboard = () => {
                           duration={1000}
                         />
                       ) : (
-                        "000,000"
+                        "..."
                       )}
                     </h1>
                     <p className="text-gray-400">LUMENS</p>
