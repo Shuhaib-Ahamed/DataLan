@@ -8,6 +8,7 @@ import stellarService from "../../../services/web3/stellarService";
 import { useSelector } from "react-redux";
 import AnimatedNumber from "animated-number-react";
 import { dev } from "../../../config";
+import PaymentsTable from "./PaymentsTable";
 
 const Dashboard = () => {
   const { user: currentUser } = useSelector((state) => state.auth);
@@ -40,8 +41,8 @@ const Dashboard = () => {
         </Breadcrumb>
         <h1 className="text-3xl mt-4 font-semibold text-gray-900">Dashboard</h1>
         <div className=" my-6  bg-white rounded-lg shadow md:flex md:items-center md:justify-between dark:bg-gray-800">
-          <div className="flex flex-col w-full">
-            <div className="flex flex-col  border rounded-lg bg-gray-800 mb-20 ">
+          <div className="flex flex-col w-full ">
+            <div className="flex flex-col  border rounded-lg bg-gray-800 ">
               <div className="flex items-start justify-between">
                 <div className="p-8">
                   <h3 className="text-3xl font-semibold  text-white">
@@ -92,6 +93,9 @@ const Dashboard = () => {
                   </div>
                 </div>
               </div>
+            </div>
+            <div className="p-8">
+              <PaymentsTable />
             </div>
           </div>
         </div>
