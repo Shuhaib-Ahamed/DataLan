@@ -19,7 +19,6 @@ import LoadingGif from "../../../static/images/block.gif";
 import { dev } from "../../../config";
 import StellarSdk from "stellar-sdk";
 
-
 const setllarConnection = new StellarSdk.Server(dev.setllarURL);
 
 const TransferForm = memo(({ loading, setLoading, setIsOpen, asset }) => {
@@ -89,10 +88,6 @@ const TransferForm = memo(({ loading, setLoading, setIsOpen, asset }) => {
       dispatch(clearError());
       reset();
       navigate("/assets");
-      console.table("EVALUATION METRICS TRANSFER ", {
-        tps: transactionsPerSecond,
-        blockIndex: blockIndex,
-      });
     }
   };
 

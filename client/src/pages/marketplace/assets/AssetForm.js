@@ -96,11 +96,6 @@ const AssetForm = memo(({ loading, setLoading, setIsOpen, setRefresh }) => {
       setCredFile(null);
       dispatch(clearError());
       navigate("/assets");
-
-      console.table("EVALUATION METRICS UPLOAD ", {
-        tps: transactionsPerSecond,
-        blockIndex: blockIndex,
-      });
     }
   };
 
