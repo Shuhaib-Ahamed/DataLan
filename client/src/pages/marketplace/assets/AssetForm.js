@@ -19,10 +19,13 @@ import LoadingGif from "../../../static/images/block.gif";
 import fileService from "../../../utils/file";
 import { dev } from "../../../config";
 import StellarSdk from "stellar-sdk";
+import useStellarMetrics from "../../../hooks/useStellarMetrics";
 
 const setllarConnection = new StellarSdk.Server(dev.setllarURL);
 
 const AssetForm = memo(({ loading, setLoading, setIsOpen, setRefresh }) => {
+  const { transactionsPerSecond, blockIndex, blockSize } =
+    useStellarMetrics(setllarConnection);
   const { user: currentUser } = useSelector((state) => state.auth);
   const { message } = useSelector((state) => state.message);
   let navigate = useNavigate();
@@ -92,10 +95,15 @@ const AssetForm = memo(({ loading, setLoading, setIsOpen, setRefresh }) => {
       dispatch(setError(message));
     } finally {
       setLoading(false);
-      // reset();
+      reset();
       setCredFile(null);
       dispatch(clearError());
       navigate("/assets");
+      console.table("EVALUATION METRICS UPLOAD ", {
+        tps: transactionsPerSecond,
+        blockIndex: blockIndex,
+        blockSize: blockSize,
+      });
     }
   };
 
