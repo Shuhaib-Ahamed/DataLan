@@ -5,12 +5,9 @@ import { SiStellar } from "react-icons/si";
 import stellarService from "../../../services/web3/stellarService";
 import StellarSdk from "stellar-sdk";
 import { dev } from "../../../config";
-import useStellarMetrics from "../../../hooks/useStellarMetrics";
 var stellarConnection = new StellarSdk.Server(dev.setllarURL);
 
 const PaymentsTable = () => {
-  const { blockIndex, transactionsPerSecond, blockSize } =
-    useStellarMetrics(stellarConnection);
   const { user: currentUser } = useSelector((state) => state.auth);
   const [loading, setLoading] = useState(false);
   const [payments, setPayments] = useState(null);
@@ -34,12 +31,6 @@ const PaymentsTable = () => {
     };
     fetchPayments();
   }, []);
-
-  console.table("EVALUATION METRICS GET PAYMENTS ", {
-    tps: transactionsPerSecond,
-    blockIndex: blockIndex,
-    blockSize: blockSize,
-  });
 
   return (
     <div className=" bg-white  block ">

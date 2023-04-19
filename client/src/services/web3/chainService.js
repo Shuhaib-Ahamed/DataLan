@@ -9,6 +9,7 @@ import requestService from "../request/requestService";
 import assetService from "../asset/assetService";
 import { v4 as uuidv4 } from "uuid";
 
+
 const chainConnection = new BigchainDB.Connection(dev.bigchainURL);
 
 const uploadAsset = (

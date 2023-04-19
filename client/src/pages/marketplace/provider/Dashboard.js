@@ -10,14 +10,11 @@ import AnimatedNumber from "animated-number-react";
 import { dev } from "../../../config";
 import PaymentsTable from "./PaymentsTable";
 import StellarSdk from "stellar-sdk";
-import useStellarMetrics from "../../../hooks/useStellarMetrics";
 
 var stellarConnection = new StellarSdk.Server(dev.setllarURL);
 
 const Dashboard = () => {
   const { user: currentUser } = useSelector((state) => state.auth);
-  const { blockIndex, transactionsPerSecond, blockSize } =
-    useStellarMetrics(stellarConnection);
   const [account, setAccount] = useState(null);
 
   const formatValue = (value) => `${Number(value).toFixed(2)}`;
@@ -38,12 +35,6 @@ const Dashboard = () => {
 
     getAccount();
   }, []);
-
-  console.table("EVALUATION METRICS GET ACCOUNT ", {
-    tps: transactionsPerSecond,
-    blockIndex: blockIndex,
-    blockSize: blockSize,
-  });
 
   return (
     <DashboardLayout>
