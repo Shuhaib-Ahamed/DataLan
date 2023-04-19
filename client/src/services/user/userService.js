@@ -27,8 +27,8 @@ const updateUserRole = async (role) => {
 };
 
 //Update User
-const updateUser = async (body) => {
-  return await axios.put(dev.backendURL + "user/" + user.id, body, {
+const updateUser = async (id, body) => {
+  return await axios.put(dev.backendURL + "user/" + id, body, {
     headers: authHeader(),
   });
 };

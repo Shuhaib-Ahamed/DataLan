@@ -26,7 +26,7 @@ const UserProfileForm = () => {
         lastName: lastName,
       };
 
-      const savedUser = await userService.updateUser({
+      const savedUser = await userService.updateUser(currentUser?._id, {
         role: role,
         data: {
           userData: newUserData,
@@ -54,9 +54,7 @@ const UserProfileForm = () => {
           <div className="col-span-full">
             <a
               target="_blank"
-              href={
-                dev.setllarURL + "/accounts/" + currentUser?.publicKey
-              }
+              href={dev.setllarURL + "/accounts/" + currentUser?.publicKey}
             >
               <FormInput
                 disabled={true}

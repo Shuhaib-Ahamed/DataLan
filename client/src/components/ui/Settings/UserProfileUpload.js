@@ -52,7 +52,7 @@ const UserProfileUpload = () => {
       };
       delete newUserData.photoURL;
 
-      const savedUser = await userService.updateUser({
+      const savedUser = await userService.updateUser(currentUser?._id, {
         data: { userData: newUserData },
       });
       if (savedUser.data.succeeded) {
@@ -71,7 +71,7 @@ const UserProfileUpload = () => {
       ...currentUser?.data?.userData,
       photoURL: photoURL,
     };
-    const savedUser = await userService.updateUser({
+    const savedUser = await userService.updateUser(currentUser?._id,{
       data: { userData: newUserData },
     });
     return savedUser.data;
