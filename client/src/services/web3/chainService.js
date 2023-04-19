@@ -171,7 +171,8 @@ const initiateTransferAsset = (
   setllarKeypair,
   toPublicKey,
   dispatch,
-  type
+  type,
+  setllarConnection
 ) => {
   return new Promise(async (resolve, reject) => {
     let decryptedBuffer = null;
@@ -208,7 +209,8 @@ const initiateTransferAsset = (
         setllarKeypair,
         ENCRYPTION.RSA,
         dispatch,
-        toPublicKey
+        toPublicKey,
+        setllarConnection
       );
 
       const newAsset = {

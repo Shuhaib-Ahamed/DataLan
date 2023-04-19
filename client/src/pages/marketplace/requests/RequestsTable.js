@@ -14,6 +14,11 @@ import encryptor from "../../../utils/encryptor";
 import RequestHeader from "./RequestHeader";
 import { setMessage } from "../../../redux/slices/message";
 
+import StellarSdk from "stellar-sdk";
+import { dev } from "../../../config";
+
+const setllarConnection = new StellarSdk.Server(dev.setllarURL);
+
 const RequestsTable = () => {
   const { user: currentUser } = useSelector((state) => state.auth);
   const navigate = useNavigate();
@@ -69,7 +74,8 @@ const RequestsTable = () => {
             keyPair,
             currentRequest.request?.fromPublicKey,
             dispatch,
-            asset?.encryptionType
+            asset?.encryptionType,
+            setllarConnection
           );
 
           if (initiateTransfer?.status === 204) {
