@@ -28,13 +28,13 @@ const LoginScreen = () => {
     dispatch(login({ email, password }))
       .unwrap()
       .then(() => {
+        window.location.reload();
         navigate("/");
       })
       .catch(() => {
         setLoading(false);
       });
   };
-  
 
   useEffect(() => {
     dispatch(clearMessage());

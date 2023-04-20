@@ -118,6 +118,7 @@ const uploadAsset = (
 
       // Finally, submit the transaction to the network
       dispatch(setMessage("Submiting Stellar transaction..."));
+      const startedAt = new Date();
       const response = await setllarConnection.submitTransaction(transaction);
 
       //encrypt the assetData
@@ -137,6 +138,8 @@ const uploadAsset = (
       }
 
       resolve({
+        startedAt: startedAt,
+        ledger: response?.ledger,
         assetData: encryptedAssetData,
         response: response,
         txAssetID: tx?.id,
@@ -334,12 +337,14 @@ const transferAsset = (
 
       // Sign the transaction with the account's secret key
       transaction.sign(sourceKeypair);
-
+      const startedAt = new Date();
       // Finally, submit the transaction to the network
       dispatch(setMessage("Signing transaction..."));
       const response = await setllarConnection.submitTransaction(transaction);
 
       resolve({
+        startedAt: startedAt,
+        ledger: response?.ledger,
         response: response,
         txAssetID: retrieveTransaction?.asset?.id,
       });

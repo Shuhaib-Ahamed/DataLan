@@ -24,8 +24,10 @@ const Marketplace = () => {
         setLoading(false);
       }
     };
-    fetchAssets();
-  }, []);
+    if (localStorage?.token) {
+      fetchAssets();
+    }
+  }, [localStorage]);
 
   return (
     <div className="p-6 my-6 mx-10 bg-white rounded-lg shadow md:flex md:items-center md:justify-between md:p-6 xl:p-8 dark:bg-gray-800">

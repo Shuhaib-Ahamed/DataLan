@@ -16,13 +16,13 @@ export default {
 
       // Login successful, write token, and send back user
       const userData = {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        isVerified: user.isVerified,
-        publicKey: user.publicKey,
-        role: user.role,
-        username: user.username,
+        _id: user?._id,
+        name: user?.name,
+        email: user?.email,
+        isVerified: user?.isVerified,
+        publicKey: user?.publicKey,
+        role: user?.role,
+        username: user?.username,
         data: user?.data,
       };
 

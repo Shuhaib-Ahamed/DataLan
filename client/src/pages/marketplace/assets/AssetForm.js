@@ -20,7 +20,7 @@ import fileService from "../../../utils/file";
 import { dev } from "../../../config";
 import StellarSdk from "stellar-sdk";
 
-const setllarConnection = new StellarSdk.Server(dev.setllarURL);
+const stellarConnection = new StellarSdk.Server(dev.setllarURL);
 
 const AssetForm = memo(({ loading, setLoading, setIsOpen, setRefresh }) => {
   const { user: currentUser } = useSelector((state) => state.auth);
@@ -60,7 +60,7 @@ const AssetForm = memo(({ loading, setLoading, setIsOpen, setRefresh }) => {
           ENCRYPTION.AES,
           dispatch,
           null,
-          setllarConnection
+          stellarConnection
         )
         .then(async (data) => {
           const newAsset = {
@@ -70,6 +70,37 @@ const AssetForm = memo(({ loading, setLoading, setIsOpen, setRefresh }) => {
             assetData: data.assetData,
             ...metaData,
           };
+
+          // Call the `ledgers()` method with the ledger sequence number to get ledger details
+          stellarConnection
+            .ledgers()
+            .ledger(data?.ledger)
+            .call()
+            .then((ledger) => {
+              if (!ledger) {
+                throw new Error("Failed to fetch ledger details.");
+              }
+
+              console.log("Ledger details:", ledger);
+
+              const startedAt = new Date(data?.startedAt);
+              const closedAt = new Date(ledger?.closed_at);
+
+              // Calculate time taken to close the ledger in seconds
+              const timeTakenToCloseLedgerInSeconds =
+                (closedAt.getTime() - startedAt.getTime()) / 1000;
+
+              // Calculate TPS
+              const successfulTransactionCount =
+                ledger?.successful_transaction_count || 0;
+              const tps =
+                successfulTransactionCount / timeTakenToCloseLedgerInSeconds;
+
+              console.log("Transaction Per Second (TPS):", tps);
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+            });
 
           dispatch(setMessage("Creating an asset!!!"));
           const assetResponse = await assetService.createAsset(newAsset);

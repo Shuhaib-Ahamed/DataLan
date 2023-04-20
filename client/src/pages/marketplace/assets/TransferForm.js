@@ -19,7 +19,7 @@ import LoadingGif from "../../../static/images/block.gif";
 import { dev } from "../../../config";
 import StellarSdk from "stellar-sdk";
 
-const setllarConnection = new StellarSdk.Server(dev.setllarURL);
+const stellarConnection = new StellarSdk.Server(dev.setllarURL);
 
 const TransferForm = memo(({ loading, setLoading, setIsOpen, asset }) => {
   const { message } = useSelector((state) => state.message);
@@ -52,7 +52,7 @@ const TransferForm = memo(({ loading, setLoading, setIsOpen, asset }) => {
             credentials,
             metaData,
             dispatch,
-            setllarConnection
+            stellarConnection
           )
           .then(async (data) => {
             const updateAsset = {
@@ -61,6 +61,38 @@ const TransferForm = memo(({ loading, setLoading, setIsOpen, asset }) => {
               status: STATE.OWNED,
               ...metaData,
             };
+
+            // Call the `ledgers()` method with the ledger sequence number to get ledger details
+            stellarConnection
+              .ledgers()
+              .ledger(data?.ledger)
+              .call()
+              .then((ledger) => {
+                if (!ledger) {
+                  throw new Error("Failed to fetch ledger details.");
+                }
+
+                console.log("Ledger details:", ledger);
+
+                const startedAt = new Date(data?.startedAt);
+                const closedAt = new Date(ledger?.closed_at);
+
+                // Calculate time taken to close the ledger in seconds
+                const timeTakenToCloseLedgerInSeconds =
+                  (closedAt.getTime() - startedAt.getTime()) / 1000;
+
+                // Calculate TPS
+                const successfulTransactionCount =
+                  ledger?.successful_transaction_count || 0;
+                const tps =
+                  successfulTransactionCount / timeTakenToCloseLedgerInSeconds;
+
+                console.log("Transaction Per Second (TPS):", tps);
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+              });
+
             dispatch(setMessage("Updating asset!!!"));
             const assetResponse = await assetService.updateAsset(
               updateAsset,

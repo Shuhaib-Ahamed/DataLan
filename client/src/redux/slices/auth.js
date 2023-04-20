@@ -57,7 +57,8 @@ export const login = createAsyncThunk(
 export const getUser = createAsyncThunk("auth/user", async (thunkAPI) => {
   try {
     const user = await UserService.getCurrentUser();
-    localStorage.setItem("user", JSON.stringify(user?.data?.data));
+
+    localStorage.setItem("user", JSON.stringify(user.data.user));
     return { user: user.data.data };
   } catch (error) {
     const message =
