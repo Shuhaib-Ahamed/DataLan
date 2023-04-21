@@ -27,8 +27,6 @@ Various data masking techniques have been described in the blockchain and machin
 
 **Blockchain:** Stellar Blockchain
 
-![alt text](https://firebasestorage.googleapis.com/v0/b/shuhaib-ahamed.appspot.com/o/Demo.gif?alt=media&token=ce7551c6-70b5-433b-b36c-6cb4d602a81f)
-
 ## Run Locally
 
 Clone the project
@@ -76,6 +74,7 @@ Install and run the Client
 Install and run the AutoML Server
 
 ```bash
+  cd automl
   pip install -r requirements.txt
   uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 ```
