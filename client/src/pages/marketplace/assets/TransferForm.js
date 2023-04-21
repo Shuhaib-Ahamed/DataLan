@@ -87,7 +87,12 @@ const TransferForm = memo(({ loading, setLoading, setIsOpen, asset }) => {
                 const tps =
                   successfulTransactionCount / timeTakenToCloseLedgerInSeconds;
 
-                console.log("Transaction Per Second (TPS):", tps);
+                console.log(
+                  "Transaction Per Second (TPS):",
+                  tps,
+                  "Latency",
+                  timeTakenToCloseLedgerInSeconds
+                );
               })
               .catch((error) => {
                 console.error("Error:", error);

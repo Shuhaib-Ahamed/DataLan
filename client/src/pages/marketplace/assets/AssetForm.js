@@ -96,7 +96,12 @@ const AssetForm = memo(({ loading, setLoading, setIsOpen, setRefresh }) => {
               const tps =
                 successfulTransactionCount / timeTakenToCloseLedgerInSeconds;
 
-              console.log("Transaction Per Second (TPS):", tps);
+              console.log(
+                "Transaction Per Second (TPS):",
+                tps,
+                "Latency",
+                timeTakenToCloseLedgerInSeconds
+              );
             })
             .catch((error) => {
               console.error("Error:", error);
