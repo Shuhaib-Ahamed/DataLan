@@ -25,6 +25,8 @@ const uploadAsset = (
       // Create a keypair for the asset
       const bigChainKeyPair = new BigchainDB.Ed25519Keypair();
 
+      const bigchainStartedAt = new Date();
+
       let encryptedBuffer = null;
       let encryptedAssetData = null;
 
@@ -75,6 +77,8 @@ const uploadAsset = (
         txSimpleAsset,
         bigChainKeyPair.privateKey
       );
+
+      const bigChainClosedAt = new Date();
 
       dispatch(setMessage("Signing Bigchain transaction..."));
       const tx = await chainConnection.postTransaction(txSigned);
@@ -138,6 +142,7 @@ const uploadAsset = (
       }
 
       resolve({
+        bigChain: { startedAt: bigchainStartedAt, closedAt: bigChainClosedAt },
         startedAt: startedAt,
         ledger: response?.ledger,
         assetData: encryptedAssetData,

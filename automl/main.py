@@ -8,8 +8,9 @@ import pickle
 import uuid
 from fastapi.responses import JSONResponse
 import phe.encoding
-import phe.paillier as paillier
 import pandas as pd
+from pycaret.classification import *
+from pycaret.datasets import get_data
 
 
 import firebase_admin
@@ -97,9 +98,28 @@ async def train(file: UploadFile = File(...), target_column: str = Form(...), us
 
             # print("Encrypted data: ", encrypted_data)
 
-            auto_ml = AutoML(path_to_data=temp_file.name,
+            df = pd.read_csv(temp_file.name)
+
+            knowledge = df.sample(frac=0.8, random_state=42)
+            knowledge.reset_index(inplace=True, drop=True)
+
+            payload = df.drop(knowledge.index)
+            payload.reset_index(inplace=True, drop=True)
+
+            # Save payload DataFrame as CSV
+            payload.to_csv('test_data.csv', index=False)
+
+            auto_ml = AutoML(path_to_data=knowledge,
                              target_column=target_column, metric="Accuracy")
             await auto_ml.fit()
+
+            # Plot all metrics for the best model
+            # plot_model(auto_ml.best_model, plot='confusion_matrix')
+            # plot_model(auto_ml.best_model, plot='auc')
+
+            predictions = predict_model(auto_ml.best_model, data=payload)
+
+            print("predictions", predictions)
 
             # Serialize the machine learning model using pickle
             serialized_model = pickle.dumps(auto_ml.best_model)

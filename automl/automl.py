@@ -4,7 +4,7 @@ from pycaret.classification import *
 
 class AutoML:
     def __init__(self, path_to_data: str, target_column: str, metric):
-        self.df = pd.read_csv(path_to_data)
+        self.df = path_to_data
         self.target_column = target_column
         self.metric = metric
         self.best_model = None

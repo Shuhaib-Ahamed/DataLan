@@ -71,6 +71,13 @@ const AssetForm = memo(({ loading, setLoading, setIsOpen, setRefresh }) => {
             ...metaData,
           };
 
+          const fileUploadLatency =
+            (data?.bigChain?.closedAt.getTime() -
+              data?.bigChain?.startedAt.getTime()) /
+            1000;
+
+          console.log("BigchainDB File Upload Latency:", fileUploadLatency);
+
           // Call the `ledgers()` method with the ledger sequence number to get ledger details
           stellarConnection
             .ledgers()

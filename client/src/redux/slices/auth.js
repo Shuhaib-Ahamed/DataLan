@@ -6,7 +6,10 @@ import { NETWORK } from "../../enum";
 import { setTestNet } from "./network";
 import UserService from "../../services/user/userService";
 
-const user = localStorage.user && JSON.parse(localStorage.getItem("user"));
+const user =
+  localStorage.user !== "undefined"
+    ? JSON.parse(localStorage.getItem("user"))
+    : null;
 
 const initialState = user
   ? { isLoggedIn: true, user, loading: false }
