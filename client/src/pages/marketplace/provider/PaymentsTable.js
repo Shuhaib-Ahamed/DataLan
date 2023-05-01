@@ -28,7 +28,6 @@ const PaymentsTable = ({ loading, setLoading }) => {
     fetchPayments();
   }, []);
 
-  console.log("payme", payments);
   return (
     <div className=" bg-white  block ">
       <div className="flex flex-col">

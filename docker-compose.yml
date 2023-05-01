@@ -1,0 +1,28 @@
+version: '3'
+services:
+  server2:
+    build: ./server
+    ports:
+      - "9000:9000"
+  server3:
+    build: ./client
+    ports:
+      - "3000:3000"
+  automl:
+    build: ./automl
+    ports:
+      - "8000:8000"
+    depends_on:
+      - bigchaindb
+
+  bigchaindb:
+    image: bigchaindb/bigchaindb:all-in-one
+    ports:
+      - "9984:9984"
+      - "9985:9985"
+      - "27017:27017"
+      - "26657:26657"
+    volumes:
+      - $HOME/bigchaindb_docker/mongodb/data/db:/data/db
+      - $HOME/bigchaindb_docker/mongodb/data/configdb:/data/configdb
+      - $HOME/bigchaindb_docker/tendermint:/tendermint

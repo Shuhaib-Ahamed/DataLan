@@ -8,7 +8,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y default-jre
 
 # Copy list of backend requirements
-COPY requirements-backend.txt requirements.txt
+COPY requirements.txt requirements.txt
 
 # Install dependencies
 RUN pip install -r requirements.txt
