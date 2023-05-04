@@ -132,7 +132,6 @@ async def train(file: UploadFile = File(...), target_column: str = Form(...), us
 
             # print("Encrypted data: ", encrypted_data)
 
-             # Plot all metrics for the best model
+            #  Plot all metrics for the best model
             # plot_model(auto_ml.best_model, plot='confusion_matrix')
             # plot_model(auto_ml.best_model, plot='auc')
-
