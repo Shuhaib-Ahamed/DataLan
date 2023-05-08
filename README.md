@@ -1,5 +1,7 @@
 # DataLan : A Decentralised Data Marketplace Based On AutoML
 
+[![CodeFactor](https://www.codefactor.io/repository/github/shuhaib-ahamed/datalan/badge)](https://www.codefactor.io/repository/github/shuhaib-ahamed/datalan)
+
 [![Watch the video](https://firebasestorage.googleapis.com/v0/b/shuhaib-ahamed.appspot.com/o/Screenshot%202023-04-13%20200304.png?alt=media&token=ab6d0cba-b8b2-4e8b-bb39-4a4880360e4a)](https://www.youtube.com/watch?v=eN1mG4_x-Zo)
 
 ## Application Demo
